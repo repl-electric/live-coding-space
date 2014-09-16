@@ -69,7 +69,7 @@ end
 end
 
 define :drums do
-d = :bass_thick_c
+d = :ambi_choir
 6.times {sleep 9}
 
 2.times do
@@ -87,7 +87,10 @@ end
 
 define :beats do
 sleep 7.5
-sample [:ambi_piano, :ambi_glass_hum].shuffle.first, rate: 0.3
+s = [:ambi_piano, :ambi_glass_hum, :ambi_drone].shuffle.first
+sample s, rate: 0.3
+sleep 7.5
+sample s, rate: 0.4
 end
 
 define :sam do
@@ -120,12 +123,12 @@ end
 end
 
 define :highlights do
-sample [:ambi_haunted_hum, :ambi_glass_hum, :ambi_soft_buzz].shuffle.first
+sample [:ambi_haunted_hum, :ambi_glass_hum].shuffle.first
 sleep 4
 end
 
 in_thread(name: :a)  do loop{highlights} end
-in_thread(name: :g)  do loop{guitars} end
+in_thread(name: :g)  do loop{sample :ambi_lunar_land; sleep 9; guitars} end
 in_thread(name: :b)  do loop{beats} end
 in_thread(name: :s)  do loop{sam} end
 in_thread(name: :c)  do loop{chords} end
