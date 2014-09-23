@@ -3,29 +3,28 @@ define :csample do |name|
   "#{root}/#{name}"
 end
 
-s = csample "155837__corsica-s__halixic.wav"
+s = csample "halixic.wav"
 s_dur = sample_duration(s)
 
-t = csample "82365__timbre__clacker-rhythm.wav"
+t = csample "clacker_rhythm.wav"
 t_dur = sample_duration(t)
 
-z = csample "49685__ejfortin__nano-blade-loop.wav"
-j = csample "34786__stantones__crunchy-beat.aif"
+z = csample "nano_blade_loop.wav"
+j = csample "crunchy_beat.aif"
 j_dur = sample_duration(j)
 
-g = csample "249181__gis-sweden__120bpm2smagnhildhh.wav"
-a = csample "249182__gis-sweden__120bpm2smagnhildbd.wav"
-b = csample "249185__gis-sweden__120bpmabramis4s-g.wav"
-c = csample "96343__noisecollector__whisperloop.wav"
-e = csample "202225__luckylittleraven__hypnoticsynth.wav"
-f = csample "24088__lg__feedback21.wav"
+g = csample "120bpm2smagnhildhh.wav"
+a = csample "120bpm2smagnhildbd.wav"
+b = csample "120bpmabramis4s_g.wav"
+c = csample "whisperloop.wav"
+e = csample "hypnoticsynth.wav"
+f = csample "feedback21.wav"
 
-g = csample "249174__gis-sweden__120bpmacantholabrus4s-g.wav"
-h = csample "249175__gis-sweden__120bpmacantholabrus6s-g.wav"
-i = csample "249173__gis-sweden__120bpmacantholabrus6s-a.wav"
-k = csample "249176__gis-sweden__120bpmacantholabrus6s-d.wav"
+#g = csample "120bpmacantholabrus4s_g.wav"
+h = csample "120bpmacantholabrus6s_g.wav"
+i = csample "120bpmacantholabrus6s_a.wav"
+k = csample "120bpmacantholabrus6s_d.wav"
 
-#Beautiful
 ethereal_femininity_s = csample "ethereal_femininity.wav"
 
 define :highlights do
@@ -124,13 +123,13 @@ define :highlights3 do
   sleep t_dur
 end
 
-in_thread(name: :a1) { loop {d3} }
-in_thread(name: :b1) { loop {d2} }
-in_thread(name: :c1) { loop {drums} }
-in_thread(name: :d1) { loop {techo} }
-in_thread(name: :e1) { loop {zoo} }
-in_thread(name: :f1) { loop {highlights} }
-in_thread(name: :g1) { loop {back} }
-in_thread(name: :i1) { loop {echoer} }
-in_thread(name: :j1) { loop {highlights2} }
-in_thread(name: :k1) { loop {highlights3}}
+in_thread(name: :d1) { loop {d3} }
+in_thread(name: :d2) { loop {d2} }
+in_thread(name: :d3) { loop {drums} }
+in_thread(name: :d4) { loop {techo} }
+in_thread(name: :d5) { loop {zoo} }
+in_thread(name: :d6) { loop {back} }
+in_thread(name: :d7) { loop {echoer} }
+in_thread(name: :h1) { loop {highlights3} }
+in_thread(name: :h2) { loop {highlights2} }
+in_thread(name: :h3) { loop {highlights} }
