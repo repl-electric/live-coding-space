@@ -109,6 +109,7 @@ end
 define :eery_vocals do
   rate = [1, -1].choose
   if dice(6) > 4
+#    with_fx :slicer do sample eery_vocals_s, rate: rate end
     sample eery_vocals_s, rate: rate
     sleep sample_duration(eery_vocals_s)
   end
@@ -124,12 +125,22 @@ define :deeper_vocals do
 end
 
 define :ethereal do
-  with_fx :pan, pan: lambda{rrand(-1,1)}  do
     with_fx :echo do
-      with_fx :reverb, mix: 0.9 do
+      with_fx :slicer, phase: [0.9, 0.5, 0.01].choose, pulse_width: 0.6 do
         r = [1, 1/2.0, 1/4.0, 1/8.0].shuffle.first
-        sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
-      end
+        with_fx :pan, pan: lambda{rrand(-1,1)}  do
+          sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        end
+
+        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first        
+        with_fx :pan, pan: lambda{rrand(-1,1)}  do
+          sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        end
+
+        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first        
+        with_fx :pan, pan: lambda{rrand(-1,1)}  do
+          sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        end
     end
   end
 
@@ -150,7 +161,7 @@ in_thread(name: :e1)  { loop {eery_vocals}   }
 in_thread(name: :de1) { loop {deeper_vocals} }
 in_thread(name: :e2)  { loop {ethereal}      }
 
-#set_volume! 1
+set_volume! 1
 
 define :fadeout do
 vol = 1
