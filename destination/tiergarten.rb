@@ -1,3 +1,5 @@
+require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/support.rb"
+
 define :csample do |name|
   root = "/Users/josephwilk/Dropbox/repl-electric/samples/pi"
   "#{root}/#{name}"
