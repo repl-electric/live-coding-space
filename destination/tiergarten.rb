@@ -73,16 +73,16 @@ define :drums2 do
   with_bpm tempo do
     sample :drum_heavy_kick, rate: 0.8
     sleep_rate = 2.0
-    
+
     if tempo == 60
       sleep beat_dur/sleep_rate
-      cue :the_snare   
+      cue :the_snare
       sleep beat_dur/sleep_rate
       cue :the_snare
     else
       sleep beat_dur/sleep_rate*2.0
     end
-    
+
     with_fx :rlpf do
       sample beat_s, pan: lambda{rrand(-1,1)}
     end
@@ -134,12 +134,12 @@ define :ethereal do
           sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
         end
 
-        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first        
+        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first
         with_fx :pan, pan: lambda{rrand(-1,1)}  do
           sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
         end
 
-        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first        
+        r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]).shuffle.first
         with_fx :pan, pan: lambda{rrand(-1,1)}  do
           sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
         end
