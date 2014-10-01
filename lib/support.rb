@@ -26,6 +26,7 @@ end
 
 def silence(name)
   if @user_methods.method_defined?(name)
+    __info "Silencing #{name}"
     define(name) do |*args|
       sleep 1
     end
