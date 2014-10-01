@@ -34,14 +34,21 @@ clacker_dur = sample_duration(clacker_s)
 beat_dur    = sample_duration(beat_s)
 halixic_dur = sample_duration(halixic_s)
 
+voc_s = csample "150399__mikobuntu__voc-formant9.wav"
+
+#drums
+c13 = csample "c13.aif"
+c14 = csample "c14.aif"
+c2  = csample "c2.aif"
+
 live_loop :backing_highlights do
   #sample [sixg_s, sixa_s, sixd_s].choose, rate: [1/2.0, 1/4.0, 1/8.0].choose
   sample halixic_s, rate: 0.2
   sample halixic_s
 
-  if dice(6) > 3
+#  3if dice(6) > 1
     with_fx :slicer  do
-      options = [2.0, 1.0 -2.0, -1.0]
+      options = [1.0 -1.0]
       sample halixic_s, rate: options.choose
       sleep 1
       sample halixic_s, rate: options.choose
@@ -52,48 +59,80 @@ live_loop :backing_highlights do
       sleep 1
     end
     sleep halixic_dur-2-1
-  else
-    sleep halixic_dur
-  end
+ # else
+  #  sleep halixic_dur
+  #end
 
 end
 
 live_loop :backing_melody do
-  sample halixic_s, rate: 1
-  with_fx :reverb, room: 0.5  do
-    sample halixic_s, rate: 0.5
-  end
+  #if dice(6) > 3
+    sample halixic_s, rate: 1
+    with_fx :reverb, room: 0.5  do
+      sample halixic_s, rate: 0.5
+    end
   with_fx :echo, mix: lambda{rrand(0, 1)} do
     sample halixic_s, rate: 1.01, amp: 0.5
     sleep halixic_dur
   end
+  #end
 end
 
 live_loop :drums2 do
   with_fx :reverb do
     sync :the_snare
-    sample :drum_snare_soft, rate: 0.45, amp: 0.7
+    sample c2, amp: 0.7
+    #sample c13
+    sync :the_snare
+    sample c2, amp: 0.7
   end
+end
+
+@cutoff = 250
+
+voice1 = csample "blip.wav"
+x  = "/Users/josephwilk/Dropbox/repl-electric/samples/beep.wav"
+live_loop :drums3 do
+  sync :drums
+  with_fx :echo do
+    sample voice1, rate: 1.0, amp: 0.2
+  end
+#  with_fx :ixi_techno do
+#  sample x, amp: 1.0, rate: 0.2
+ # end
+  sleep beat_dur
+#  sample voice1, rate: 1.0, amp: 2.0
 end
 
 live_loop :drums do
   # default tempo is 60 bpm
   tempo = [60*2].choose
-  with_bpm tempo do
-    sample :drum_heavy_kick, rate: 0.8
-    sleep_rate = 2.0
+  with_fx :lpf, cutoff: lambda{ 250 }  do
 
-    if tempo == 60
-      sleep beat_dur/slee_rate
+    with_bpm tempo do
+      sleep_rate = 2.0
+
+      if sleep_rate == 8.0
+        s = [c2].choose
+        sample s
+        sample :drum_heavy_kick, rate: 0.8
+      else
+        sample :drum_heavy_kick, rate: 0.8
+      end
+
+      with_fx :rlpf do
+        sample beat_s, pan: lambda{rrand(-1,1)}
+      end
+
+#      if tempo == 60
+      sleep beat_dur/sleep_rate
       cue :the_snare
       sleep beat_dur/sleep_rate
       cue :the_snare
-    else
-      sleep beat_dur/sleep_rate*2.0
-    end
+ #     else
+  #      sleep beat_dur/sleep_rate*2.0
+   #   end
 
-    with_fx :rlpf do
-      sample beat_s, pan: lambda{rrand(-1,1)}
     end
   end
 end
@@ -118,20 +157,21 @@ live_loop :glitch do
 end
 
 live_loop :eery_vocals do
-in_thread(name: :d2) { loop {drums2  } }
+  @rate = 4000
+  in_thread(name: :d2) { loop {drums2  } }
   rate = [1, -1].choose
 #  if dice(6) > 4
- #   with_fx :slicer do sample eery_vocals_s, rate: rate end
-    sample eery_vocals_s, rate: rate, amp: 1.3
+#    with_fx :slicer do sample eery_vocals_s, rate: rate end
+    sample eery_vocals_s, rate: rate, amp: 0.1
     sleep sample_duration(eery_vocals_s)
  # end
 end
 
-define :deeper_vocals do
+live_loop :deeper_vocals do
   rate = [0.7, -0.7].choose
   fxs =[:slicer, :echo, :reverb, :reverb, :reverb, :reverb, :lpf]
   with_fx fxs.choose do
-    sample whisper_s, amp: 1, rate: rate, attack_level: 0.0
+    sample whisper_s, amp: 2, rate: rate, attack_level: 0.0
   end
   sleep clacker_dur
 end
@@ -139,20 +179,20 @@ end
 live_loop :ethereal do
   exclude = [1, 1/2.0, 1/4.0]
   with_fx :echo do
-    with_fx :slicer, phase: [0.95, 0.01].choose, pulse_width: 0.6 do
-      r = ([1, 1/2.0, 1/4.0, 1/8.0]-exclude).shuffle.first
+    with_fx :slicer, phase: [0.05].choose, pulse_width: 0.5 do
+      r = ([1, 1/2.0, 1/4.0, 1/6.0]-exclude).shuffle.first
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.8, rate: r, attack_level: 0.9
       end
 
-      r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r]- exclude).shuffle.first
+      r = ([1, 1/2.0, 1/4.0, 1/6.0]-[r]- exclude).shuffle.first
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.8, rate: r, attack_level: 0.9
       end
 
-      r = ([1, 1/2.0, 1/4.0, 1/8.0]-[r] - exclude).shuffle.first
+      r = ([1, 1/2.0, 1/4.0, 1/6.0]-[r] - exclude).shuffle.first
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.9, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.8, rate: r, attack_level: 0.9
       end
     end
   end
@@ -175,20 +215,21 @@ live_loop :lead do
   end
 end
 
-silence :lead
-silence :ethereal
+#silence :lead
+#silence :ethereal
 
-silence :drums
-silence :drums2
+#silence :drums3
+#silence :drums
+#silence :drums2
 
-silence :deeper_vocals
-silence :eery_vocals
-silence :glitch
-silence :zoom
-silence :ambience
+#silence :deeper_vocals
+#silence :eery_vocals
+#silence :glitch
+#silence :zoom
+#silence :ambience
 
-silence :backing_highlights
-silence :backing_melody
+#silence :backing_highlights
+#silence :backing_melody
 
 #set_volume! 1
 #solo(:lead)
