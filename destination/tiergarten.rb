@@ -232,7 +232,7 @@ end
 live_loop_it :floating_voices do |what_n|
   sync :drums
   vol = 0.5
-  if what_n % 2 == 1
+  if what_n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
       with_fx :reverb do
         #use_synth :prophet
