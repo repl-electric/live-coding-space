@@ -1,3 +1,7 @@
+#             _                   \:o/     π=-      π=-
+#_|_ o  _  __(_| _  ___|_ _ __     █       π=-   π   π=-   π=  
+# |_ | (/_ | __|(_| |  |_(/_| |  .||.     π=-  π=-  π=-
+#
 require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/support"
 soporano_root = "/Users/josephwilk/Workspace/music/samples/soprano/Samples"
 sop_ah1_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_01.wav"
