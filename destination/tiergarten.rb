@@ -89,7 +89,7 @@ end
 
 live_loop_it :drums do |inc|
   tempo = [60*2].choose
-  with_fx :lpf, cutoff: lambda{ 95 }  do
+  with_fx :lpf, cutoff: lambda{ 0 }  do
     with_bpm tempo do
       sleep_rate = 2.0
       sample :drum_heavy_kick, rate: 0.8
@@ -262,7 +262,7 @@ silence :drums2
 silence :deeper_vocals
 silence :eery_vocals
 silence :glitch
-silence :zoom
+#silence :zoom
 silence :ambience
 silence :backing_highlights
 silence :backing_melody
