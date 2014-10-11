@@ -89,7 +89,7 @@ end
 
 live_loop_it :drums do |inc|
   tempo = [60*2].choose
-  with_fx :lpf, cutoff: lambda{ 0 }  do
+  with_fx :lpf, cutoff: lambda{ 95 }  do
     with_bpm tempo do
       sleep_rate = 2.0
       sample :drum_heavy_kick, rate: 0.8
@@ -129,7 +129,7 @@ end
 live_loop_it :zoom do
   sync :drums
   with_fx :reverb do
-    sample zoom_s
+    sample zoom_s, amp: 0.4
     sleep beat_dur
   end
 end
@@ -178,7 +178,7 @@ live_loop_it :deeper_vocals do |n|
   if n % 4 == 0
     with_fx :echo do
       with_fx :reverb do
-        sample eery_vocals_s, start: 0.0, finish: 0.1, amp: 3.0, rate: eery_ratio/2.0
+        sample eery_vocals_s, start: 0.0, finish: 0.1, amp: 2.5, rate: eery_ratio/2.0
       end
     end
   end
@@ -188,23 +188,23 @@ end
 live_loop_it :ethereal do |n|
   exclude = [1, 1/2.0, 1/4.0]
 
-  if n % 4 == 1
+  if n % 4 == 4
   
   with_fx :echo do
     #quart = 4
     with_fx :slicer, phase: quart*4, pulse_width: 0.5 do
       r = eery_ratio / 1.8
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.8, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.3, rate: r, attack_level: 0.9
       end
 
       r = (eery_ratio/1.8) - 0.01
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.3, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
       end
       r = eery_ratio / 1.8
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.8, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.3, rate: r, attack_level: 0.9
       end
     end
   end
@@ -230,7 +230,7 @@ end
 live_loop_it :floating_voices do |what_n|
   sync :drums
   vol = 0.5
-  if what_n % 2 == 1
+  if what_n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
       with_fx :reverb do
         #use_synth :prophet
@@ -255,15 +255,15 @@ end
 #IN THE BEGINNING
 silence :whispers_wind
 silence :ethereal
-#silence :floating_voices
+silence :floating_voices
 silence :drums3
 
-#silence :drums2
-#silence :deeper_vocals
-#silence :eery_vocals
+silence :drums2
+silence :deeper_vocals
+silence :eery_vocals
 silence :glitch
-#silence :zoom
-#silence :ambience
+silence :zoom
+silence :ambience
 silence :backing_highlights
 silence :backing_melody
 
