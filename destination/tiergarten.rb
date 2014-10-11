@@ -43,10 +43,10 @@ half   = beat_dur / 2.0
 eighth = beat_dur / 8.0
 quart  = beat_dur / 16.0
 
-live_loop_it :backing_highlights do
+live_loop_it :backing_highlights do |n|
   sync :drums
   sleep bar*2
-  with_fx :reverb do
+  with_fx :pan, pan: Math.sin(n) do
     with_fx :rlpf do
       with_fx :ixi_techno, phase: bar do
         sample [sixg_s, sixa_s, sixd_s].choose, rate: [eery_ratio].choose, amp: 0.1, pan: [0.1, -0.1].choose
