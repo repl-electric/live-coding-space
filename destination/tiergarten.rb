@@ -221,7 +221,7 @@ end
 live_loop_it :whispers_wind do
   with_fx :echo do
     s = whisper_s
-    pan_amps = [[1.0, 0.75, 0.5], [1.0, 0.75, 0.5].reverse].choose
+    pan_amps = [[0.8.0, 0.75, 0.5], [0.8, 0.75, 0.5].reverse].choose
     pan_dir = [[1, 0.0, -1], [-1, 0, 1]].choose
 
     sample s, rate: -1.0, pan: pan_dir[0], amp: pan_amps[0]
@@ -229,7 +229,7 @@ live_loop_it :whispers_wind do
     sample s, rate: 1.0, pan: pan_dir[1], amp:  pan_amps[1]
     sleep 1
     sample s, rate: -1.0, pan: pan_dir[2], amp:  pan_amps[2]
-    sleep  beat_dur*2
+    sleep  beat_dur*4
   end
 end
 
