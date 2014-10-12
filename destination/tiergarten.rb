@@ -196,23 +196,22 @@ end
 live_loop_it :ethereal do |n|
   exclude = [1, 1/2.0, 1/4.0]
 
-  if n % 4 == 0
-  
+  if n % 4 == 2
   with_fx :echo do
     sync :drums
     with_fx :slicer, phase: eery_ratio, pulse_width: 0.5 do
       r = eery_ratio / 1.8
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
       end
 
       r = (eery_ratio/1.8) - 0.01
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.1, rate: r, attack_level: 0.9
-      end
-      r = eery_ratio / 1.8
-      with_fx :pan, pan: lambda{rrand(-1,1)}  do
         sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
+      end
+      r = eery_ratio/1.8
+      with_fx :pan, pan: lambda{rrand(-1,1)}  do
+        sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
       end
     end
   end
@@ -222,16 +221,20 @@ end
 
 live_loop_it :whispers_wind do
   with_fx :echo do
+    with_fx :lpf do
     s = whisper_s
-    pan_amps = [[0.8.0, 0.75, 0.5], [0.8, 0.75, 0.5].reverse].choose
+    pan_amps = [[0.6, 0.55, 0.4], [0.6, 0.55, 0.4].reverse].choose
     pan_dir = [[1, 0.0, -1], [-1, 0, 1]].choose
 
+    sync :drums
+    sleep eery_ratio/4.0
     sample s, rate: -1.0, pan: pan_dir[0], amp: pan_amps[0]
     sleep 1
     sample s, rate: 1.0, pan: pan_dir[1], amp:  pan_amps[1]
     sleep 1
     sample s, rate: -1.0, pan: pan_dir[2], amp:  pan_amps[2]
     sleep  beat_dur*4
+    end
   end
 end
 
@@ -265,7 +268,6 @@ silence :whispers_wind
 silence :ethereal
 silence :floating_voices
 silence :drums3
-
 silence :drums2
 silence :deeper_vocals
 silence :eery_vocals
