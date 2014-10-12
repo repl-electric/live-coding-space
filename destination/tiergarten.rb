@@ -49,7 +49,7 @@ live_loop_it :backing_highlights do |n|
   with_fx :pan, pan: Math.sin(n) do
     with_fx :rlpf do
       with_fx :ixi_techno, phase: bar do
-        sample [sixg_s, sixa_s, sixd_s].choose, rate: [eery_ratio].choose, amp: 0.1, pan: [0.1, -0.1].choose
+        sample [sixg_s, sixa_s, sixd_s].choose, rate: [eery_ratio].choose, amp: 0.07, pan: [0.1, -0.1].choose
       end
     end
   end
