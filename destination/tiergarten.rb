@@ -197,24 +197,27 @@ live_loop_it :ethereal do |n|
   exclude = [1, 1/2.0, 1/4.0]
 
   if n % 4 == 2
-  with_fx :echo do
-    sync :drums
-    with_fx :slicer, phase: eery_ratio, pulse_width: 0.5 do
-      r = eery_ratio / 1.8
-      with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
-      end
+    with_fx :echo do
+      sync :drums
+      with_fx :compressor do
+        ratio = [1.5, 1.8].choose
+        with_fx :slicer, phase: eery_ratio, pulse_width: 0.9 do
+          r = eery_ratio/ratio
+          with_fx :pan, pan: lambda{rrand(-1,1)}  do
+            sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
+          end
 
-      r = (eery_ratio/1.8) - 0.01
-      with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
-      end
-      r = eery_ratio/1.8
-      with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
+          r = (eery_ratio/1.8) - 0.01
+          with_fx :pan, pan: lambda{rrand(-1,1)}  do
+            sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
+          end
+          r = eery_ratio/ratio
+          with_fx :pan, pan: lambda{rrand(-1,1)}  do
+            sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
+          end
+        end
       end
     end
-  end
   end
   sleep sample_duration(ethereal_femininity_s)
 end
