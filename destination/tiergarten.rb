@@ -196,23 +196,23 @@ end
 live_loop_it :ethereal do |n|
   exclude = [1, 1/2.0, 1/4.0]
 
-  if n % 4 == 4
+  if n % 4 == 0
   
   with_fx :echo do
-    #quart = 4
-    with_fx :slicer, phase: quart*4, pulse_width: 0.5 do
+    sync :drums
+    with_fx :slicer, phase: eery_ratio, pulse_width: 0.5 do
       r = eery_ratio / 1.8
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.3, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
       end
 
       r = (eery_ratio/1.8) - 0.01
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.1, rate: r, attack_level: 0.9
       end
       r = eery_ratio / 1.8
       with_fx :pan, pan: lambda{rrand(-1,1)}  do
-        sample ethereal_femininity_s, amp: 0.3, rate: r, attack_level: 0.9
+        sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
       end
     end
   end
