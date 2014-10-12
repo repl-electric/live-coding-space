@@ -151,12 +151,10 @@ eery_slicing_phase = [eery_ratio, beat_dur/8, beat_dur/4].choose
 live_loop_it :eery_vocals do |n|
   vol = 1.0
 
-  if n % 16
-    rate = eery_ratio/2.0
-  elsif n % 2
-    rate = -1 #pq/8.0
+  rate = if n % 8 >= 4
+    eery_ratio/2.0
   else
-    rate = 1
+    -(eery_ratio/2.0)
   end
   sync :drums
 
@@ -167,9 +165,9 @@ live_loop_it :eery_vocals do |n|
   #with_fx :slicer, phase: lambda{eery_slicing_phase} do sample eery_vocals_s, rate: rate, amp: vol+0.2 end
   #with_fx :lpf, cutoff: 100 do  sample eery_vocals_s, rate: eery_ratio/4.0, amp: vol end
   sample eery_vocals_s, rate: (eery_ratio/4.0), amp: vol
-
   #sample eery_vocals_s, rate: (eery_ratio/8.0), amp: vol
   #sample eery_vocals_s, rate: -(eery_ratio/4.0), amp: vol
+
   sleep sample_duration(eery_vocals_s)
 end
 
