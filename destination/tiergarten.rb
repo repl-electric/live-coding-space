@@ -109,7 +109,7 @@ live_loop_it :drums do |inc|
         cue :the_snare
       else
         with_fx :rlpf do
-          #          sample beat_s, pan: lambda{rrand(-0.8,0.8)}, rate: [1].choose
+          #sample beat_s, pan: lambda{rrand(-0.8,0.8)}, rate: [1].choose
           sleep beat_dur/sleep_rate
           cue :the_snare
           sleep beat_dur/sleep_rate
@@ -129,7 +129,7 @@ end
 live_loop_it :zoom do
   sync :drums
   with_fx :reverb do
-    sample zoom_s, amp: 0.4
+    sample zoom_s, amp: 0.2
     sleep beat_dur
   end
 end
