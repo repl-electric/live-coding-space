@@ -272,7 +272,7 @@ silence :drums2
 silence :deeper_vocals
 silence :eery_vocals
 silence :glitch
-#silence :zoom
+silence :zoom
 silence :ambience
 silence :backing_highlights
 silence :backing_melody
