@@ -72,10 +72,10 @@ end
 live_loop_it :drums2 do
   with_fx :reverb do
     sync :the_snare
-    sample drum_2_s, amp: 0.6
+    sample drum_2_s, amp: 0.4
     #sample c13
     sync :the_snare
-    sample drum_2_s, amp: 0.7
+    sample drum_2_s, amp: 0.5
   end
 end
 
