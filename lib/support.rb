@@ -1,6 +1,8 @@
 def csample(name)
   root = "/Users/josephwilk/Dropbox/repl-electric/samples/pi"
-  "#{root}/#{name}"
+  sample_path = "#{root}/#{name}"
+  load_sample sample_path
+  sample_path
 end
 
 def with_echo(args, &block)
