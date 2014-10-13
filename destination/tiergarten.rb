@@ -221,30 +221,30 @@ live_loop_it :floating_voices do |what_n|
         #sample sop_ah1_s
         sample eery_vocals_s, start: 0.4, finish: 0.5, amp: 2, rate: [eery_ratio/1.5, eery_ratio/1.5, eery_ratio].choose
 
-        ah_candidate = [sop_ah1_s,sop_ah2_s,sop_ah3_s].choose
-        with_fx :slicer, phase: quart do
-          sample ah_candidate, rate: eery_ratio, pan: -0.25, release: 0.01, decay: 0.01
-        end
+        #ah_candidate = [sop_ah1_s,sop_ah2_s,sop_ah3_s].choose
+        #with_fx :slicer, phase: quart do
+        #  sample ah_candidate, rate: eery_ratio, pan: -0.25, release: 0.01, decay: 0.01
+        #end
 
         #If we are feeling *brave*, lets try some overlap
-        sleep beat_dur/2.0
-        with_fx :slicer, phase: [quart/2, quart].choose  do
-          sample ah_candidate, rate: eery_ratio/[1.5, 2.0].choose, pan: 0.25, release: 0.01, decay: 0.01
-        end
+        #sleep beat_dur/2.0
+        #with_fx :slicer, phase: [quart/2, quart].choose  do
+        #  sample ah_candidate, rate: eery_ratio/[1.5, 2.0].choose, pan: 0.25, release: 0.01, decay: 0.01
+        #end
       end
     end
   end
 end
 
 #IN THE BEGINNING
-#silence :whispers_wind
-#silence :ethereal
-#silence :floating_voices
-#silence :drums3
+silence :whispers_wind
+silence :ethereal
+silence :floating_voices
+silence :drums3
 
-#silence :drums2
+silence :drums2
 silence :deeper_vocals
-#silence :eery_vocals
+silence :eery_vocals
 silence :glitch
 silence :zoom
 silence :ambience
