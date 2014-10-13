@@ -3,8 +3,38 @@
 # |_ | (/_ | __|(_| |  |_(/_| |  .||.     π=-  π=-  π=-
 #
 require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/support"
-require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/samples"
-
+soporano_root = "/Users/josephwilk/Workspace/music/samples/soprano/Samples"
+sop_ah1_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_01.wav"
+sop_ah2_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_02.wav"
+sop_ah3_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_03.wav"
+sop_ah4_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_04.wav"
+halixic_s             = csample "halixic.wav"
+clacker_s             = csample "clacker_rhythm.wav"
+eery_vocals_s         = csample "hypnoticsynth.wav"
+zoom_s                = csample "nano_blade_loop.wav"
+beat_s                = csample "crunchy_beat.aif"
+whisper_s             = csample "whisperloop.wav"
+ethereal_femininity_s = csample "ethereal_femininity.wav"
+sixg_s                = csample "120bpmacantholabrus6s_g.wav"
+sixa_s                = csample "120bpmacantholabrus6s_a.wav"
+sixd_s                = csample "120bpmacantholabrus6s_d.wav"
+fourg_s               = csample "120bpmacantholabrus4s_g.wav"
+h_s                   = csample "120bpm2smagnhildhh.wav"
+d_s                   = csample "120bpm2smagnhildbd.wav"
+feedback_s            = csample "feedback21.wav"
+#house_lead_s         = csample "128-bpm-house-lead-fx.wav"
+nasal_s               = csample "183669__alienxxx__loop2-009-nasal-120bpm.wav"
+arp_s                 = csample "20341__djgriffin__trippyarp120bpm.aif"
+epsilon_four_s        = csample "249178__gis-sweden__120bpmepsilon4s-g.wav"
+epsilon_six_s         = csample "249177__gis-sweden__120bpmepsilon6s-d.wav"
+meta_six_s            = csample "249179__gis-sweden__120bpmeta6s-g.wav"
+skappa_s              = csample "249870__gis-sweden__120bpm10skappa-g.wav"
+#fourg_s              = csample "120bpmabramis4s_g.wav"
+voc_s                 = csample "150399__mikobuntu__voc-formant9.wav"
+drum_13_s             = csample "c13.aif"
+drum_14_s             = csample "c14.aif"
+drum_2_s              = csample "c2.aif"
+gutteral_wobble_s     = csample "blip.wav"
 clacker_dur   = sample_duration(clacker_s)
 beat_dur      = sample_duration(beat_s)
 halixic_dur   = sample_duration(halixic_s)
@@ -46,13 +76,12 @@ live_loop_it :drums2 do
   with_fx :reverb do
     sync :the_snare
     sample drum_2_s, amp: 0.4
-    #sample c13
     sync :the_snare
     sample drum_2_s, amp: 0.5
   end
 end
 
-live_loop :drums3 do
+live_loop_it :drums3 do
   sync :drums
   with_fx :echo do
     #sample gutteral_wobble_s, rate: 1.0, amp: 0.2
@@ -62,31 +91,50 @@ end
 
 live_loop_it :drums do |inc|
   tempo = [60*2].choose
-  with_fx :lpf, cutoff: lambda{ 0 }  do
+  drum_cutoff = if inc % 4 < 3
+    80
+  else
+    85
+  end
+
+  with_fx :lpf, cutoff: lambda{ drum_cutoff }  do
     with_bpm tempo do
       sleep_rate = 2.0
-      sample :drum_heavy_kick, rate: 0.8
-      if sleep_rate == 8.0
-        s = [drum_2_s].choose
-        sample s
-      end
-      if sleep_rate == 8.0
-        sample beat_s, pan: -0.85, rate: [1].choose
-        sleep beat_dur/sleep_rate
-        sample beat_s, pan: 0.85,  rate: [1].choose
-        #sample c2
-        sample drum_14_s
+
+      if (inc % 4 == 1)
+        sample :drum_heavy_kick, rate: 0.8
+        sleep (beat_dur/sleep_rate)
+        #sample eery_vocals_s, start: 0.0, finish: 0.2, amp: 3, rate: eery_ratio/4.0
+        sample :drum_heavy_kick, rate: 0.7
         cue :the_snare
-        sleep beat_dur/sleep_rate
-        sample drum_14_s
+        sleep (beat_dur/sleep_rate)
         cue :the_snare
       else
-        with_fx :rlpf do
-          #sample beat_s, pan: lambda{rrand(-0.8,0.8)}, rate: [1].choose
+        drum_rate = inc % 4 == 0 ? 0.9 : 0.8
+        sample :drum_heavy_kick, rate: drum_rate
+
+        if sleep_rate == 8.0
+          s = [drum_2_s].choose
+          sample s
+        end
+        if sleep_rate == 8.0
+          sample beat_s, pan: -0.85, rate: [1].choose
           sleep beat_dur/sleep_rate
+          sample beat_s, pan: 0.85,  rate: [1].choose
+          #sample c2
+          sample drum_14_s
           cue :the_snare
           sleep beat_dur/sleep_rate
+          sample drum_14_s
           cue :the_snare
+        else
+          with_fx :rlpf do
+            #sample beat_s, pan: lambda{rrand(-0.8,0.8)}, rate: [1].choose
+            sleep beat_dur/sleep_rate
+            cue :the_snare
+            sleep beat_dur/sleep_rate
+            cue :the_snare
+          end
         end
       end
     end

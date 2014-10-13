@@ -1,7 +1,7 @@
 def csample(name)
   root = "/Users/josephwilk/Dropbox/repl-electric/samples/pi"
   sample_path = "#{root}/#{name}"
-  load_sample sample_path
+#  load_sample sample_path
   sample_path
 end
 
