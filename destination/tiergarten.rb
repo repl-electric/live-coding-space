@@ -128,7 +128,7 @@ live :deeper_vocals do |n|
       end
     end
   end
-  #sample whisper_s, start: 0.2, finish: 1.0, rate: 1, amp: 1
+  #sample S.whisper, start: 0.2, finish: 1.0, rate: 1, amp: 1
 end
 
 live :ethereal do |n|
@@ -140,28 +140,28 @@ live :ethereal do |n|
         with_fx :slicer, phase: eery_ratio, pulse_width: 0.9 do
           r = eery_ratio/ratio
           with_fx :pan, pan: lambda{rrand(-1,1)}  do
-            sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
+            sample S.ethereal_femininity, amp: 0.25, rate: r, attack_level: 0.9
           end
 
           r = (eery_ratio/1.8) - 0.01
           with_fx :pan, pan: lambda{rrand(-1,1)}  do
-            sample ethereal_femininity_s, amp: 0.2, rate: r, attack_level: 0.9
+            sample S.ethereal_femininity, amp: 0.2, rate: r, attack_level: 0.9
           end
           r = eery_ratio/ratio
           with_fx :pan, pan: lambda{rrand(-1,1)}  do
-            sample ethereal_femininity_s, amp: 0.25, rate: r, attack_level: 0.9
+            sample S.ethereal_femininity, amp: 0.25, rate: r, attack_level: 0.9
           end
         end
       end
     end
   end
-  sleep sample_duration(ethereal_femininity_s)
+  sleep sample_duration(S.ethereal_femininity)
 end
 
 live :whispers_wind do
   with_fx :echo do
     with_fx :lpf do
-      s = whisper_s
+      s = S.whisper
       pan_amps = [[0.6, 0.55, 0.4], [0.6, 0.55, 0.4].reverse].choose
       pan_dir = [[1, 0.0, -1], [-1, 0, 1]].choose
 
@@ -188,7 +188,7 @@ live :floating_voices do |what_n|
                  [beat_dur/4.0,beat_dur/2.0]
                  ]
       
-        sample eery_vocals_s, start: 0.4, finish: 0.5, amp: 1, 
+        sample S.eery_vocals, start: 0.4, finish: 0.5, amp: 1, 
                               rate: rates.choose.choose
 
         ah_candidate = [Sop.ehp, Sop.ahp].choose
