@@ -42,7 +42,7 @@ live :drums do |inc|
     with_bpm tempo do
       sleep_rate = 2.0      
       sample S.drum_2
-      if (inc % 4 == 1)
+      if inc % 4 == 1
         sample :drum_heavy_kick, rate: 0.8
         sleep (beat_dur/sleep_rate)
         with_fx :reverb do
@@ -84,12 +84,7 @@ end
 eery_slicing_phase = [eery_ratio].choose
 live :eery_vocals do |n|
   vol = 1.0
-
-  rate = if n % 8 >= 4
-    eery_ratio/2.0
-  else
-    -(eery_ratio/2.0)
-  end
+  rate = n % 8 >= 4 ? eery_ratio/2.0 : -(eery_ratio/2.0)
   sync :drums
 
   if n % 4 == 0
@@ -137,7 +132,6 @@ live :ethereal do |n|
           with_fx :pan, pan: lambda{rrand(-1,1)}  do
             sample S.ethereal_femininity, amp: 0.25, rate: r, attack_level: 0.9
           end
-
           r = (eery_ratio/1.8) - 0.01
           with_fx :pan, pan: lambda{rrand(-1,1)}  do
             sample S.ethereal_femininity, amp: 0.2, rate: r, attack_level: 0.9
@@ -202,15 +196,15 @@ live :floating_voices do |what_n|
 end
 
 #IN THE BEGINNING
-silence :whispers_wind
-silence :ethereal
-silence :floating_voices
-silence :snares
-silence :deeper_vocals
-silence :eery_vocals
-silence :zoom
-silence :ambience
-silence :wail
+begone :whispers_wind
+begone :ethereal
+begone :floating_voices
+begone :snares
+begone :deeper_vocals
+begone :eery_vocals
+begone :zoom
+begone :ambience
+begone :wail
 
 set_volume! 1.25
 #solo(:lead)

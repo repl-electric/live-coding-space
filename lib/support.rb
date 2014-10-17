@@ -32,7 +32,7 @@ def live(name, &block)
   end
 end
 
-def silence(name)
+def begone(name)
   raise "could not find #{name} to silence" unless @user_methods.method_defined?(name)
 
   __info "Silencing #{name}"
