@@ -35,14 +35,14 @@ live :snares do
   end
 end
 
-live :drums do |inc|
+live :drums do |n|
   tempo = [60*2].choose
-  drum_cutoff =  inc % 4 < 3 ? 80 : 85
-  with_fx :lpf, cutoff: lambda{ drum_cutoff }  do
+  drum_cutoff =  n % 4 < 3 ? 80 : 85
+  with_fx :lpf, cutoff: lambda{ 0 }  do
     with_bpm tempo do
-      sleep_rate = 2.0      
+      sleep_rate = 2.0
       sample S.drum_2
-      if inc % 4 == 1
+      if n % 4 == 1
         sample :drum_heavy_kick, rate: 0.8
         sleep (beat_dur/sleep_rate)
         with_fx :reverb do
@@ -53,15 +53,15 @@ live :drums do |inc|
         sleep (beat_dur/sleep_rate)
         cue :the_snare
       else
-        drum_rate = inc % 4 == 0 ? 0.7 : 0.8
+        drum_rate = n % 4 == 0 ? 0.7 : 0.8
         sample :drum_heavy_kick, rate: drum_rate
-          with_fx :rlpf do
-            sleep beat_dur/sleep_rate
-            cue :the_snare
-            sleep beat_dur/sleep_rate
-            cue :the_snare
-          end
+        with_fx :rlpf do
+          sleep beat_dur/sleep_rate
+          cue :the_snare
+          sleep beat_dur/sleep_rate
+          cue :the_snare
         end
+      end
 
     end
   end
@@ -166,19 +166,19 @@ live :whispers_wind do
   end
 end
 
-live :floating_voices do |what_n|
+live :floating_voices do |n|
   sync :drums
   vol = 0.5
-  if what_n % 4 == 1
+  if n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
       with_fx :reverb do
         rates = [
-                #[eery_ratio/1.5, eery_ratio/1.5, eery_ratio],
-                 [beat_dur/4.0,beat_dur/2.0]
-                 ]
-      
-        sample S.eery_vocals, start: 0.4, finish: 0.5, amp: 1, 
-                              rate: rates.choose.choose
+          #[eery_ratio/1.5, eery_ratio/1.5, eery_ratio],
+          [beat_dur/4.0,beat_dur/2.0]
+        ]
+
+        sample S.eery_vocals, start: 0.4, finish: 0.5, amp: 1,
+          rate: rates.choose.choose
 
         #ah_candidate = [Sop.ehp, Sop.ahp].choose
         #with_fx :slicer, phase: quart do
