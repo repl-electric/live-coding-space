@@ -39,7 +39,7 @@ clacker_dur   = sample_duration(clacker_s)
 beat_dur      = sample_duration(beat_s)
 halixic_dur   = sample_duration(halixic_s)
 eery_ratio    = sample_duration(eery_vocals_s) / beat_dur
-clacker_ratio = (sample_duration clacker_s) / beat_dur
+clacker_ratio = sample_duration(clacker_s) / beat_dur
 
 bar    = beat_dur / 4.0
 half   = beat_dur / 2.0
@@ -58,20 +58,6 @@ live_loop_it :backing_highlights do |n|
   end
 end
 
-live_loop_it :backing_melody do
-  sync :drums
-  #if dice(6) > 3
-  sample halixic_s, rate: 1
-  with_fx :reverb, room: 0.5  do
-    sample halixic_s, rate: 0.5
-  end
-  with_fx :echo, mix: lambda{rrand(0, 1)} do
-    sample halixic_s, rate: 1.01, amp: 0.5
-    sleep quart*4
-  end
-  #end
-end
-
 live_loop_it :drums2 do
   with_fx :reverb do
     sync :the_snare
@@ -79,14 +65,6 @@ live_loop_it :drums2 do
     sync :the_snare
     sample drum_2_s, amp: 0.5
   end
-end
-
-live_loop_it :drums3 do
-  sync :drums
-  with_fx :echo do
-    #sample gutteral_wobble_s, rate: 1.0, amp: 0.2
-  end
-  sleep beat_dur
 end
 
 live_loop_it :drums do |inc|
@@ -99,44 +77,29 @@ live_loop_it :drums do |inc|
 
   with_fx :lpf, cutoff: lambda{ drum_cutoff }  do
     with_bpm tempo do
-      sleep_rate = 2.0
-
+      sleep_rate = 2.0      
+      sample drum_2_s
       if (inc % 4 == 1)
         sample :drum_heavy_kick, rate: 0.8
         sleep (beat_dur/sleep_rate)
-        #sample eery_vocals_s, start: 0.0, finish: 0.2, amp: 3, rate: eery_ratio/4.0
+        with_fx :reverb do
+          sample eery_vocals_s, start: 0.1, finish: 0.15, amp: 5, rate: eery_ratio/4.0
+        end
         sample :drum_heavy_kick, rate: 0.7
         cue :the_snare
         sleep (beat_dur/sleep_rate)
         cue :the_snare
       else
-        drum_rate = inc % 4 == 0 ? 0.9 : 0.8
+        drum_rate = inc % 4 == 0 ? 0.7 : 0.8
         sample :drum_heavy_kick, rate: drum_rate
-
-        if sleep_rate == 8.0
-          s = [drum_2_s].choose
-          sample s
-        end
-        if sleep_rate == 8.0
-          sample beat_s, pan: -0.85, rate: [1].choose
-          sleep beat_dur/sleep_rate
-          sample beat_s, pan: 0.85,  rate: [1].choose
-          #sample c2
-          sample drum_14_s
-          cue :the_snare
-          sleep beat_dur/sleep_rate
-          sample drum_14_s
-          cue :the_snare
-        else
           with_fx :rlpf do
-            #sample beat_s, pan: lambda{rrand(-0.8,0.8)}, rate: [1].choose
             sleep beat_dur/sleep_rate
             cue :the_snare
             sleep beat_dur/sleep_rate
             cue :the_snare
           end
         end
-      end
+
     end
   end
 end
@@ -155,16 +118,7 @@ live_loop_it :zoom do
   end
 end
 
-live_loop_it :glitch do
-  sync :drums
-  with_fx :ixi_techno, phase: quart do
-    #TOOD: Find something to glitch
-    # sample clacker_s, rate: 1, amp: 0.9, pan: [-1, 1].choose
-    sleep beat_dur * 2
-  end
-end
-
-eery_slicing_phase = [eery_ratio, beat_dur/8, beat_dur/4].choose
+eery_slicing_phase = [eery_ratio].choose
 live_loop_it :eery_vocals do |n|
   vol = 1.0
 
@@ -176,7 +130,7 @@ live_loop_it :eery_vocals do |n|
   sync :drums
 
   if n % 4 == 0
-    eery_slicing_phase = [eery_ratio, beat_dur/8, beat_dur/4].choose
+    eery_slicing_phase = [beat_dur/4.0, eery_ratio].choose
   end
 
   #with_fx :slicer, phase: lambda{eery_slicing_phase} do sample eery_vocals_s, rate: rate, amp: vol+0.2 end
@@ -189,8 +143,7 @@ live_loop_it :eery_vocals do |n|
 end
 
 live_loop_it :deeper_vocals do |n|
-  vol = 2
-  #  sync :drums
+  sync :drums
   rate = [0.7, -0.7].choose
   fxs =[:echo, :reverb, :reverb, :reverb, :reverb, :lpf]
   with_fx fxs.choose do
@@ -240,7 +193,6 @@ live_loop_it :ethereal do |n|
 end
 
 live_loop_it :whispers_wind do
-
   with_fx :echo do
     with_fx :lpf do
       s = whisper_s
@@ -265,9 +217,11 @@ live_loop_it :floating_voices do |what_n|
   if what_n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
       with_fx :reverb do
-        #use_synth :prophet
-        #sample sop_ah1_s
-        sample eery_vocals_s, start: 0.4, finish: 0.5, amp: 2, rate: [eery_ratio/1.5, eery_ratio/1.5, eery_ratio].choose
+        rates = [[eery_ratio/1.5, eery_ratio/1.5, eery_ratio],
+                 [beat_dur/4.0,beat_dur/2.0]]
+      
+        sample eery_vocals_s, start: 0.4, finish: 0.5, amp: 1, 
+                              rate: rates.choose.choose
 
         #ah_candidate = [sop_ah1_s,sop_ah2_s,sop_ah3_s].choose
         #with_fx :slicer, phase: quart do
@@ -288,17 +242,13 @@ end
 silence :whispers_wind
 silence :ethereal
 silence :floating_voices
-silence :drums3
-
 silence :drums2
 silence :deeper_vocals
 silence :eery_vocals
-silence :glitch
 silence :zoom
-silence :ambience
+#silence :ambience
 silence :backing_highlights
-silence :backing_melody
 
-set_volume! 1
+set_volume! 1.25
 #solo(:lead)
 #fadeout
