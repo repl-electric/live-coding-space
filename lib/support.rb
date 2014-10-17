@@ -11,7 +11,7 @@ def with_echo(args, &block)
   end
 end
 
-def live_loop_it(name, &block)
+def live(name, &block)
   raise "live_loop must be called with a code block" unless block
   (@__live_cache ||= []) << name
   @__live_cache = @__live_cache.uniq

@@ -1,32 +1,29 @@
-soporano_root = "/Users/josephwilk/Workspace/music/samples/soprano/Samples"
-sop_ah1_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_01.wav"
-sop_ah2_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_02.wav"
-sop_ah3_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_03.wav"
-sop_ah4_s = "#{soporano_root}/Sustains/Ah p/vor_sopr_sustain_ah_p_04.wav"
-halixic_s             = csample "halixic.wav"
-clacker_s             = csample "clacker_rhythm.wav"
-eery_vocals_s         = csample "hypnoticsynth.wav"
-zoom_s                = csample "nano_blade_loop.wav"
-beat_s                = csample "crunchy_beat.aif"
-whisper_s             = csample "whisperloop.wav"
-ethereal_femininity_s = csample "ethereal_femininity.wav"
-sixg_s                = csample "120bpmacantholabrus6s_g.wav"
-sixa_s                = csample "120bpmacantholabrus6s_a.wav"
-sixd_s                = csample "120bpmacantholabrus6s_d.wav"
-fourg_s               = csample "120bpmacantholabrus4s_g.wav"
-h_s                   = csample "120bpm2smagnhildhh.wav"
-d_s                   = csample "120bpm2smagnhildbd.wav"
-feedback_s            = csample "feedback21.wav"
-#house_lead_s         = csample "128-bpm-house-lead-fx.wav"
-nasal_s               = csample "183669__alienxxx__loop2-009-nasal-120bpm.wav"
-arp_s                 = csample "20341__djgriffin__trippyarp120bpm.aif"
-epsilon_four_s        = csample "249178__gis-sweden__120bpmepsilon4s-g.wav"
-epsilon_six_s         = csample "249177__gis-sweden__120bpmepsilon6s-d.wav"
-meta_six_s            = csample "249179__gis-sweden__120bpmeta6s-g.wav"
-skappa_s              = csample "249870__gis-sweden__120bpm10skappa-g.wav"
-#fourg_s              = csample "120bpmabramis4s_g.wav"
-voc_s                 = csample "150399__mikobuntu__voc-formant9.wav"
-drum_13_s             = csample "c13.aif"
-drum_14_s             = csample "c14.aif"
-drum_2_s              = csample "c2.aif"
-gutteral_wobble_s     = csample "blip.wav"
+module S
+def self.halixic              csample "halixic.wav"; end
+def self.clacker              csample "clacker_rhythm.wav"; end
+def self.eery_vocals          csample "hypnoticsynth.wav"; end
+def self.zoom                 csample "nano_blade_loop.wav"; end
+def self.beat                 csample "crunchy_beat.aif"; end
+def self.whisper              csample "whisperloop.wav"; end
+def self.ethereal_femininity  csample "ethereal_femininity.wav"; end
+def self.sixg                 csample "120bpmacantholabrus6s_g.wav"; end
+def self.sixa                 csample "120bpmacantholabrus6s_a.wav"; end
+def self.sixd                 csample "120bpmacantholabrus6s_d.wav"; end
+def self.fourg                csample "120bpmacantholabrus4s_g.wav"; end
+def self.h                    csample "120bpm2smagnhildhh.wav"; end
+def self.d                    csample "120bpm2smagnhildbd.wav"; end
+def self.feedback             csample "feedback21.wav"; end
+def self.house_lead          csample "128-bpm-house-lead-fx.wav"; end
+def self.nasal                csample "183669__alienxxx__loop2-009-nasal-120bpm.wav"; end
+def self.arp                  csample "20341__djgriffin__trippyarp120bpm.aif"; end
+def self.epsilon_four         csample "249178__gis-sweden__120bpmepsilon4s-g.wav"; end
+def self.epsilonix          csample "249177__gis-sweden__120bpmepsilon6s-d.wav"; end
+def self.metaix             csample "249179__gis-sweden__120bpmeta6s-g.wav"; end
+def self.skappa               csample "249870__gis-sweden__120bpm10skappa-g.wav"; end
+def self.fourg               csample "120bpmabramis4s_g.wav"; end
+def self.voc                  csample "150399__mikobuntu__voc-formant9.wav"; end
+def self.drum_13              csample "c13.aif"; end
+def self.drum_14              csample "c14.aif"; end
+def self.drum_2               csample "c2.aif"; end
+def self.gutteral_wobble      csample "blip.wav"; end
+end
