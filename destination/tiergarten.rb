@@ -2,7 +2,7 @@
 #_|_ o  _  __(_| _  ___|_ _ __     █       π=-   π   π=-   π=
 # |_ | (/_ | __|(_| |  |_(/_| |  .||.     π=-  π=-  π=-
 #
-["support", "soprano"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
+["support", "soprano", "samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 clacker_dur   = sample_duration(S.clacker)
 beat_dur      = sample_duration(S.beat)
 halixic_dur   = sample_duration(S.halixic)
@@ -26,7 +26,7 @@ live :wail do |n|
   end
 end
 
-live :drums2 do
+live :snares do
   with_fx :reverb do
     sync :the_snare
     sample S.drum_2, amp: 0.4
@@ -37,15 +37,10 @@ end
 
 live :drums do |inc|
   tempo = [60*2].choose
-  drum_cutoff = if inc % 4 < 3
-    80
-  else
-    85
-  end
-
+  drum_cutoff =  inc % 4 < 3 ? 80 : 85
   with_fx :lpf, cutoff: lambda{ drum_cutoff }  do
     with_bpm tempo do
-      sleep_rate = 4.0      
+      sleep_rate = 2.0      
       sample S.drum_2
       if (inc % 4 == 1)
         sample :drum_heavy_kick, rate: 0.8
@@ -74,7 +69,7 @@ end
 
 live :ambience do
   sync :drums
-  sleep halixic_dur*3
+  sleep beat_dur*3
   sample :ambi_choir, rate: 0.2, amp: 0.2
 end
 
@@ -101,8 +96,8 @@ live :eery_vocals do |n|
     eery_slicing_phase = [beat_dur/4.0, eery_ratio].choose
   end
 
-  with_fx :slicer, phase: lambda{eery_slicing_phase} do S.sample eery_vocals, rate: rate, amp: vol+0.2 end
-  with_fx :lpf, cutoff: 100 do  sample S.eery_vocals, rate: eery_ratio/4.0, amp: vol end
+  #with_fx :slicer, phase: lambda{eery_slicing_phase} do S.sample eery_vocals, rate: rate, amp: vol+0.2 end
+  #with_fx :lpf, cutoff: 100 do  sample S.eery_vocals, rate: eery_ratio/4.0, amp: vol end
   sample S.eery_vocals, rate: (eery_ratio/4.0), amp: vol
   #sample S.eery_vocals, rate: (eery_ratio/8.0), amp: vol
   #sample S.eery_vocals, rate: -(eery_ratio/4.0), amp: vol
@@ -121,7 +116,7 @@ live :deeper_vocals do |n|
   sleep beat_dur
 
   #POWER LIES HERE
-  if n % 2 == 0
+  if n % 4 == 0
     with_fx :echo do
       with_fx :reverb do
         sample S.eery_vocals, start: 0.0, finish: 0.1, amp: 2.5, rate: eery_ratio/2.0
@@ -132,7 +127,7 @@ live :deeper_vocals do |n|
 end
 
 live :ethereal do |n|
-  if n % 4
+  if n % 4 == 2
     with_fx :echo do
       sync :drums
       with_fx :compressor do
@@ -180,7 +175,7 @@ end
 live :floating_voices do |what_n|
   sync :drums
   vol = 0.5
-  if what_n % 2 == 1
+  if what_n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
       with_fx :reverb do
         rates = [
@@ -191,16 +186,16 @@ live :floating_voices do |what_n|
         sample S.eery_vocals, start: 0.4, finish: 0.5, amp: 1, 
                               rate: rates.choose.choose
 
-        ah_candidate = [Sop.ehp, Sop.ahp].choose
-        with_fx :slicer, phase: quart do
-          sample ah_candidate, rate: eery_ratio, pan: -0.25, release: 0.01, decay: 0.01
-        end
+        #ah_candidate = [Sop.ehp, Sop.ahp].choose
+        #with_fx :slicer, phase: quart do
+        #  sample ah_candidate, rate: eery_ratio, pan: -0.25, release: 0.01, decay: 0.01
+        #end
 
         #If we are feeling *brave*, lets try some overlap
-        sleep beat_dur/2.0
-        with_fx :slicer, phase: [quart/2, quart].choose  do
-          sample ah_candidate, rate: eery_ratio/[1.5, 2.0].choose, pan: 0.25, release: 0.01, decay: 0.01
-        end
+        #sleep beat_dur/2.0
+        #with_fx :slicer, phase: [quart/2, quart].choose  do
+        #  sample ah_candidate, rate: eery_ratio/[1.5, 2.0].choose, pan: 0.25, release: 0.01, decay: 0.01
+        #end
       end
     end
   end
@@ -210,7 +205,7 @@ end
 silence :whispers_wind
 silence :ethereal
 silence :floating_voices
-silence :drums2
+silence :snares
 silence :deeper_vocals
 silence :eery_vocals
 silence :zoom
