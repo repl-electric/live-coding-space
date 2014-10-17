@@ -15,7 +15,7 @@ eighth = beat_dur / 8.0
 quart  = beat_dur / 16.0
 
 live :wail do |n|
-  sync :drums
+  sync :beat
   sleep bar*2
   with_fx :pan, pan: Math.sin(n) do
     with_fx :rlpf do
@@ -26,7 +26,7 @@ live :wail do |n|
   end
 end
 
-live :snares do
+live :dark_snares do
   with_fx :reverb do
     sync :the_snare
     sample S.drum_2, amp: 0.4
@@ -35,7 +35,7 @@ live :snares do
   end
 end
 
-live :drums do |n|
+live :beat do |n|
   tempo = [60*2].choose
   drum_cutoff =  n % 4 < 3 ? 80 : 85
   with_fx :lpf, cutoff: lambda{ 0 }  do
@@ -67,14 +67,14 @@ live :drums do |n|
   end
 end
 
-live :ambience do
-  sync :drums
+live :quiet_ambience do
+  sync :beat
   sleep beat_dur*3
   sample :ambi_choir, rate: 0.2, amp: 0.2
 end
 
-live :zoom do
-  sync :drums
+live :dark_rolling do
+  sync :beat
   with_fx :reverb do
     sample S.zoom, amp: 0.2
     sleep beat_dur
@@ -82,10 +82,10 @@ live :zoom do
 end
 
 eery_slicing_phase = [eery_ratio].choose
-live :eery_vocals do |n|
+live :mountain_echos do |n|
   vol = 1.0
   rate = n % 8 >= 4 ? eery_ratio/2.0 : -(eery_ratio/2.0)
-  sync :drums
+  sync :beat
 
   if n % 4 == 0
     eery_slicing_phase = [beat_dur/4.0, eery_ratio].choose
@@ -100,8 +100,8 @@ live :eery_vocals do |n|
   sleep sample_duration(S.eery_vocals)
 end
 
-live :deeper_vocals do |n|
-  sync :drums
+live :depths_voices do |n|
+  sync :beat
   rate = [0.7, -0.7].choose
   fxs =[:echo, :reverb, :reverb, :reverb, :reverb, :lpf]
   with_fx fxs.choose do
@@ -121,10 +121,10 @@ live :deeper_vocals do |n|
   #sample S.whisper, start: 0.2, finish: 1.0, rate: 1, amp: 1
 end
 
-live :ethereal do |n|
+live :floating_voices do |n|
   if n % 4 == 2
     with_fx :echo do
-      sync :drums
+      sync :beat
       with_fx :compressor do
         ratio = [1.5, 1.8, 0.5].choose
         with_fx :slicer, phase: eery_ratio, pulse_width: 0.9 do
@@ -147,14 +147,14 @@ live :ethereal do |n|
   sleep sample_duration(S.ethereal_femininity)
 end
 
-live :whispers_wind do
+live :whispering_wind do
   with_fx :echo do
     with_fx :lpf do
       s = S.whisper
       pan_amps = [[0.6, 0.55, 0.4], [0.6, 0.55, 0.4].reverse].choose
       pan_dir = [[1, 0.0, -1], [-1, 0, 1]].choose
 
-      sync :drums
+      sync :beat
       sleep eery_ratio/4.0
       sample s, rate: -1.0, pan: pan_dir[0], amp: pan_amps[0]
       sleep 1
@@ -166,8 +166,8 @@ live :whispers_wind do
   end
 end
 
-live :floating_voices do |n|
-  sync :drums
+live :mountain_voices do |n|
+  sync :beat
   vol = 0.5
   if n % 4 == 1
     with_fx :echo, decay: beat_dur, phase: (quart+(bar/2.0))  do
@@ -196,14 +196,14 @@ live :floating_voices do |n|
 end
 
 #IN THE BEGINNING
-begone :whispers_wind
-begone :ethereal
+begone :whispering_wind
+begone :mountain_voices
 begone :floating_voices
-begone :snares
-begone :deeper_vocals
-begone :eery_vocals
-begone :zoom
-begone :ambience
+begone :dark_snares
+begone :depths_voices
+begone :mountain_echos
+begone :dark_rolling
+begone :quiet_ambience
 begone :wail
 
 set_volume! 1.25
