@@ -82,7 +82,7 @@ live :dark_rolling do
 end
 
 eery_slicing_phase = [eery_ratio].choose
-live :mountain_echos do |n|
+live :mountain_beats do |n|
   vol = 1.0
   rate = n % 8 >= 4 ? eery_ratio/2.0 : -(eery_ratio/2.0)
   sync :beat
@@ -91,7 +91,7 @@ live :mountain_echos do |n|
     eery_slicing_phase = [beat_dur/4.0, eery_ratio].choose
   end
 
-  #with_fx :slicer, phase: lambda{eery_slicing_phase} do S.sample eery_vocals, rate: rate, amp: vol+0.2 end
+  #with_fx :slicer, phase: lambda{eery_slicing_phase} do sample S.eery_vocals, rate: rate, amp: vol+0.2 end
   #with_fx :lpf, cutoff: 100 do  sample S.eery_vocals, rate: eery_ratio/4.0, amp: vol end
   sample S.eery_vocals, rate: (eery_ratio/4.0), amp: vol
   #sample S.eery_vocals, rate: (eery_ratio/8.0), amp: vol
@@ -180,7 +180,7 @@ live :mountain_voices do |n|
         sample S.eery_vocals, start: 0.4, finish: 0.5, amp: 1,
           rate: rates.choose.choose
 
-        #ah_candidate = [Sop.ehp, Sop.ahp].choose
+        #ah_candidate = [Sop.ahp].choose.choose
         #with_fx :slicer, phase: quart do
         #  sample ah_candidate, rate: eery_ratio, pan: -0.25, release: 0.01, decay: 0.01
         #end
@@ -201,7 +201,7 @@ begone :mountain_voices
 begone :floating_voices
 begone :dark_snares
 begone :depths_voices
-begone :mountain_echos
+begone :mountain_beats
 begone :dark_rolling
 begone :quiet_ambience
 begone :wail
