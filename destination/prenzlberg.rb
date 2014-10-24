@@ -54,29 +54,34 @@ live :synths do |n|
 end
 
 live :sins do |n|
-sync :highlight
+  sync :circleofeight
+  sync :highlight
+  with_fx :rlpf, cutoff: 90 do
   with_fx :reverb do
     use_synth :beep
-    play :D4, release: bar*8, attack: 0.25, decay: bar*2, amp: 0.5
+    play :D4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
     sleep bar*8
-    play :C4, release: bar*8, attack: 0.25, decay: bar*2, amp: 0.5
+    play :C4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
     sleep bar*8
-    play :E4, release: bar*8, attack: 0.25, decay: bar*2, amp: 0.5
+    play :E4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
     sleep bar*8
-    play :D3, release: bar*8, attack: 0.25, decay: bar*2, amp: 0.5
+    play :D3, release: bar*8, attack: 0.20, decay: bar*2, amp: 0.9
     sleep bar*8
+  end
   end
 end
 
 live :sins2 do |n|
+  sync :circleofeight
   with_fx :lpf, cutoff: 60 do
     use_synth :pretty_bell
-    play :D4, amp: 0.9, attack: 0.2, release: bar*8
+    play :D4, amp: 0.5, attack: 0.2, release: bar*8, amp: 0.5, decay: bar
     sleep bar*8
-    play :C4, amp: 0.9, attack: 0.2, release: bar*8
+    play :C4, amp: 0.5, attack: 0.2, release: bar*8, amp: 0.5, decay: bar
     sleep bar*8
   end
 end
+
 
 live :noise do |n|
   use_synth :pnoise
@@ -92,28 +97,31 @@ end
 
 live :highlight do |n|
   use_synth :zawa
+
   with_fx :echo do
+    sync :circleofeight
     with_fx :lpf, cutoff: 60 do
-      play_chord chord(:D3, :major),   release: bar*8, amp: 0.5, decay: bar*8
+      play_chord chord(:D3, :major),   release: bar*8, amp: 0.4, decay: bar
       sleep bar*8
 
-      play_chord chord(:D3, :sus4),    release: bar*8, amp: 0.6, decay: bar*8
+      play_chord chord(:D3, :sus4),    release: bar*8, amp: 0.5, decay: bar
       sleep bar*8
 
-      play_chord chord(:D3, :"7sus4"), release: bar*4, amp: 0.6, decay: bar*4
+      play_chord chord(:D3, :"7sus4"), release: bar*4, amp: 0.5, decay: bar
       sleep bar*4
 
-      play_chord chord(:D3, :major),   release: bar*4, amp: 0.6, decay: bar*4
+      play_chord chord(:D3, :major),   release: bar*4, amp: 0.5, decay: bar
       sleep bar*4
 
-      play_chord chord(:D3, :sus4),    release: bar*4, amp: 0.6, decay: bar*4
+      play_chord chord(:D3, :sus4),    release: bar*4, amp: 0.5, decay: bar
       sleep bar*4
 
-      play_chord chord(:D3, :major),   release: bar*4, amp: 0.6, decay: bar*4
+      play_chord chord(:D3, :major),   release: bar*4, amp: 0.5, decay: bar*4
       sleep bar*4
     end
   end
 end
+
 
 #begone :drums
 #begone :sins
