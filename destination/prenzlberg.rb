@@ -1,19 +1,20 @@
 ["support", "soprano", "samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 
-bar = 1/2.0
+bar = 1.0/2.0
 clap_s = csample("183102__dwsd__clp-bodacious.wav")
 
 live(:words) do
   sync :drums
-  with_fx :lpf, cutoff: 70 do
+  with_fx :rlpf, cutoff: 50 do
     sample Sop.yehp.choose, release: bar*16, amp: 2
   end
-  sleep bar*8 
+  sleep bar*8
 end
 
 live(:drums) do
-  with_fx :lpf, cutoff: 70 do
+  with_fx :lpf, cutoff: 60 do
     15.times do |n|
+      cue :circleofeight
       sample :drum_bass_soft
       sleep bar/2.0
       if (n%4 == 0)
@@ -21,20 +22,19 @@ live(:drums) do
       end
       if n == 7
         sample clap_s
-        sleep bar/4.0
+        sleep bar/4
         sample clap_s
-        sleep bar/4.0
+        sleep bar/4
       else
-        sleep bar/2.0
+        sleep bar/2
       end
-      #sample :drum_snare_soft if n % 2 == 0
+
     end
     sample :drum_bass_soft
     sleep bar/2
     sample :drum_bass_soft
+    sample :drum_cymbal_pedal
     sleep bar/2
-    #sample :drum_bass_soft
-    
   end
 end
 
@@ -45,7 +45,9 @@ live :synths do |n|
       play :D3
       sleep bar
     else
-      play :D4
+      with_fx :echo, phase: bar*4  do
+        play :D4
+      end
       sleep bar/2.0
       play :D3
       sleep bar/2.0
@@ -57,17 +59,17 @@ live :sins do |n|
   sync :circleofeight
   sync :highlight
   with_fx :rlpf, cutoff: 90 do
-  with_fx :reverb do
-    use_synth :beep
-    play :D4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
-    sleep bar*8
-    play :C4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
-    sleep bar*8
-    play :E4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
-    sleep bar*8
-    play :D3, release: bar*8, attack: 0.20, decay: bar*2, amp: 0.9
-    sleep bar*8
-  end
+    with_fx :reverb do
+      use_synth :beep
+      play :D4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
+      sleep bar*8
+      play :C4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
+      sleep bar*8
+      play :E4, release: bar*8, attack: 0.25, decay: bar, amp: 0.5
+      sleep bar*8
+      play :D3, release: bar*8, attack: 0.20, decay: bar*2, amp: 0.9
+      sleep bar*8
+    end
   end
 end
 
@@ -82,13 +84,13 @@ live :sins2 do |n|
   end
 end
 
-
 live :noise do |n|
+  synth :circleofeight
   use_synth :pnoise
   with_fx :pan, pan: (Math.sin(n)) do
     with_fx :reverb do
-      with_fx :lpf, cutoff: 55 do
-        play :D6, release: bar*16, amp: 0.5
+      with_fx :lpf, cutoff: 30 do
+        play :D6, release: bar*16, amp: 2.5
         sleep bar * 16
       end
     end
@@ -97,35 +99,38 @@ end
 
 live :highlight do |n|
   use_synth :zawa
+  vol = 0.4
 
   with_fx :echo do
     sync :circleofeight
     with_fx :lpf, cutoff: 60 do
-      play_chord chord(:D3, :major),   release: bar*8, amp: 0.4, decay: bar
+      play_chord chord(:D3, :major),   release: bar*8, amp: vol, decay: bar, phase: bar*2
       sleep bar*8
 
-      play_chord chord(:D3, :sus4),    release: bar*8, amp: 0.5, decay: bar
+      play_chord chord(:E3, :sus4),    release: bar*8, amp: vol, decay: bar*2, phase: bar*2
       sleep bar*8
 
-      play_chord chord(:D3, :"7sus4"), release: bar*4, amp: 0.5, decay: bar
+      play_chord chord(:D3, :"7sus4"), release: bar*4, amp: vol+0.1, decay: bar*2, phase: bar*2
       sleep bar*4
 
-      play_chord chord(:D3, :major),   release: bar*4, amp: 0.5, decay: bar
+      play_chord chord(:D3, :major),   release: bar*4, amp: vol+0.1, decay: bar*2, phase: bar*2
       sleep bar*4
 
-      play_chord chord(:D3, :sus4),    release: bar*4, amp: 0.5, decay: bar
+      play_chord chord(:D3, :sus4),    release: bar*4, amp: vol+0.1, decay: bar*2, phase: bar*2
       sleep bar*4
 
-      play_chord chord(:D3, :major),   release: bar*4, amp: 0.5, decay: bar*4
-      sleep bar*4
+      with_fx :reverb do
+        play_chord chord(:D3, :major),   release: bar*4, amp: 0.5, decay: bar*4, phase: bar*2
+        sleep bar*4
+      end
     end
   end
 end
 
-
 #begone :drums
-#begone :sins
-#begone :sins2
-#begone :noise
-#begone :synths
-#begone :highlight
+begone :sins
+begone :sins2
+begone :noise
+begone :synths
+begone :highlight
+begone :words
