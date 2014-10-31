@@ -37,7 +37,7 @@ live :drummer do |n|
         sleep bar/3.0
       else
         with_fx :lpf, cutoff: 80 do
-        sample :drum_bass_soft
+          sample :drum_bass_soft
         end
         play degree(1, :A4, :major)
         sleep bar
@@ -49,36 +49,32 @@ live :drummer do |n|
 end
 
 live :highlights do |n|
-#  sync :high
-
   use_synth :fm
   vol = 0.7
   #if n%2 == 0
   #8.times do |n|
-    sync :circle
-    play degree(1, :A2, :major), attack: bar, release: bar*1, amp: vol
-    sleep bar*1
-    sync :circle
-    play degree(4, :A2, :major), attack: bar, release: bar*1, amp: vol
-    sleep bar*1
-  #end    
-
+  sync :circle
+  play degree(1, :A2, :major), attack: bar, release: bar*1, amp: vol
+  sleep bar*1
+  sync :circle
+  play degree(4, :A2, :major), attack: bar, release: bar*1, amp: vol
+  sleep bar*1
 end
 
 live :higher do |n|
   sync :high
   use_synth :beep
   #with_fx :slicer, phase: bar/2  do
-    play degree(6, :A3, :major), release: bar*2, attack: bar*2
+  play degree(6, :A3, :major), release: bar*2, attack: bar*2
   #end
   use_synth :zawa
   with_fx :lpf, cutoff: 70 do
-  with_fx :echo, phase: bar do 
-  
-  with_fx :reverb do
-    #play_chord chord(:A5, :major), release: bar*1, attack: bar, decay: bar, amp: 0.3
-  end
-  end
+    with_fx :echo, phase: bar do
+
+      with_fx :reverb do
+        #play_chord chord(:A5, :major), release: bar*1, attack: bar, decay: bar, amp: 0.3
+      end
+    end
   end
 end
 
@@ -88,12 +84,66 @@ live :otherhigher do |n|
   play degree(5, :A3, :major), release: bar*2, attack: bar*2
 end
 
-
 live :words do
   sync :circle
   with_fx :ixi_techno do
-  sample "/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav", amp: 1 
-  sleep 8*sample_duration("/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav")
+    sample "/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav", amp: 1
+    sleep 8*sample_duration("/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav")
+  end
+end
+
+define :startbeep do |n|
+  play degree(1, :A3, :major)
+  sleep bar/2.0
+  play degree(3, :A3, :major)
+  sleep bar/2.0
+
+  if n == 3 || n == 7
+    play degree(1, :A3, :major)
+    sleep bar/2.0
+    play degree(4, :A3, :major)
+    sleep bar/4.0
+    with_fx :lpf, cutoff: 70 do
+      sample :drum_tom_lo_soft
+    end
+    play degree(4, :A3, :major)
+    sleep bar/4.0
+  else
+    play degree(1, :A3, :major)
+    sleep bar/2.0
+    play degree(4, :A3, :major)
+    sleep bar/2.0
+    cue :high
+  end
+end
+
+define :endbeep do |n|
+  play degree(1, :A3, :major)
+  sleep bar/2.0
+  play degree(3, :A3, :major)
+  sleep bar/2.0
+
+  if n == 3 || n == 7
+    play degree(1, :A3, :major)
+    sleep bar/4.0
+    with_fx :lpf, cutoff: 70 do
+      sample :drum_tom_hi_soft
+    end
+    play degree(5, :A3, :major)
+    sleep bar/4.0
+    play degree(5, :A3, :major)
+    sleep bar/4.0
+    with_fx :lpf, cutoff: 70 do
+      sample :drum_tom_hi_soft
+    end
+    play degree(5, :A3, :major)
+    sleep bar/4.0
+  else
+    play degree(1, :A3, :major)
+    sleep bar/2.0
+    play degree(5, :A3, :major)
+    sleep bar/2.0
+    cue :other_high
   end
 end
 
@@ -104,61 +154,14 @@ live :beeping do
     with_fx :reverb do
       8.times do |n|
         sync :circle
-        play degree(1, :A3, :major)
-        sleep bar/2.0
-        play degree(3, :A3, :major)
-        sleep bar/2.0
-
-        if n == 3 || n == 7
-          play degree(1, :A3, :major)
-          sleep bar/2.0
-          play degree(4, :A3, :major)
-          sleep bar/4.0
-          with_fx :lpf, cutoff: 70 do
-            sample :drum_tom_lo_soft
-          end
-          play degree(4, :A3, :major)
-          sleep bar/4.0
-        else
-          play degree(1, :A3, :major)
-          sleep bar/2.0
-          play degree(4, :A3, :major)
-          sleep bar/2.0
-          cue :high
-        end
+        startbeep(n)
       end
 
       8.times do |n|
         sync :circle
-        play degree(1, :A3, :major)
-        sleep bar/2.0
-        play degree(3, :A3, :major)
-        sleep bar/2.0
-
-        if n == 3 || n == 7
-          play degree(1, :A3, :major)
-          sleep bar/4.0
-          with_fx :lpf, cutoff: 70 do
-            sample :drum_tom_hi_soft
-          end
-          play degree(5, :A3, :major)
-          sleep bar/4.0
-          play degree(5, :A3, :major)
-          sleep bar/4.0
-          with_fx :lpf, cutoff: 70 do
-            sample :drum_tom_hi_soft
-          end
-          play degree(5, :A3, :major)
-          sleep bar/4.0
-        else
-          play degree(1, :A3, :major)
-          sleep bar/2.0
-          play degree(5, :A3, :major)
-          sleep bar/2.0
-          cue :other_high
-        end
+        endbeep(n)
       end
     end
+    # end
   end
-  # end
 end
