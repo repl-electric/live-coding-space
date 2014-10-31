@@ -10,6 +10,8 @@ A project where I visit a place in Berlin, live code a piece of music and then l
 
 Written in Sonic Pi: www.sonic-pi.net
 
+![](http://nadine-rossa.de/made-in-berlin-badge.png)
+
 ##License
 
 Copyright © 2014 Joseph Wilk
