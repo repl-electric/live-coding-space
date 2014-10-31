@@ -1,5 +1,7 @@
 ["support", "soprano", "samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 
+gravity_s = "/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav"
+
 bar = 1.0/1.0
 live :timer do
   cue :circle
@@ -64,31 +66,77 @@ end
 live :higher do |n|
   sync :high
   use_synth :beep
-  #with_fx :slicer, phase: bar/2  do
   play degree(6, :A3, :major), release: bar*2, attack: bar*2
-  #end
-  use_synth :zawa
   with_fx :lpf, cutoff: 70 do
     with_fx :echo, phase: bar do
-
       with_fx :reverb do
-        #play_chord chord(:A5, :major), release: bar*1, attack: bar, decay: bar, amp: 0.3
+        use_synth :zawa
+        play_chord chord(:A5, :major), release: bar*2, attack: bar, decay: bar, amp: 0.3,  cutoff: 50, res_slide: 0.2
       end
+    end
+  end
+end
+
+live :higher2 do |n|
+  use_synth :tb303
+  #use_synth :beep
+  with_fx :reverb do
+    sync :high
+    if n%2 == 0
+    play degree(5, :A4, :major), release: 0.3, attack: 0.01
+    sleep bar*1
+    #with_fx :reverb do
+    play degree(3, :A4, :major), release: 0.2, attack: 0.01
+
+    sleep bar*1
+    with_fx :reverb do
+      play degree(3, :A4, :major), release: bar*2, attack: 0.01, decay: bar/4
+      sleep bar/2
+      play degree(6, :A4, :major), release: 0.15, attack: 0.01
+      sleep bar/2
+      play degree(6, :A4, :major), release: 0.1, attack: 0.01
+      sleep bar
+    end
     end
   end
 end
 
 live :otherhigher do |n|
   sync :other_high
+
   use_synth :beep
   play degree(5, :A3, :major), release: bar*2, attack: bar*2
 end
 
+live :otherhigher2 do |n|
+  use_synth :tb303
+  with_fx :reverb do
+    sync :other_high
+    if n%2 == 0
+    play degree(5, :A3, :major), release: 0.3, attack: 0.01
+    sleep bar*1
+    #with_fx :reverb do
+    play degree(3, :A3, :major), release: 0.2, attack: 0.01
+
+    sleep bar*1
+    with_fx :reverb, room: 0.9 do
+      play degree(5, :A3, :major), release: bar*2, attack: 0.01, decay: bar/8
+      sleep bar/2
+      play degree(3, :A3, :major), release: 0.15, attack: 0.01
+      sleep bar/2
+      play degree(3, :A3, :major), release: 0.1, attack: 0.01
+      sleep bar
+    end
+    end
+  end
+end
+
+
 live :words do
   sync :circle
-  with_fx :ixi_techno do
-    sample "/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav", amp: 1
-    sleep 8*sample_duration("/Users/josephwilk/Dropbox/repl-electric/samples/stars_gravity.wav")
+  with_fx :ixi_techno, phase: bar*4 do
+    sample gravity_s, amp: 1
+    sleep 8*sample_duration(gravity_s)
   end
 end
 
@@ -165,3 +213,6 @@ live :beeping do
     # end
   end
 end
+
+
+set_volume! 1
