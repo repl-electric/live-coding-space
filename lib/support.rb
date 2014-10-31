@@ -58,3 +58,32 @@ def fadeout
     sleep 1
   end
 end
+
+DEGREES = {:i    => 0,
+               :ii   => 1,
+               :iii  => 2,
+               :iv   => 3,
+               :v    => 4,
+               :vi   => 5,
+               :vii  => 6,
+               :viii => 7,
+               :ix   => 8,
+               :x    => 9,
+               :xi   => 10,
+               :xii  => 11}
+
+def resolve_degree_index(degree)
+  if idx = DEGREES[degree]
+      return idx
+    elsif degree.is_a? Numeric
+      return degree - 1
+   else
+        raise InvalidDegreeError, "Invalid scale degree #{degree.inspect}, expecting #{DEGREES.keys.join ','} or a number"
+   end
+end
+
+def degree(degree, tonic, scale)
+  scale = SonicPi::Scale.new(tonic, scale)
+  index = resolve_degree_index(degree)
+  scale.notes[index]
+end
