@@ -6,7 +6,11 @@
  .||.     π=-  π=-  π=-
 ```
 
-A project where I visit a place in Berlin, live code a piece of music and then leave.
+A project where: 
+* I visit a place in Berlin.
+* Live code a piece of music with my laptop there.
+* Publish the source code.
+* Leave.
 
 Written in Sonic Pi: www.sonic-pi.net
 
