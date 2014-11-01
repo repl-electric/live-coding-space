@@ -8,7 +8,7 @@
 ```
 
 A project where: 
-* I visit a place in Berlin.
+* I visit an open space in Berlin.
 * Live code a piece of music with my laptop there and then.
 * Publish the source code and piece.
 * Leave.
