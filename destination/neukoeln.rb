@@ -82,7 +82,7 @@ end
 
 live :highlights do |n|
   use_synth :fm
-  vol = 0.7
+  vol = 0.6
   sync :circle
   play degree(1, :A2, :major), attack: bar, release: bar*1, amp: vol
   sleep bar*1
@@ -92,9 +92,10 @@ live :highlights do |n|
 end
 
 live :higher do |n|
+  vol = 0.7
   sync :high
   use_synth :beep
-  play degree(6, :A3, :major), release: bar*2, attack: bar*2
+  play degree(6, :A3, :major), release: bar*2, attack: bar*2, amp: vol
 
   with_fx :lpf, cutoff: 70 do
     with_fx :echo, phase: bar do
@@ -107,22 +108,23 @@ live :higher do |n|
 end
 
 live :higher2 do |n|
+  vol = 0.5
   use_synth :tb303
   #use_synth :beep
   with_fx :reverb do
     sync :high
     if n%2 == 0
-      play degree(5, :A4, :major), release: 0.3, attack: 0.01
+      play degree(5, :A4, :major), release: 0.3, attack: 0.01, amp: vol
       sleep bar*1
-      play degree(3, :A4, :major), release: 0.2, attack: 0.01
+      play degree(3, :A4, :major), release: 0.2, attack: 0.01, amp: vol
 
       sleep bar*1
       with_fx :reverb do
-        play degree(3, :A4, :major), release: bar*2, attack: 0.01, decay: bar/4
+        play degree(3, :A4, :major), release: bar*2, attack: 0.01, decay: bar/4, amp: vol
         sleep bar/2
-        play degree(6, :A4, :major), release: 0.15, attack: 0.01
+        play degree(6, :A4, :major), release: 0.15, attack: 0.01, amp: vol
         sleep bar/2
-        play degree(6, :A4, :major), release: 0.1, attack: 0.01
+        play degree(6, :A4, :major), release: 0.1, attack: 0.01, amp: vol
         sleep bar
       end
     end
@@ -137,14 +139,15 @@ live :otherhigher do |n|
 end
 
 live :otherhigher2 do |n|
+  vol = 0.7
   use_synth :tb303
   with_fx :reverb do
     sync :other_high
     if n%2 == 0
-      play degree(5, :A3, :major), release: 0.3, attack: 0.01
+      play degree(5, :A3, :major), release: 0.3, attack: 0.01, amp: vol
       sleep bar*1
       #with_fx :reverb do
-      play degree(3, :A3, :major), release: 0.2, attack: 0.01
+      play degree(3, :A3, :major), release: 0.2, attack: 0.01, amp: vol
 
       sleep bar*1
       with_fx :reverb, room: 0.9 do
