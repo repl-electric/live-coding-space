@@ -92,7 +92,7 @@ live :highlights do |n|
 end
 
 live :higher do |n|
-  vol = 0.7
+  vol = 0.6
   sync :high
   use_synth :beep
   play degree(6, :A3, :major), release: bar*2, attack: bar*2, amp: vol
@@ -139,7 +139,7 @@ live :otherhigher do |n|
 end
 
 live :otherhigher2 do |n|
-  vol = 0.7
+  vol = 0.6
   use_synth :tb303
   with_fx :reverb do
     sync :other_high
@@ -153,9 +153,9 @@ live :otherhigher2 do |n|
       with_fx :reverb, room: 0.9 do
         play degree(5, :A3, :major), release: bar*2, attack: 0.01, decay: bar/8
         sleep bar/2
-        play degree(3, :A3, :major), release: 0.15, attack: 0.01
+        play degree(3, :A3, :major), release: 0.15, attack: 0.01, amp: vol
         sleep bar/2
-        play degree(3, :A3, :major), release: 0.1, attack: 0.01
+        play degree(3, :A3, :major), release: 0.1, attack: 0.01, amp: vol
         sleep bar
       end
     end
