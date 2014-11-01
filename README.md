@@ -13,9 +13,14 @@ A project where:
 * Publish the source code and piece.
 * Leave.
 
-Written in Sonic Pi: www.sonic-pi.net
+Performed using Sonic Pi: www.sonic-pi.net and the Ruby programming language.
 
 ![](http://nadine-rossa.de/made-in-berlin-badge.png)
+
+## Open Music
+
+Bringing the culture of open source code to music. 
+All the performance source code is there for anyone to look at and learn from.
 
 ##License
 
