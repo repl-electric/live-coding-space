@@ -24,6 +24,8 @@ Bringing the culture of open source code to music.
 
 ## Performances:
 
+[All photos on flickr](https://www.flickr.com/photos/128327080@N05/sets/72157646760361894/)
+
 ##### Invalidenfriedhof, Berlin, Mitte: November 2, 2014
 
 One of the oldest cemeteries in Berlin, overlooking the river Spree. 
