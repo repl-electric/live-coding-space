@@ -19,8 +19,8 @@ Performed using Sonic Pi: www.sonic-pi.net and the Ruby programming language: ht
 
 ## Open Music
 
-Bringing the culture of open source code to music. 
-All the performance source code is there for anyone to look at and learn from.
+In the theme of open spaces, the musical source code is open for all to look at and learn from.
+Bringing the culture of open source code to music.
 
 ## Performances:
 
