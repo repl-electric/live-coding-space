@@ -1,13 +1,13 @@
 # Live Coding Berlin
 
-A project exploring Live Coding in open spaces.
-
 ```
  _____         _ _ 
 | __  |___ ___| |_|___     \:o/     π=-      π=-
 | __ -| -_|  _| | |   |     █       π=-   π   π=-   π=-
 |_____|___|_| |_|_|_|_|   .||.     π=-  π=-  π=-
 ```
+
+A project exploring Live Coding in open spaces.
 
 * I visit an open space in Berlin.
 * Live code a piece of music with my laptop there and then.
