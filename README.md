@@ -23,7 +23,7 @@ All the performance source code is there for anyone to look at and learn from.
 
 ## Performances:
 
-##### Invalidenfriedhof, Berlin, Mitte
+##### Invalidenfriedhof, Berlin, Mitte: November 2, 2014
 
 One of the oldest cemeteries in Berlin, overlooking the river Spree. 
 The Berlin wall cut the cemetry in half.
