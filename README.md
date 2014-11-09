@@ -33,6 +33,12 @@ The Berlin wall cut the cemetry in half.
 
 ![](https://c2.staticflickr.com/4/3953/15690272655_11709966b9_z.jpg)
 
+##### Invalidenpark, Berlin, Mitte: November 9, 2014
+
+In the middle of the park is a water basin which contains the granite sculpture "versunkene Mauer" which translates to "sunken wall". It commemorates the Berlin Wall which was located near this park.
+
+![](https://c4.staticflickr.com/8/7564/15723698576_74f0253949_b.jpg)
+
 ##License
 
 Copyright © 2014 Joseph Wilk
