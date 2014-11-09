@@ -37,7 +37,7 @@ The Berlin wall cut the cemetry in half.
 
 In the middle of the park is a water basin which contains the granite sculpture "versunkene Mauer" which translates to "sunken wall". It commemorates the Berlin Wall which was located near this park.
 
-![](https://c4.staticflickr.com/8/7564/15723698576_74f0253949_b.jpg)
+![](https://farm8.staticflickr.com/7564/15723698576_74f0253949_z_d.jpg)
 
 ##License
 
