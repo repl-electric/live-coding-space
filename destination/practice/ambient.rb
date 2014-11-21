@@ -1,3 +1,4 @@
+["piano"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 bar = 1/2.0
 quart = 2*bar
 
@@ -48,44 +49,49 @@ live_loop :piano do
     play degree(1, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
     sample pa_s, amp: 2
 
-#    play degree([4,5].choose, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
-#    sleep bar/4
-#    play degree(4, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
-#    sleep bar/4
-#    play degree(1, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+    #    play degree([4,5].choose, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
+    #    sleep bar/4
+    #    play degree(4, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
+    #    sleep bar/4
+    #    play degree(1, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
   end
 end
 
 live_loop :piano2 do
-  use_synth :tri #prophet
+  use_synth :tri
   sync :start
 
   with_fx :echo, mix: 0.2 do
-  with_fx :reverb, room: 0.9 do
-    with_fx :distortion, mix: 0.5 do
-      play chord_degree(1, :A2, :major)[0], amp: 1.0, attack: 0.01, release: 0.5, decay: 2.0, sustain: 1.5
-      sleep bar/2
-      with_synth(:tri){ play chord_degree(1, :A2, :major)[1], amp: 1.0, attack: 0.01, release: 0.5, decay: 2.0, sustain: 1.5}
-    end
-  end
+    with_fx :reverb, room: 0.9, room_slide: 2 do |r|
+      with_fx :distortion, mix: 0.5 do
+        #with_fx(:reverb, room: 1, mix: 1){sample Piano.note(:a2), amp: 1, rate: 1.0}
 
-  4.times{sync :start}
+        #play chord_degree(1, :A2, :major).take(3), amp: 1.0, attack: 0.01, release: 0.5, decay: 2.0, sustain: 1.8
+        play chord_degree(1, :A2, :major)[0], amp: 1.0, attack: 0.01, release: 0.5, decay: 2.0, sustain: 1.5
+        sleep bar/2
+        with_synth(:tri){ play chord_degree(1, :A2, :major)[1], amp: 1.0, attack: 0.01, release: 0.5, decay: 2.0, sustain: 1.5}
+      end
 
-  with_fx :reverb, room: 0.5 do
-    with_fx :distortion, mix: 0.2 do
-      play chord_degree(1, :A2, :major)[0], amp: 1.1, attack: 0.01, release: 0.5, decay: 1.5, sustain: 1.0
-      sleep bar/2
-      with_synth(:tri){play chord_degree(1, :A2, :major)[2], amp: 1.1, attack: 0.01, release: 0.5, decay: 1.5, sustain: 1.0}
-    end
-  end
+      4.times{sync :start}
 
-  2.times{sync :start}
-  with_fx :reverb, room: 0.3 do
-    with_fx :distortion, mix: 0.2 do
-      play chord_degree(4, :A1, :major).first, amp: 1.1, attack: 0.001, release: 0.5, decay: 1.5, sustain: 1.5
-      with_synth(:tri){play chord_degree(4, :A1, :major).first, amp: 1.1, attack: 0.001, release: 0.5, decay: 1.5, sustain: 1.5}
+      control(r, room: 0.5)
+      with_fx :distortion, mix: 0.2 do
+        #sample Piano.note(:c2)
+
+        play chord_degree(1, :A2, :major)[0], amp: 1.1, attack: 0.01, release: 0.5, decay: 1.5, sustain: 1.0
+        sleep bar/2
+        with_synth(:tri){play chord_degree(1, :A2, :major)[2], amp: 1.1, attack: 0.01, release: 0.5, decay: 1.5, sustain: 1.0}
+      end
+
+      2.times{sync :start}
+      control(r, room: 0.3)
+      with_fx :distortion, mix: 0.2 do
+        #sample Piano.note(:c2)
+
+        play chord_degree(4, :A1, :major).first, amp: 1.15, attack: 0.001, release: 0.5, decay: 1.5, sustain: 1.5
+        with_synth(:tri){play chord_degree(4, :A1, :major).first, amp: 1.2, attack: 0.001, release: 0.5, decay: 1.5, sustain: 1.5}
+      end
     end
-  end
   end
 
   2.times{sync :start}
@@ -110,12 +116,12 @@ define :beeper do |note, direction, room_size, cutoff, detune_factor1, detune_fa
   with_fx :reverb do |r|
     with_fx :lpf, cutoff: cutoff, cutoff_slide: 20 do |c|
       with_fx :distortion, distort: 0.1, cutoff: 90 do |d|
-
         n_cut = rrand(50,cutoff);
         control(c, cutoff: n_cut);
         7.times do |n|
           control(r, room: 0.1) ; control(d, distort: 0.5); play note, attack: 0.001,  pan: 0.8*direction, detune: detune_factor1
           sample :elec_soft_kick, rate: 1, start: 0.1
+
           sleep bar/2
           control(r, room: 0.3, distort: 0.5); play note, attack: 0.001, pan: 0.7*direction, detune: detune_factor1
           sample :elec_soft_kick, rate: 1, start: 0.1
@@ -157,7 +163,21 @@ live_loop :beep do
     beeper n, @direction, 1, 100, 0, -5.0
     room_size += 1
   end
+end
 
+live_loop :beep2 do
+  #  sync :bar
+  #-10.0, -5.0
+  # degree(6, :A2, :major)
+
+  n =  [degree(6, :A2, :major), degree(4, :A2, :major)].choose
+  #sync :start
+
+  4.times do
+    sync :bar
+    beeper n, @direction < 0 ? 1 : -1, 1, 100, 0, -5.0
+    room_size += 1
+  end
 end
 
 live_loop :deep do
@@ -177,9 +197,10 @@ live_loop :sawnoise do
       with_fx :reverb, room: 1 do
         with_fx :reverb, room: 1 do
           with_fx :echo, decay: 1 do
-            with_fx :hpf, cutoff: 115 do
-              play degree([1,3].choose, :A1, :minor), release: bar*4, decay: bar*4, amp: 1.0
-  end end end end end end
+            with_fx :lpf, cutoff: 100 do
+              with_fx :hpf, cutoff: 110 do
+                play degree([1,3].choose, :A1, :minor), release: bar*4, decay: bar*4, amp: 1.0
+  end end end end end end end
   n+= 1
 end
 
