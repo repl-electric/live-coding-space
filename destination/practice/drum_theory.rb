@@ -1,7 +1,7 @@
-bar = 1/2.0
+bar = 1/8.0
 
 live_loop :metro do
-  16.times{cue :sixteen;sleep bar/4;}
+  16.times{cue :sixteen;sleep bar;}
 end
 
 # | 1 2 3 4 | 5 6 (7) 8 | 9 (10) 11 12 | 13 14 15 16
