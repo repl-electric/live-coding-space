@@ -13,14 +13,56 @@ v_s = "/Users/josephwilk/.overtone/orchestra/violin/violin_A3_1_piano_arco-norma
 radio_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/32266__paracelsus__radio.wav"
 
 live_loop :metro do
-  cue :start; cue :quart;  cue :bar
-  sleep bar
-  cue :bar
-  sleep bar
-  cue :quart; cue :bar
-  sleep bar
-  cue :bar
-  sleep bar
+  cue :start; cue :quart;  cue :bar; cue :eight;
+  sleep bar/2; cue :eight; sleep bar/2;
+  cue :bar; cue :eight
+  sleep bar/2; cue :eight; sleep bar/2;
+  cue :quart; cue :bar; cue :eight
+  sleep bar/2; cue :eight; sleep bar/2;
+  cue :bar; cue :eight
+  sleep bar/2; cue :eight; sleep bar/2;
+end
+
+r_count = 0
+live_loop :rides do
+  with_fx :reverb do
+  sync :eight
+  sample :drum_cymbal_closed, start: (r_count % 16 >= 12 ? 0.05 : 0.3), rate: rrand(0.99,1.01)
+  #sync :eight
+  r_count+=1
+  end
+end
+
+live_loop :drums do
+with_fx :reverb do
+  #1
+  sync :eight
+  with_fx :slicer, phase: bar/8 do
+    sample :elec_soft_kick, amp: 12
+  end
+  sync :eight
+
+  #2
+  sync :eight
+#  sample :elec_lo_snare
+  sample :elec_soft_kick, amp: 12
+  sync :eight
+
+  roll = dice(6)
+  sample :elec_soft_kick, amp: 12 if roll > 4
+  #3
+  sync :eight
+  with_fx :reverb, room: 1, mix: 0.5 do
+    sample [:elec_hi_snare].choose
+  end
+  sync :eight
+  sample :elec_soft_kick, amp: 12 if roll > 4
+
+  #4
+  sync :eight
+  sample :elec_soft_kick, rate: (roll > 4 ? -1 : 0)
+  sync :eight
+end
 end
 
 live_loop :drum do
@@ -42,6 +84,7 @@ live_loop :radio do
   sleep sample_duration(radio_s)
 end
 
+p_count = 0
 live_loop :piano do
   sync :quart
   use_synth :beep
@@ -49,12 +92,39 @@ live_loop :piano do
     play degree(1, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
     sample pa_s, amp: 2
 
-    #    play degree([4,5].choose, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
-    #    sleep bar/4
-    #    play degree(4, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
-    #    sleep bar/4
-    #    play degree(1, :A4, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+    if(dice(6) > ((p_count % 6)+2))
+#      sleep bar/4
+ #     sample pa_s, amp: 12, rate: [-1.2].choose #-1.2
+    end
+
+      if(p_count % 4 <= 2)
+        play degree([5].choose, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1
+        sleep bar/4
+        play degree(4, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1
+        sleep bar/4
+        play degree(1, :A5, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+      else
+        play degree([5].choose, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1
+        sleep bar/4
+        play degree(4, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1
+        sleep bar/4/2
+        #play degree(4, :A4, :major), amp: 3.0, attack: 0.01, release: 0.01, decay: 0.1   #:A5
+
+#        with_fx :slicer, phase: bar do
+          play chord(:A4, :"sus4"), amp: 2.0, attack: 0.1, release: 0.5, decay: 0.5   #:A5
+#        end
+        use_synth :mod_beep
+        play degree(1, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+        sleep bar/4/2
+        play degree(1, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+        sleep bar/4/2
+        play degree(1, :A4, :major), amp: 3.0, attack: 0.001, release: 0.01, decay: 0.1   #:A5
+        sleep bar/4/2
+        sample pa_s, amp: 12, rate: -1
+        end
+
   end
+  p_count += 1
 end
 
 live_loop :piano2 do
@@ -109,6 +179,7 @@ live_loop :dark do
 end
 
 define :beeper do |note, direction, room_size, cutoff, detune_factor1, detune_factor2|
+  with_fx :lpf, cutoff: rrand(80, 120) do
   use_synth :mod_dsaw #:mod_saw
   use_synth_defaults detune: 0.0, sustain_level: 0.20, res: 1, env_curve: 7 ,sustain: 1.0, attack: 0.01, decay: 0.15, amp: 1.0, release: 0.5, attack_level: 0.8
   #with_fx :reverb, room: 0.5+0.5*Math.sin(note), mix: 0.5 do
@@ -116,7 +187,7 @@ define :beeper do |note, direction, room_size, cutoff, detune_factor1, detune_fa
   with_fx :reverb do |r|
     with_fx :lpf, cutoff: cutoff, cutoff_slide: 20 do |c|
       with_fx :distortion, distort: 0.1, cutoff: 90 do |d|
-        n_cut = rrand(50,cutoff);
+        n_cut = rrand(30,cutoff);
         control(c, cutoff: n_cut);
         7.times do |n|
           control(r, room: 0.1) ; control(d, distort: 0.5); play note, attack: 0.001,  pan: 0.8*direction, detune: detune_factor1
@@ -139,43 +210,48 @@ define :beeper do |note, direction, room_size, cutoff, detune_factor1, detune_fa
           sleep bar/2
         end
         sleep bar/2
-      end
-    end
-  end
-end
+      end end end end end
 
 @cutoff = 100
 @direction = 1
 room_size = 0
-live_loop :beep do
-  #  sync :bar
 
-  #-10.0, -5.0
-  # degree(6, :A2, :major)
-
-  n =  [degree(6, :A2, :major), degree(4, :A2, :major)].choose
-  #sync :start
-
-  4.times do
-    @direction = rand_i(-1..1)
-
-    sync :bar
-    beeper n, @direction, 1, 100, 0, -5.0
-    room_size += 1
-  end
-end
+@@beep_note = chord_degree(1, :A3, :major).choose
 
 live_loop :beep2 do
   #  sync :bar
   #-10.0, -5.0
   # degree(6, :A2, :major)
 
-  n =  [degree(6, :A2, :major), degree(4, :A2, :major)].choose
+  @@beep_note =  [chord_degree(1, :A3, :major)].choose
   #sync :start
 
   4.times do
     sync :bar
-    beeper n, @direction < 0 ? 1 : -1, 1, 100, 0, -5.0
+    beeper @@beep_note, @direction < 0 ? 1 : -1, 1, 90, 0, 0.0001
+    room_size += 1
+  end
+end
+
+live_loop :beep do
+  #  sync :bar
+
+  #-10.0, -5.0
+  # degree(6, :A2, :major)
+
+  #n =  [degree(6, :A2, :major), degree(4, :A2, :major), ].choose
+
+  puts "------------------------------->#{@@beep_note}"
+  n = (chord_degree(3, :A3, :major) - [@@beep_note]).choose
+  puts "----------------------------->#{n}"
+
+  #sync :start
+
+  4.times do
+    @direction = rand_i(-1..1)
+
+    sync :bar
+    beeper n, @direction, 1, 90, 0, -5.0001
     room_size += 1
   end
 end
@@ -203,34 +279,3 @@ live_loop :sawnoise do
   end end end end end end end
   n+= 1
 end
-
-#begone :deep
-#begone :vio
-#begone :deep
-#begone :beep
-#begone :piano
-#begone :dark
-#begone :radio
-#begone :sawnoise
-
-
-#3.times do
-#  control(r, room: 0.1) ; control(d, distort: 0.5)
-#  play note, attack: 0.001,  pan: 0.8*direction,  decay: (bar/2)*6, release: bar*6, detune: 0.0
-#  sleep bar/2
-#  control(r, room: 0.3, distort: 0.5);
-
-#  play note, attack: 0.001, pan: 0.7*direction, detune: 0.0
-#  sleep bar/2
-#  control(r, room: 0.8)
-#  play note, attack: 0.01,  pan: 0.6*direction, release: 0.5, decay: (bar/2), detune: detune_factor
-#  sleep bar/2
-#  control(r, room: 1.0); control(d, distort: 0.0)
-#  play note, attack: 0.01,  pan: 0.5*direction, release: 0.5, decay: (bar/2)/2, detune: detune_factor
-#  sleep bar/2
-#end
-#  sleep bar/2
-#
-# end
-# end
-#  end
