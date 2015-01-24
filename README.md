@@ -40,7 +40,7 @@ In the middle of the park is a water basin which contains the granite sculpture 
 
 ##License
 
-Copyright © 2014 Joseph Wilk
+Copyright © 2014-2015 Joseph Wilk
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
