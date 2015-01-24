@@ -11,7 +11,6 @@ A project exploring Live Coding in open spaces.
 
 * I visit an open space in Berlin.
 * Live code a piece of music with my laptop there and then.
-* Incorporate a sample recorded in the location.
 * Publish the source code and piece.
 * Leave.
 
