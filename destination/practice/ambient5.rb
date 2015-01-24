@@ -290,4 +290,16 @@ end
 end
 end
 
+live_loop :across_the_night do
+with_fx :level, amp: 1.0 do
+use_synth :dark_sea_horn
+use_synth_defaults amp: 1, release: 8
+play degree(4, :A2, :major)
+16.times{sync :bar}
+play degree(6, :A2, :major)
+16.times{sync :bar}
+play degree(5, :A2, :major)
+16.times{sync :bar}
+end
+end
 set_volume! 0.0
