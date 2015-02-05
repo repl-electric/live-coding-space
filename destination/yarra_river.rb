@@ -1,4 +1,4 @@
-#Composed in Melbourne Australia
+#Composed in Melbourne Australia (Not in Berlin, livecoding the-world?)
 #By the Yarra River
 
 bar = 1
@@ -34,26 +34,6 @@ live_loop :poem do
 with_fx :level, amp: 0.2 do
 say <<-FOREST
 Tiger tiger burning bright
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 FOREST
 end
 end
