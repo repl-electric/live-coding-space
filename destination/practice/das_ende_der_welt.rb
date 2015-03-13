@@ -7,24 +7,12 @@ high_hat2_s = "/Users/josephwilk/Workspace/music/samples/LOOPMASTERS\ EXCITE_PAC
 snare2_s = :drum_snare_soft
 voice_s = "/Users/josephwilk/Workspace/music/samples/soprano/Samples/Sustains/Ah p/vor_sopr_sustain_ah_p_01.wav"
 
-live_loop :clapper do
-  with_fx :level, amp: 0.0 do
-    32.times{sync :hit}
-    sample clap_s, start: 0.2, amp: 0.25
-    sync :hit
-    sample clap_s, start: 0.1, amp: 0.3
-    sync :hit
-    sample clap_s, start: 0.09, amp: 0.4
-    sync :hit
-    sample clap_s, amp: 0.4, rate: -1.0
-  end
-end
-
-live_loop :voices do
-  with_fx :level, amp: 0.0 do
-    sync :atmosphere
-    with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){
-    sample voice_s, attack: 1.0, amp: 0.5}}}}}
+def hollowed_synth(n)
+  use_synth :hollow
+  with_fx :pitch_shift, pitch_dis: 0.001, time_dis: 0.1, window_size: 1.5  do
+    #with_fx :slicer, phase: 1/64.0 do
+    play n, release: 8, amp: 2
+    #end
   end
 end
 
@@ -53,9 +41,32 @@ live_loop :clock do
   sleep beat/2
 end
 
+live_loop :clapper do
+  with_fx :level, amp: 1.0 do
+    32.times{sync :hit}
+    sample clap_s, start: 0.2, amp: 0.25
+    sync :hit
+    sample clap_s, start: 0.1, amp: 0.3
+    sync :hit
+    sample clap_s, start: 0.09, amp: 0.4
+    sync :hit
+    sample clap_s, start: 0.04, amp: 0.4
+#    sample clap_s, amp: 0.4, rate: -1.0
+  end
+end
+
+live_loop :voices do
+  with_fx :level, amp: 0.8 do
+    sync :atmosphere
+    with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){with_fx(:reverb, room: 1.0, damp: 1){
+    sample voice_s, attack: 1.0, amp: 0.5}}}}}
+  end
+end
+
 r=0
-r2 = 0
+r2=0
 live_loop :ride do
+with_fx :level, amp: 0.0 do
   sync :half_beat
   sample (ring high_hat_s, high_hat_s,high_hat_s, high_hat2_s)[r2], amp: 0.3, start: 0.01
   #sleep beat
@@ -75,21 +86,23 @@ live_loop :ride do
   end
   r2+=1
 end
+end
 
 live_loop :heart do
   sync :hit
-  sample :elec_hollow_kick, start: 0.1
+  sample :elec_hollow_kick, start: 0.25, amp: 0.0
 end
 
 n=0
 live_loop :drums do
   cue :hit
   #sample clap_s, rate: 0.1, amp: 0.25
-  with_fx(:lpf, cutoff: 40){
-  sample :drum_heavy_kick, amp: 2, rate: 1.0} #0.7}
+  with_fx(:lpf, cutoff: 30){
+  sample :drum_heavy_kick, amp: 1.5, rate: 1.0 #0.7
+  }
   sleep beat
 
-  with_fx :level, amp: 1.0 do
+  with_fx :level, amp: 0.0 do
     case n%6
     when 0
       with_fx(:slicer, phase: 1.0){with_fx(:echo, phase: beat/4, decay: 0.09){with_fx(:bitcrusher, bits: 6){
@@ -114,9 +127,11 @@ end
 
 z=0
 live_loop :synth do
+with_fx :level, amp: 1.0 do
   # sync :beat
   use_synth :dsaw
   use_synth_defaults detune: 0.1, amp: 0.25, attack: 0.001, release: 0.25, note_slide: 1.0
+
   with_fx :lpf, cutoff: 70 do
     sync :hit
     my = play degrees_seq(222222222222222, :Cs4), release: beat/2*16*3, attack: 1
@@ -148,8 +163,10 @@ live_loop :synth do
   end
   z+=1
 end
+end
 
 live_loop :pulse do
+with_fx :level, amp: 1.0 do
   sync :start
   with_fx :reverb, room: 100, mix: 0.9, dry: 0.1 do
     with_synth :growl  do
@@ -158,8 +175,10 @@ live_loop :pulse do
   end
   sleep beat*32
 end
+end
 
 live_loop :atmos do
+with_fx :level, amp: 1.0 do
   cue :atmosphere
   use_synth :dark_ambience
   sync :hit
@@ -174,3 +193,11 @@ live_loop :atmos do
   play degree(7, :Cs2, :major), attack: 4, release: beat*32, amp: 0.8
   sleep beat*32
 end
+end
+
+live_loop :hollowed do
+  sync :start
+  hollowed_synth degree(1, :Cs4, :major)
+end
+
+set_volume! 0.0
