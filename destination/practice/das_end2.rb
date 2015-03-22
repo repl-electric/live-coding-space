@@ -30,7 +30,13 @@ def hollowed_synth(n)
 end
 
 def degrees_seq(*pattern_and_roots)
- patterns = pattern_and_roots.select{|a| a.kind_of? Fixnum} 
+  pattern_and_roots = pattern_and_roots.reduce([]){|accu, id| 
+  if(!accu[-1].kind_of?(Symbol) && id.kind_of?(Integer))
+    accu[0..-2] << "#{accu[-1]}#{id}"
+  else
+    accu << id
+  end}
+ patterns = pattern_and_roots.select{|a| (a.kind_of?(Fixnum) || a.kind_of?(String))} 
  roots   = pattern_and_roots.select{|a| a.kind_of? Symbol}
  notes = patterns.each_with_index.map do |pattern, idx|
   root = roots[idx]
@@ -107,7 +113,7 @@ live :drums do |n|
       sample snare2_s, start: 0.20, amp: 1.1, rate: 1.0, finish: 0.45
     end
 end
-
+ with_fx(:lpf, cutoff: 40){sample :drum_heavy_kick}
   sleep beat/4
   cue :quarter_hit
   sleep beat/4
@@ -121,9 +127,9 @@ live :pulse3, amp: 0.2 do |p_inc|
  sync :half_hit, :quarter_hit
  with_synth :hollow do
    sample wood_s, amp: 0.4, start: 0.1
-   play *degrees_seq(1113111311131114, :Cs3)[p_inc], attack: 0.01, release: beat/2, amp: 4.00
+   play degrees_seq(:Cs3,1113111311131114)[p_inc], attack: 0.01, release: beat/2, amp: 4.00
    with_synth :growl do
-   play *degrees_seq(1113111311131114, :Cs5)[p_inc], attack: 0.001, release: beat/2, amp: 4.00
+   play degrees_seq(:Cs5, 1113111311131114)[p_inc], attack: 0.001, release: beat/2, amp: 4.00
    end
    #sleep (ring beat/2, beat/2, beat/4, beat/4)[p_inc]
    sleep beat/4
@@ -134,16 +140,18 @@ end
 live :highlights2, amp: 0.3 do |h_inc|
   with_synth :dark_ambience do 
   sync :half_hit
-  play degrees_seq(101010101010101, :Cs3, 0000, :Cs4)[h_inc], release: beat*4+(0.1*rand)
+  play degrees_seq(:Cs3, 101010101010101, :Cs4, 0000)[h_inc], release: beat*4+(0.1*rand)
   end
   sleep beat
   h_inc+=1
 end
 
-live :highlights3, amp: 0.2 do |h_inc|
+live :highlights3, amp: 1.0 do |h_inc|
   sync :half_hit
   with_synth :mod_fm do 
-    play degrees_seq(101010101010101, :Cs2)[h_inc], release: beat*4+(0.1*rand)
+    play degrees_seq(:Cs2, 1010101010101010,
+                           1000100010001000,
+                           4000000040000000)[h_inc], release: beat*4+(0.1*rand)
   end
   sleep beat
   h_inc+=1
@@ -151,7 +159,7 @@ end
 
 live :highlights do |h_inc|
   sync :half_hit
-  play degrees_seq(333322221111106000, :Cs3, 6655544444, :Cs3)[h_inc]
+  play degrees_seq(:Cs3, 333322221111106000, :Cs3, 6655544444)[h_inc]
   sleep beat
   h_inc+=1
 end
@@ -170,7 +178,7 @@ live :deep, amp: 0.0 do |d_inc|
   d_inc+=1
 end
 
-live :holloweded, amp: 0.0 do |z_inc|
+live :holloweded, amp: 0.8 do |z_inc|
   hollowed_synth (ring *degrees_seq(1, :Cs3, :major))[z_inc]
   sleep beat
   z_inc+=1
