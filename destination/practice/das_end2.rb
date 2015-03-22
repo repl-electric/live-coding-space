@@ -57,7 +57,7 @@ wood_s = "/Users/josephwilk/Dropbox/repl-electric/samples/Analog\ Snares\ \&\ Cl
 
 r2=0
 live_loop :ride do |r|
-  with_fx :level, amp: 0.1 do
+  with_fx :level, amp: 0.0 do
     sync :half_beat
     sample (ring high_hat_s, high_hat_s,high_hat_s, high_hat2_s)[r2], amp: 0.5, start: 0.01, finish: rand(0.9..1.0)
     #sleep beat
@@ -89,7 +89,7 @@ live_loop :clock do
   sleep beat/2
 end
 
-live :drums do |n|
+live :drums, amp: 0.2 do |n|
   with_fx(:lpf, cutoff: 40){sample :drum_heavy_kick}
   cue :start
   cue :half_hit
@@ -113,7 +113,7 @@ live :drums do |n|
       sample snare2_s, start: 0.20, amp: 1.1, rate: 1.0, finish: 0.45
     end
 end
- with_fx(:lpf, cutoff: 40){sample :drum_heavy_kick}
+  with_fx(:lpf, cutoff: 20){sample :drum_heavy_kick}
   sleep beat/4
   cue :quarter_hit
   sleep beat/4
@@ -123,16 +123,32 @@ end
   n+=1
 end
 
-live :pulse3, amp: 0.2 do |p_inc|
+live :pulse3, amp: 0.4 do |p_inc|
  sync :half_hit, :quarter_hit
  with_synth :hollow do
-   sample wood_s, amp: 0.4, start: 0.1
-   play degrees_seq(:Cs3,1113111311131114)[p_inc], attack: 0.01, release: beat/2, amp: 4.00
+   #sample wood_s, amp: 0.4, start: 0.1
+   play degrees_seq(:Cs3, 1113111311131114)[p_inc], attack: 0.01, release: beat/2, amp: 4.00
    with_synth :growl do
-   play degrees_seq(:Cs5, 1113111311131114)[p_inc], attack: 0.001, release: beat/2, amp: 4.00
+   play degrees_seq(:Cs5, 1113111311131114)[p_inc], attack: 0.001, release: beat/2, amp: 2.00
    end
    #sleep (ring beat/2, beat/2, beat/4, beat/4)[p_inc]
    sleep beat/4
+ end
+ p_inc+=1
+end
+
+live :pulse4, amp: 1.0 do |p_inc|
+ sync :half_hit #,:quarter_hit
+ with_synth :hollow do
+   #sample wood_s, amp: 0.4, start: 0.1
+   case p_inc % 16
+   when 0
+    play degrees_seq(:Cs4, 1), attack: 0.01, release: beat/4, amp: 1.00
+    sleep beat/2
+    play degrees_seq(:Cs4, 1), attack: 0.01, release: 0.2, amp: 1.00
+   else
+    play degrees_seq(:Cs3, 1), attack: 0.01, release: 0.2, amp: 1.00
+   end
  end
  p_inc+=1
 end
@@ -146,18 +162,16 @@ live :highlights2, amp: 0.3 do |h_inc|
   h_inc+=1
 end
 
-live :highlights3, amp: 1.0 do |h_inc|
+live :highlights3, amp: 0.0 do |h_inc|
   sync :half_hit
   with_synth :mod_fm do 
-    play degrees_seq(:Cs2, 1010101010101010,
-                           1000100010001000,
-                           4000000040000000)[h_inc], release: beat*4+(0.1*rand)
+    play degrees_seq(:Cs2, 1314)[h_inc], release: beat*8+(0.1*rand)
   end
-  sleep beat
+  sleep beat*4
   h_inc+=1
 end
 
-live :highlights do |h_inc|
+live :highlights, amp: 0.2 do |h_inc|
   sync :half_hit
   play degrees_seq(:Cs3, 333322221111106000, :Cs3, 6655544444)[h_inc]
   sleep beat
@@ -178,10 +192,10 @@ live :deep, amp: 0.0 do |d_inc|
   d_inc+=1
 end
 
-live :holloweded, amp: 0.8 do |z_inc|
+live :holloweded, amp: 0.2 do |z_inc|
   hollowed_synth (ring *degrees_seq(1, :Cs3, :major))[z_inc]
   sleep beat
   z_inc+=1
 end
 
-set_volume! 4.0
+set_volume! 2.0
