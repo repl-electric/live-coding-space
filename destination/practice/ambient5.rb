@@ -1,16 +1,15 @@
 ["piano"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 bar = 1/2.0
 quart = 2*bar
-
 set_volume! 1.0
-pa_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/piano_a.wav"
 
+pa_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/piano_a.wav"
 p_c3_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/148600__neatonk__piano-med-c3.wav"
 p_a2_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/148533__neatonk__piano-med-a2.wav"
 p_c4_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/148603__neatonk__piano-med-c4.wav"
-
 v_s = "/Users/josephwilk/.overtone/orchestra/violin/violin_A3_1_piano_arco-normal.wav"
 radio_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/32266__paracelsus__radio.wav"
+
 live_loop :metro do
   cue :start; cue :quart;  cue :bar
   sleep bar
@@ -21,12 +20,11 @@ live_loop :metro do
   cue :bar
   sleep bar
 end
-high_n = 0
-live_loop :highlights do
-with_fx :level, amp: 1 do
+live_loop :highlights do |high_n|
+with_fx :level, amp: 0.4 do
  sync :high
  use_synth :sine
- play high_n % 2 == 0 ? degree(1, :A4, :major) : degree(1, :A3, :major)
+ play (ring degree(1, :A4, :major), degree(1, :A3, :major))[high_n]
  high_n += 1
 end
 end
@@ -40,8 +38,8 @@ end
 end
 
 vio_pan = -1
-live_loop :vio do
-with_fx :level, amp: 1 do
+live_loop :vio do |vio_idx|
+with_fx :level, amp: 0 do
   #4.times{sync :start}
   sync :otherhigh
   with_fx :reverb, room: 1.0, mix: 1.0 do
@@ -49,24 +47,25 @@ with_fx :level, amp: 1 do
     a4_s = "/Users/josephwilk/.overtone/orchestra/violin/violin_A4_phrase_mezzo-forte_arco-legato.wav"
 
     with_fx :slicer, phase: bar/8 do
-     sample [a4_s, a5_s].choose, amp: 2.5, pan: Math.sin((vio_pan))
+     sample (ring a4_s, a5_s)[vio_idx], amp: 2.5, pan: Math.sin((vio_pan))
     end 
 #    sample v_s, amp: 90
   end
 end
 vio_pan += 1
+vio_idx += 1
 end
 live_loop :piano do
-with_fx :level, amp: 1 do
+with_fx :level, amp: 0 do
   sync :quart
   use_synth :beep
   with_fx :reverb do
     sample pa_s, amp: 2, rate: -1
     play degree(1, :A3, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
     sleep bar/2
-   # play degree(1, :A5, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
+    #play degree(1, :A5, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
     sleep bar/4
-   # play degree(1, :A5, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1   
+    #play degree(1, :A5, :minor), amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1   
   end
 end
 end
@@ -86,7 +85,7 @@ with_fx :level, amp: 1 do
 end
 end
 live_loop :peeep do
-with_fx :level, amp: 1 do
+with_fx :level, amp: 0.25 do
   3.times {sync :quart}
   use_synth :beep    #:mod_pulse #:mod_beep
   use_synth_defaults cutoff: 100, res: 1.001, amp: 0.8
@@ -145,8 +144,8 @@ with_fx :level, amp: 1 do
 end
 end
 
-live_loop :piano2 do
-with_fx :level, amp: 1 do
+live_loop :thebass do
+with_fx :level, amp: 0.5 do
   use_synth :tri
   sync :start
 
@@ -240,7 +239,6 @@ with_fx :level, amp: 1 do
   #  sync :bar
   #-10.0, -5.0
   # degree(6, :A2, :major)
-
   #n = [degree(4, :A3, :major)].choose
   n =  [degree(4, :A3, :major)].choose #fm
 
@@ -256,9 +254,9 @@ with_fx :level, amp: 1 do
 end
 end
 
-live_loop :beep2 do
-notes = [degree(5, :A3, :major), degree(6, :A3, :major)].shuffle
-with_fx :level, amp: 1.0 do
+live_loop :beep2 do |n|
+notes = (ring degree(5, :A3, :major), degree(6, :A3, :major))[n]
+with_fx :level, amp: 0.1 do
   4.times do |i|
     n = notes[i % 2]
     sync :bar
@@ -266,6 +264,7 @@ with_fx :level, amp: 1.0 do
     room_size += 1
   end
 end
+n+=1
 end
 
 live_loop :vio_dark do
@@ -294,4 +293,4 @@ play degree(5, :A2, :major)
 16.times{sync :bar}
 end
 end
-set_volume! 0.0
+#set_volume! 0.0
