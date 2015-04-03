@@ -11,26 +11,25 @@ def with_echo(args, &block)
   end
 end
 
-def live(name, &block)
-  raise "live_loop must be called with a code block" unless block
+def live(name, opts={}, &block)
   (@__live_cache ||= []) << name
   @__live_cache = @__live_cache.uniq
-
-  define(name, &block)
-
-  in_thread(name: name) do
-    n = 0
-    loop do
-      cue name
-      if self.method(name).arity >= 1
-        send(name, n)
-      else
-        send(name)
-      end
-      n += 1
-    end
+  
+  idx = 0
+  amp = if(opts[:amp])
+    opts[:amp]
+  else
+    1
+  end
+  x = lambda{|idx|
+    with_fx :level, amp: amp do
+      block.(idx)
+  end}
+  live_loop name do |idx|
+    x.(idx)
   end
 end
+
 
 def begone(name)
   raise "could not find #{name} to silence" unless @user_methods.method_defined?(name)
