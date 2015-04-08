@@ -5,10 +5,13 @@ def degrees_seq(*pattern_and_roots)
   else
     accu << id
   end}
- patterns = pattern_and_roots.select{|a| (a.kind_of?(Fixnum) || a.kind_of?(String))} 
- roots   = pattern_and_roots.select{|a| a.kind_of? Symbol}
+ patterns = pattern_and_roots.select{|a| /^[\d]+$/ =~ a.to_s } 
+ roots   = pattern_and_roots.select{|a| /^[\d]+$/ !~ a.to_s}
  notes = patterns.each_with_index.map do |pattern, idx|
   root = roots[idx]
+  if(root[0] == ":")
+    root = root[1..-1]
+  end
   s = /[[:upper:]]/.match(root.to_s[0]) ? :major : :minor
   pattern.to_s.split("").map{|d| degree(d.to_i, root, s)}
  end.flat_map{|x| x}
