@@ -18,6 +18,26 @@ def degrees_seq(*pattern_and_roots)
  (ring *notes)
 end
 
+def deg_seq(*pattern_and_roots)
+  pattern_and_roots = pattern_and_roots.reduce([]){|accu, id| 
+  if(/^[\d]+$/ =~ accu[-1] && /^[\d]+$/ =~ id)
+    accu[0..-2] << "#{accu[-1]}#{id}"
+  else
+    accu << id
+  end}
+  patterns = pattern_and_roots.select{|a| /^[\d]+$/ =~ a.to_s } 
+  roots   = pattern_and_roots.select{|a| /^[\d]+$/ !~ a.to_s}
+  notes = patterns.each_with_index.map do |pattern, idx|
+  root = roots[idx]
+  if(root[0] == ":")
+    root = root[1..-1]
+  end
+  s = /[[:upper:]]/.match(root.to_s[0]) ? :major : :minor
+  pattern.to_s.split("").map{|d| degree(d.to_i, root, s)}
+ end.flat_map{|x| x}
+ (ring *notes)
+end
+
 def chords_seq(pattern, root, s=nil)
   if !s
     s = /[[:upper:]]/.match(root.to_s[0]) ? :major : :minor
