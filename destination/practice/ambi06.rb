@@ -55,16 +55,14 @@ live_loop :metro do
   sleep bar
 end
 
-live_loop :highlights do |high_n|
-  with_fx :level, amp: 0.0 do
+live_loop :highlights do |high_n|;with_fx :level, amp: 0.0 do
     sync :high
     use_synth :sine
     play (ring degree(1, :A4, :major), degree(1, :A3, :major))[high_n]
     high_n += 1
   end
 end
-live_loop :drum do
-  with_fx :level, amp: 0.1 do
+live_loop :drum do;with_fx :level, amp: 0.1 do
     sync :quart
     with_fx :lpf do
       sample :elec_triangle, amp: 0.2
@@ -72,8 +70,7 @@ live_loop :drum do
   end
 end
 vio_pan = -1
-live_loop :vio do |vio_idx|
-  with_fx :level, amp: 0.0 do
+live_loop :vio do |vio_idx|;with_fx :level, amp: 0.0 do
     #4.times{sync :start}
     sync :otherhigh
     with_fx :reverb, room: 1.0, mix: 1.0 do
@@ -89,8 +86,7 @@ live_loop :vio do |vio_idx|
   vio_pan += 1
   vio_idx += 1
 end
-live_loop :piano do |p_idx|
-  with_fx :level, amp: 1.0 do
+live_loop :piano do |p_idx|;with_fx :level, amp: 1.0 do
     use_synth :beep; use_synth_defaults amp: 0.3, attack: 0.001, release: 0.01, decay: 0.1
     with_fx :reverb do
       sample pa_s, amp: 0.1, rate: (ring -1, 1)[p_idx]
@@ -101,8 +97,8 @@ live_loop :piano do |p_idx|
           #play degree(1, :A2, :minor), cutoff: 70, release: bar, decay: bar*8, env_curve: 6, res: 0.2
         end
       end
-      with_fx :level, amp: 0 do
-        notes = deg_seq(*%w{:A3 1211 :A3 1411 :A3 1111 :A3 1311})
+      with_fx :level, amp: 1 do
+        notes = deg_seq(*%w{:a3 1 :a4 211 :a3 1 a4 311 :a3 1 :a4 111 :a3 1 :a4 311})
         play notes[0], amp: 1.2, attack: 0.001, release: 0.01, decay: 0.1
         sleep bar/2
         play notes[1], amp: 1.0, attack: 0.001, release: 0.01, decay: 0.1
@@ -138,7 +134,7 @@ live_loop :piano do |p_idx|
 
         if(p_idx % 2 == 0)
           with_fx :echo, phase: bar do
-            play degree(7, :A2, :minor), amp: 1.0, attack: 0.001, release: bar/2.0, decay: bar
+            play degree(7, :A3, :minor), amp: 1.0, attack: 0.001, release: bar/2.0, decay: bar
           end
         else
           play notes[13], amp: 1.0, attack: 0.001, release: (p_idx % 4) == 0 ? bar/2.0 : 0.01, decay: (p_idx % 4) == 0 ? bar : 0.1
@@ -163,8 +159,8 @@ live_loop :chords do; with_fx :level, amp: 1.0 do
       # with_fx :slicer, phase: bar/4 do
       use_synth :tri #:dsaw
       play chord_degree(1, :A2, :major)[0], decay: bar*2, release: 1, attack: 0.2, amp: 0.2
-      # sleep bar/2
-      # play chord_degree(4, :A2, :major)[1..2], decay: bar*2, release: 1, attack: 0.2, amp: 0.2
+       sleep bar/2
+       play chord_degree(4, :A2, :major)[1..2], decay: bar*2, release: 1, attack: 0.2, amp: 0.2
       sync :start
       play chord_degree(1, :A2, :major)[1..2], decay: bar*2, release: 1, attack: 0.2, amp: 0.2
     end
@@ -172,7 +168,7 @@ live_loop :chords do; with_fx :level, amp: 1.0 do
   #end
 end
 live_loop :bright_light do
-  with_fx :level, amp: 1.0 do
+  with_fx :level, amp: 1.2 do
     3.times {sync :quart}
     use_synth :beep    #:mod_pulse #:mod_beep
     use_synth_defaults cutoff: 100, res: 1.001, amp: 0.8
@@ -271,7 +267,7 @@ end
 
 vio_pan = -1
 live_loop :vio do |vio_idx|
-  with_fx :level, amp: 1.0 do
+  with_fx :level, amp: 0.0 do
     #4.times{sync :start}
     sync :otherhigh
     with_fx :reverb, room: 1.0, mix: 1.0 do
@@ -363,7 +359,7 @@ room_size = 0
 
 live_loop :rolling_left do |b_idx|
   with_fx :level, amp: 1.0 do
-    notes = deg_seq(*%w[:A3 145]) #fm
+    notes = deg_seq(*%w[:A3 45]) #fm
     2.times do
       @direction = rand_i(-1..1)
       play_rolling notes[b_idx], dir=@direction, room=1, cut=100, detune1=0, detune2=0.001
@@ -374,7 +370,7 @@ live_loop :rolling_left do |b_idx|
 end
 
 live_loop :rolling_right do |n_idx|
-  notes = deg_seq(*%w[:A3 561])
+  notes = deg_seq(*%w[:A2 56])
   with_fx :level, amp: 1.0 do
     2.times do |i|
       play_rolling notes[n_idx], @direction == -1 ? 1 : 0, room=1, cut=90, detune1=0, detune2=0.01
