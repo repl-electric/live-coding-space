@@ -33,6 +33,15 @@ def deg_seq(*pattern_and_roots)
     root = root[1..-1]
   end
   s = /[[:upper:]]/.match(root.to_s[0]) ? :major : :minor
+  if(s == :minor)
+    s = if    root.to_s[1] == "h"
+        :harmonic_minor
+        elsif root.to_s[1] == "m"
+        :melodic_minor
+        else :minor
+      end
+  end
+  root = root[0] + root[2..-1] if root.length > 2
   pattern.to_s.split("").map{|d| d == "_" ? nil : degree(d.to_i, root, s)}
  end.flat_map{|x| x}
  (ring *notes)
