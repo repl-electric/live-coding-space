@@ -111,15 +111,15 @@ live_loop :piano do |p_idx|;with_fx :level, amp: 1.0 do
       end
       with_fx :level, amp: 1.0  do
         if p_idx % 4 <= 2
-          notes = dez_seq(*%w{:a3 1 :a4 211 :a3 1 a4 311 :a3 1 :a4 111 :a3 1 :a4 311})
+          notes = deg_seq(*%w{:a3 1 :a4 211 :a3 1 a4 311 :a3 1 :a4 111 :a3 1 :a4 311})
         else
-          notes = dez_seq(*%w{:a3 2 :a4 222 :a3 2 a4 322 :a3 2 :a4 222 :a3 2 :a4 322})
+          notes = deg_seq(*%w{:a3 2 :a4 222 :a3 2 a4 322 :a3 2 :a4 222 :a3 2 :a4 322})
         end
-        notes = dez_seq(*%w{:a3 6666 7777 6666 7777})
+        notes = deg_seq(*%w{:a3 6666 7777 6666 7777})
         if p_idx % 4 <= 2
-          notes = dez_seq(*%w{:a3 5 5 5 5 7 7 7 7 6 6 6 6 7 7 7 7})
+          notes = deg_seq(*%w{:a3 5 5 5 5 7 7 7 7 6 6 6 6 7 7 7 7})
         else
-          notes = dez_seq(*%w{:a3 5 5 5 5 :a4 1 :a3 7 7 6 6 6 6 7 7 7 7})
+          notes = deg_seq(*%w{:a3 5 5 5 5 :a4 1 :a3 7 7 6 6 6 6 7 7 7 7})
         end
 
         bonus_note = (ring degree(5, :a3, :minor))
@@ -129,11 +129,11 @@ live_loop :piano do |p_idx|;with_fx :level, amp: 1.0 do
                   bar/2.0, bar/2.0, bar/4.0)
 
         if p_idx % 32 == 0
-          notes = dez_seq(*%w{:ah3 _ _ 5 5 _ _ 4 4 _ _ 6 6 _ _ 4 4})
+          notes = deg_seq(*%w{:ah3 _ _ 5 5 _ _ 4 4 _ _ 6 6 _ _ 4 4})
           bonus_note = (ring degree(3, :a3, :minor))
 
         elsif p_idx % 32 >= 16
-          notes = dez_seq(*%w{:ah3 1 1 1 6 1 1 1 5 1 1 1 6 1 1 1 7})
+          notes = deg_seq(*%w{:ah3 1 1 1 6 1 1 1 5 1 1 1 6 1 1 1 7})
           bonus_note = (ring degree(5, :a3, :minor))
 
           sleeps = (ring bar, bar, bar/2,
@@ -392,7 +392,7 @@ end
 
 live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 1 do
     with_fx :pitch_shift, pitch_dis: 0.01 do
-      with_fx :reverb do
+      with_fx :reverb, room: 0.5 do
         with_synth :prophet do
           4.times{sync :start}
           notes = (ring chord(:a1, '7sus4')[0],
