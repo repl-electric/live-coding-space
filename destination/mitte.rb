@@ -71,7 +71,8 @@ live_loop :metro do
   cue :eighth
   sleep bar/2.0
   cue :quart; cue :eighth
-  sleep bar
+  sleep bar/2.0
+  cue :eighth
 end
 live_loop :drum do |d_idx|;with_fx :level, amp: 0.0 do
     sync :half
@@ -305,7 +306,7 @@ end
 live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.0 do
     with_fx :pitch_shift, pitch_dis: 0.01 do
       with_fx :reverb do
-        with_synth :prophet do
+        with_synth :prophet do 
           1.times{sync :whole}
           chord_name = '7sus4'
           root = :a2
