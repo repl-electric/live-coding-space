@@ -223,13 +223,13 @@ live_loop :dark_highlight do |n_idx|
   end
   n_idx+=1
 end
-define :play_rolling do |notes, direction, cutoff, detune_factor1, detune_factor2|
+define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detune_factor2|
   hit_start_min=0.1
   hit_start_max=0.2
   distort_off = false
   drums_on = false
   use_synth :mod_fm
-  use_synth_defaults detune: 0.00, sustain_level: 0.20, res: 1, env_curve: 7 ,sustain: 1.0, attack: 0.01, decay: 0.15, amp: 1.0, release: 0.5, attack_level: 0.8,
+  use_synth_defaults detune: 0.005, sustain_level: 0.20, res: 1, env_curve: 7 ,sustain: 1.0, attack: 0.01, decay: 0.15, amp: 1.0, release: 0.5, attack_level: 0.8,
     mod_phase: 2
   with_fx :reverb, mix_slide: 0.2 do |r_fx|
    #   with_fx :echo, phase: bar/1.0 do
@@ -247,7 +247,7 @@ define :play_rolling do |notes, direction, cutoff, detune_factor1, detune_factor
           play notes[n], attack: 0.001,  pan: 0.8*direction, detune: detune_factor1
           sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max) if drums_on
 
-          sleep bar/2
+          sleep sleeps[n*3 + 0]
           if cutoff > 80 && !distort_off
             control(r_fx, room: 0.8, mix:  n_mix); control(d_fx, distort: 0.25)
           end
@@ -256,14 +256,14 @@ define :play_rolling do |notes, direction, cutoff, detune_factor1, detune_factor
 
           n_cut += cutoff/(4*7); control(c_fx, cutoff: n_cut);
 
-          sleep bar/2
+          sleep sleeps[n*3 + 1]
           if cutoff > 80 && !distort_off
             control(r_fx, room: 0.8, mix:  n_mix)
           end
           play notes[n], attack: 0.005, pan: 0.6*direction, detune: detune_factor2
           sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max)  if drums_on
 
-          sleep bar/2
+          sleep sleeps[n*3 + 2]
           if cutoff > 80 && !distort_off
             control(r_fx, room: 1.0, mix:  n_mix); control(d_fx, distort: 0.0)
           end
@@ -279,7 +279,8 @@ live_loop :rolling_left do |idx|; with_fx :level, amp: 1.0 do
     #notes = deg_seq(*%w[:a2 1531 4333 :a3 1511 :A2 7])
     notes = knit(*chord(:a3, 'sus4')[0..3].reverse.map{|a| [a, 8]}.flatten)
     notes = (ring deg_seq(*%w[:A3 1])[idx])
-    1.times {play_rolling notes, (ring -1,1)[idx], cut=10, detune1=0, detune2=0.001}
+    sleeps = (ring bar/2)
+    1.times {play_rolling notes, sleeps, direction=(ring -1,1)[idx], cut=10, detune1=0, detune2=0.001}
   end
   idx+=1
 end
@@ -287,8 +288,9 @@ live_loop :rolling_right do |idx|;with_fx :level, amp: 1.0 do
     #    notes = deg_seq(*%w[:A2 3753 7511 :A3 353 :A2 1])
     notes = (ring deg_seq(*%w[:A3 1])[idx])
     notes = knit(*chord(:a3, 'sus4')[0..3].map{|a| [a, 8]}.flatten)
+    sleeps = (ring bar/2)
     cue :flow
-    1.times{play_rolling notes,(ring 1,-1)[idx], cut=10, detune1=0, detune2=0.0001}
+    1.times{play_rolling notes, sleeps, direction=(ring 1,-1)[idx], cut=10, detune1=0, detune2=0.0001}
   end
   idx+=1
 end
