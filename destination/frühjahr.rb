@@ -285,9 +285,9 @@ end;end;end;end;
 live_loop :rolling_left do |idx|; with_fx :level, amp: 0.5 do
     #notes = deg_seq(*%w[:a2 1531 4333 :a3 1511 :A2 7])
     notes = knit(*chord(:a3, 'sus4')[0..3].reverse.map{|a| [a, 8]}.flatten)
-#    notes = (ring deg_seq(*%w[:A3 111 :A3 5]))
+    notes = (ring deg_seq(*%w[:A3 111 :A3 5]))
     sleeps = (ring bar/2)
-    1.times {play_rolling notes, sleeps, direction=(ring -1,1)[idx], cut=120, detune1=0, detune2=0.001# do |n|
+    1.times {play_rolling notes, sleeps, direction=(ring -1,1)[idx], cut=0, detune1=0, detune2=0.001# do |n|
      # with_synth(:beep){with_fx(:slicer, phase: bar){play deg_seq(*%w{:A3 3161 5141 3131 3141})[n*1+rand_i(1)], attack: 0.01, release: 0.01, decay: 1.0} if  n%2==0}
     #end
   } 
@@ -349,7 +349,7 @@ end;end;end;end;end
 end
 
 live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do
-    #m_idx = (m_idx % 16) + 16
+    m_idx = (m_idx % 16) #+ 16
     sync :whole
     use_synth :beep
     with_fx :lpf, cutoff: 80, mix: 0.0 do
@@ -361,17 +361,27 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do
         # notes = deg_seq(*%w{:A3 21})
         #notes = deg_seq(*%w{:A3 4363 5333 3331 3131})
 
-puts "#{notes[m_idx]} == #{note(:Fs4)}"
-            with_fx :slicer, phase: bar do
+      with_fx :slicer, phase: bar do
       case notes[m_idx]
-      when note(:Fs4)
-      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Fs2_15_pianissimo_arco-normal.wav", amp: 0.8
-      when note(:Cs4)
-      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Cs2_15_pianissimo_arco-normal.wav", amp: 0.4           
-      when note(note(:E4))
-      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_E2_15_pianissimo_arco-normal.wav", amp: 0.5           
-      end
-end
+                    when note(:A3)
+#sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Bowed\ Notes/A_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.2
+                      sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Guitar\ Tails/108_A_PostRockChords_01_SP.wav"
+                    when note(:Fs4)
+#sample "/Users/josephwilk/Workspace/music/samples/Sample\ Magic\ -\ Ambient\ and\ Chill\ -\ Sampler\ Formats/Battery/Chords\ 80BPM\ Samples/am_chrd80_flights_F\#m9.wav"
+sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Bowed\ Notes/F\#_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.1
+                      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Fs2_15_pianissimo_arco-normal.wav", amp: 0.8
+                    when note(:Cs4)
+                      sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Guitar\ Tails/92_C\#_PostRockChords_01_SP.wav"
+#sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Bowed\ Notes/C\#_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.2
+                      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Cs2_15_pianissimo_arco-normal.wav", amp: 0.4
+                    when note(:E4)
+#sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Bowed\ Notes/E_BowedGuitarHarm_01_SP.wav"
+sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Bowed\ Notes/E_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.2
+#                      sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Guitar\ Tails/92_E_PostRockChords_01_SP.wav"
+                      #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_E2_15_pianissimo_arco-normal.wav", amp: 0.5
+                    end
+                  end
+
 
         if m_idx % 16 == 8
           back_notes = deg_seq(*%w{:A2 614})
@@ -435,20 +445,20 @@ end
                     end
                   end
 
-
+                  #5 7 2 4
         if m_idx % 4 == 0 
 #                    with_fx :slicer, phase: bar do
-                    with_synth :beep do
+                    with_synth :dark_ambience do
                       play deg_seq(*%w{:A2 _ _ _ _ 
                                        :A3 _ _ _ _
-                                       :A2 7 _ _ _
+                                       :A4 6 _ _ _
                                            _ _ _ _
 
                                        :A2 _ _ _ _
                                        :A3 _ _ _ _
-                                       :A2 7 _ _ _
+                                       :A4 7 _ _ _
                                            _ _ _ _
-                                          })[m_idx], decay: bar*2, amp: 0.7, sustain: bar/2.0, cutoff: 80
+                                          })[m_idx], decay: bar*2, amp: 2.7, sustain: bar/2.0, cutoff: 80
                     end
  #                   end
                   end
@@ -471,7 +481,7 @@ live_loop :hl do |idx| with_fx :level, amp: 0.0 do
     play_darkness deg_seq(*%w{:A1 1235 1215})[idx], bar
     idx+=1
 end;end
-live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 3.0 do
+live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.0 do
   _ = nil
     with_synth :dark_ambience do
       with_fx :reverb, room: 0.8 do
