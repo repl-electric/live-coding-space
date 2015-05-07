@@ -369,33 +369,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.0 do; with_fx :lpf, cutoff: 80
                     end
                   end
 
-
-        if m_idx % 16 == 8
-          back_notes = deg_seq(*%w{:A2 614})
-with_synth :beep do
-          #play back_notes[0], attack: 0.5, amp: 0.5,  release: 1,  decay: 4 + rrand(0,2)
-          #play back_notes[1], attack: 0.25, amp: 0.5, release: 1, decay: 4 + rrand(0,2)
-          #play back_notes[2], attack: 1.0, amp: 0.5,  release: 1,  decay: 4 + rrand(0,2)
-end
- 
-        elsif m_idx % 16 == 14
-          back_notes = deg_seq(*%w{:A2 735})
-with_synth :beep do
-
-         # play back_notes[0], attack: 1.0,  amp: 0.5, decay: 0.5
-         # play back_notes[1], attack: 0.25, amp: 0.5, decay: 0.5
-         # play back_notes[2], attack: 0.5,  amp: 0.5, release: 1.0, decay: 0.5
-end
-        elsif m_idx % 16 == 15
-          back_notes = deg_seq(*%w{:A2 135})
-with_synth :beep do
-
-         # play back_notes[0], attack: 1.0,  amp: 0.5, decay: 0.5
-         # play back_notes[1], attack: 0.25, amp: 0.5, decay: 0.5
-         # play back_notes[2], attack: 0.5,  amp: 0.5, release: 1.0, decay: 0.5
-end
-        end
-        play notes[m_idx], amp: 1, decay: 0.1 + rrand(0.0,0.15)
+        play notes[m_idx], amp: (notes[m_idx] == note(:Fs4) ? 0.4 : 1, decay: 0.1 + rrand(0.0,0.15)
 
 
         #notes = deg_seq(*%w{:A3           3161 5131 3131 3131})
