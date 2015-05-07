@@ -333,7 +333,7 @@ live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.0 do
     s_idx+=1
 end;end
 
-live_loop :melo do |m_idx|;with_fx :level, amp: 0.0 do; with_fx :lpf, cutoff: 80, mix: 1.0 do
+live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20, mix: 1.0 do
     #m_idx = (m_idx % 16) #+ 16
     sync :whole
     use_synth :beep
@@ -345,7 +345,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.0 do; with_fx :lpf, cutoff: 80
         notes = deg_seq(*%w{:A3 3161 5131 3131 3131
                                 3163 5131 3131 4121})
 
-        notes = deg_seq(*%w{:A3 31})
+        notes = deg_seq(*%w{:A3 4 :A2 7  :A3 1 :A2 7 })
 
         # notes = deg_seq(*%w{:A3 21})
         #notes = deg_seq(*%w{:A3 4363 5333 3331 3131})
@@ -369,7 +369,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.0 do; with_fx :lpf, cutoff: 80
                     end
                   end
 
-        play notes[m_idx], amp: (notes[m_idx] == note(:Fs4) ? 0.4 : 1, decay: 0.1 + rrand(0.0,0.15)
+        play notes[m_idx], amp: (notes[m_idx] == note(:Fs4)) ? 0.4 : 1, decay: 0.1 + rrand(0.0,0.15)
 
 
         #notes = deg_seq(*%w{:A3           3161 5131 3131 3131})
