@@ -402,6 +402,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 0,
                     end;end
         if m_idx % 4 == 0 
                     with_fx :slicer, phase: (knit bar*4, 4, bar*6, 4)[m_idx] do
+                    with_fx :lpf, cutoff: 80 do
                     with_synth :beep do
                       play deg_seq(*%w{:A2 5 _ _ _ 
                                        :A3 3 _ _ _
@@ -412,8 +413,8 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 0,
                                        :A3 3 _ _ _
                                        :A2 1 _ _ _
                                        :A2 6 _ _ _
-                                           })[m_idx], decay: bar*4, amp: 0.5, cutoff: 80, sustain: bar/2.0
-                    end;end;end
+                                           })[m_idx], decay: bar*4, amp: 0.5, sustain: bar/2.0
+                    end;end;end;end
         if m_idx % 4 == 0 
 #                    with_fx :slicer, phase: bar do
 with_fx :lpf, cutoff: 80 do
