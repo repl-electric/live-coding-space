@@ -1,7 +1,7 @@
 ["piano"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
 bar = 1/2.0
 quart = 2*bar
-set_volume! 1.0
+set_volume! 2.5
 pa_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/piano_a.wav"
 p_c3_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/148600__neatonk__piano-med-c3.wav"
 p_a2_s = "/Users/josephwilk/Dropbox/repl-electric/samples/pi/148533__neatonk__piano-med-a2.wav"
@@ -265,30 +265,39 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
           end
           play notes[n+3], attack: 0.001,  pan: 0.5*direction, detune: (detune_factor2+(n*0.005))
           sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max+0.2)  if drums_on
+
           n_mix-0.09 unless n_mix < 0.2
 
+          #bonus
           #with_synth(:beep){with_fx(:slicer, phase: bar){play deg_seq(*%w{:A3 3161 5141 3131 3141})[n*1+rand_i(1)], attack: 0.01, release: 0.01, decay: 1.0} if  n%2==0}
         end
         sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max)
 end;end;end;end;
 live_loop :rolling_left do |idx|; with_fx :level, amp: 0.4 do
     notes = knit(*chord(:a3, 'sus4')[0..3].reverse.map{|a| [a, 8]}.flatten)
-    notes = (ring deg_seq(*%w[:A2 1])[idx])
+    #notes = (ring (deg_seq(*%w[:A2 1457 6543])[idx]))
+    notes = (ring (deg_seq(*%w[:A2 1])[idx]))
+
     sleeps = (ring bar/2.0)
-    1.times {play_rolling notes, sleeps, direction=(ring -1,1)[idx], cut=0, detune1=0, detune2=0.001} 
+    cue :roller
+    1.times {play_rolling notes, sleeps, direction=(ring -1,1)[idx], cut=0, detune1=0, detune2=0.001
+  } 
   end
   idx+=1
 end
 live_loop :rolling_right do |idx|;with_fx :level, amp: 0.4 do
     notes = knit(*chord(:a3, 'sus4')[0..3].map{|a| [a, 8]}.flatten)
-    notes = (ring deg_seq(*%w[:A2 1])[idx])
+    #notes = (deg_seq(*%w[:A2 3535 1616]))
+    notes = (ring (deg_seq(*%w[:A2 5613 4361])[idx]))
+    notes = (ring (deg_seq(*%w[:A2 1])[idx]))
+
     sleeps = (ring bar)
     cue :flow
     1.times{play_rolling(notes, sleeps, direction=(ring 1,-1)[idx], cut=0, detune1=0, detune2=0.0001)}
   end
   idx+=1
 end
-live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.0 do
+live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.01 do
     with_fx :pitch_shift, pitch_dis: 0.01 do
       with_fx :reverb do
         with_synth :prophet do 
@@ -306,11 +315,48 @@ live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.0 do
     end
     s_idx+=1
 end;end
-live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20, mix: 1.0 do
+
+#145
+#561
+live_loop :floating do |idx|; with_fx :level, amp: 0.0 do
+sync :roller
+    with_fx :reverb, room: 1.0 do;with_synth :dark_ambience do; with_fx :level, amp: 1.0 do
+      #if idx % 4 == 0
+#        play chord((ring :B3)[idx], "7sus2")[(knit 0, 4, 1, 4)[idx]], 
+              #(ring :Cs4, :E3, :Cs4, :B3)[idx], "7sus2"), 
+              notes =(ring degree(3, :A3, :major),
+                  [degree(2, :A3, :major), degree(7, :A2, :major)],
+                  [degree(7, :A2, :major), degree(3, :A2, :major)],
+                  chord(:A2, :major7))
+
+        play notes[idx], amp: (ring 0.5, 0.6, 0.6, 0.5)[idx],
+        release: (ring bar*8, bar*7 ,bar*7 ,bar*7)[idx], decay: bar*8, attack: 0.1
+#       sleep (ring bar*8, bar*4, bar*4, bar*4)[idx]
+#end
+notes = notes[idx]
+if notes.class == Array
+  notes = notes.first
+end
+with_fx :rhpf do
+with_fx :bitcrusher, pre_amp: 0.2, mix: 0.2 do
+case notes
+when degree(3, :A3, :major)
+sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed\ Notes/C\#_BowedGuitarNote_01_SP.wav", amp: 0.3
+when degree(2, :A3, :major)
+sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed\ Notes/B_BowedGuitarHarm_01_SP.wav", amp: 0.05
+when degree(7, :A2, :major)
+sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed Notes/F#_BowedGuitarNote_01_SP.wav", amp: 0.05
+end
+end
+end;end;end;end;end
+
+idx+=1
+end
+
+live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 0, mix: 1.0 do
     #m_idx = (m_idx % 16) #+ 16
     sync :whole
     use_synth :beep
-    with_fx :lpf, cutoff: 80, mix: 0.0 do
     with_fx :reverb, room: 0.7, dry: 1.0, mix: 0.2 do
       with_fx (ring :echo, :none)[m_idx], phase: bar/8 do
         with_synth_defaults attack: 0.1, release: 1.0, decay: 0.1 + rrand(0.0,0.15) do
@@ -327,7 +373,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20
                       sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed Notes/A_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.2
                       sample "/Users/josephwilk/Dropbox/repl-electric/samples/Guitar Tails/108_A_PostRockChords_01_SP.wav", amp: 1.0
                     when note(:Fs4)
-                      #sample "/Users/josephwilk/Dropbox/repl-electric/samples/Battery/Chords 80BPM Samples/am_chrd80_flights_F#m9.wav"
+#                      sample "/Users/josephwilk/Dropbox/repl-electric/samples/Battery/Chords 80BPM Samples/am_chrd80_flights_F#m9.wav"
                       sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed Notes/F#_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.2
                       #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Fs2_15_pianissimo_arco-normal.wav", amp: 0.8
                     when note(:Cs4)
@@ -335,7 +381,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20
                       #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_Cs2_15_pianissimo_arco-normal.wav", amp: 0.4
                     when note(:E4)
                       sample "/Users/josephwilk/Dropbox/repl-electric/samples/Bowed Notes/E_BowedGuitarNote_01_SP.wav", start: 0.2, amp: 0.5
-                      #sample "/Users/josephwilk/Dropbox/repl-electric/samples/Guitar\ Tails/92_E_PostRockChords_01_SP.wav"
+#                      sample "/Users/josephwilk/Dropbox/repl-electric/samples/Guitar\ Tails/92_E_PostRockChords_01_SP.wav"
                       #sample "/Users/josephwilk/Workspace/music/samples/instruments/cello/wavs/cello_E2_15_pianissimo_arco-normal.wav", amp: 0.5
                     end
                   end
@@ -370,6 +416,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20
                     end;end;end
         if m_idx % 4 == 0 
 #                    with_fx :slicer, phase: bar do
+with_fx :lpf, cutoff: 80 do
                     with_synth :dark_ambience do
                       play deg_seq(*%w{:A2 _ _ _ _ 
                                        :A3 _ _ _ _
@@ -380,26 +427,25 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.5 do; with_fx :lpf, cutoff: 20
                                        :A3 _ _ _ _
                                        :A4 7 _ _ _
                                            _ _ _ _
-                                          })[m_idx], decay: bar*2, amp: 2.7, sustain: bar/2.0, cutoff: 80
-                    end;end;end;end;end;end
+                                          })[m_idx], decay: bar*2, amp: 0.7, sustain: bar/2.0
+                    end;end;end;end;end;end;end
     with_fx :reverb, room: 1.0 do                
         with_synth :dark_ambience do
           if m_idx % 4 == 0
-            play chord((ring :Cs4, :E4, :Cs4, :Cs4)[m_idx], "7sus2")[(ring 0)[m_idx]], amp: 0.5, release: bar*2, decay: bar*2, attack: 1.0
-end;end;end;end;end;
+            #play chord((ring :Cs4, :E4, :Cs4, :Cs4)[m_idx], "7sus2")[(ring 0)[m_idx]], amp: 0.5, release: bar*2, decay: bar*2, attack: 1.0
+end;end;end;end;
   m_idx+= 1
 end
-
 live_loop :hl do |idx| with_fx :level, amp: 0.0 do
     sync :flow
     play_darkness deg_seq(*%w{:A1 1235 1215})[idx], bar
     idx+=1
 end;end
-
-live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.0 do
+live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.9 do
   _ = nil
     with_synth :dark_ambience do
       with_fx :reverb, room: 0.8 do
+
 #comment do
         1.times{sync :whole}
   play (ring
@@ -414,6 +460,8 @@ live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.0 do
         )[n_idx], release: (ring bar*4, bar*4, bar*4, bar*6)[n_idx], attack: 0.28,
           amp: (ring 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5,1.5)[n_idx]
 #end
+
+
 comment do
         1.times{sync :whole}
 
@@ -425,17 +473,26 @@ comment do
               _,chord_degree(4, :a2, :major)[0],
               #
               chord_degree(5, :a3, :major)[0],_,
-              _,chord_degree(4, :a3, :major)[0])[n_idx], release: (ring bar*4, bar*4, bar*4, bar*6)[n_idx], attack: 0.28,
+              _,chord_degree(4, :a3, :major)[0],
+        )[n_idx], release: (ring bar*4, bar*4, bar*4, bar*6)[n_idx], attack: 0.28,
           amp: (ring 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5,1.5)[n_idx]
 end
+
 comment do
         1.times{sync :quarter}
       with_fx :lpf, cutoff: 100, mix: 1.0 do
+
         play (ring                  
+#              chord_degree(1, :a4, :major)[0], chord_degree(1, :a3, :major)[1], chord_degree(1, :a3, :major)[1], chord_degree(1, :a3, :major)[0],
+ #             chord_degree(3, :a4, :major)[0], chord_degree(3, :a3, :major)[1], chord_degree(3, :a3, :major)[2], chord_degree(1, :a3, :major)[0],
               _, _, _, chord(:a3, :sus2),
               _, _, _, chord(:a3, :sus2)[0],
               _, _, _, degree(3, :a3, :major),
-              _, _, _, degree(3, :a3, :major))[n_idx], release: (ring bar*2, bar, bar, bar*2)[n_idx], attack: (ring 1.0, 0.5, 0.5, 0.5)[n_idx],
+              _, _, _, degree(3, :a3, :major)
+
+#wholes :A3 3    161 5131 3131 3131}
+#              chord_degree(7, :a2, :major)[0], chord_degree(7, :a2, :major)[1], chord_degree(7, :a2, :major)[2], _
+)[n_idx], release: (ring bar*2, bar, bar, bar*2)[n_idx], attack: (ring 1.0, 0.5, 0.5, 0.5)[n_idx],
           amp: (ring 1.2, 1.0, 1.1, 0.9)[n_idx]
 end
 end
@@ -445,7 +502,7 @@ end
   n_idx+=1
 end
 
-live_loop :crackler do;with_fx :level, amp: 0.2 do
+live_loop :crackler do;with_fx :level, amp: 0.25 do
 crack_dur = sample_duration(ambi_s(:crackling))
 a = 0.5
 sync :whole
