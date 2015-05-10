@@ -214,7 +214,7 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
   hit_start_min=0.5
   hit_start_max=0.6
   distort_on = true
-  drums_on = true
+  drums_on = false
   use_synth :mod_fm
   use_synth_defaults detune: 0.00, sustain_level: 0.20, res: 1, env_curve: 7 ,sustain: 1.0, attack: 0.01, decay: 0.15, amp: 1.0, release: 0.5, attack_level: 0.8,
     mod_phase: 0
@@ -226,7 +226,7 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
         n_cut = rrand(30,cutoff);
         n_mix = 0.4
         control(c_fx, cutoff: n_cut);
-        8.times do |n|
+        4.times do |n|
           n%2==0 ? sync(:whole) : sync(:half)
 
           if cutoff > 80 && distort_on
@@ -265,10 +265,10 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
         end
         sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max)
 end;end;end;end;
-live_loop :rolling_left do |idx|; with_fx :level, amp: 0.4 do
+live_loop :rolling_left do |idx|; with_fx :level, amp: 0.35 do
    notes = knit(*chord(:a3, 'sus4')[0..3].reverse.map{|a| [a, 8]}.flatten)
-     notes = (ring (deg_seq(*%w[:A2 1457 6543])[idx]))
-     notes = (ring (deg_seq(*%w[:A2 1 ])[idx]))
+    notes = (ring (deg_seq(*%w[:A2 1457 6543])[idx]))
+    notes = (ring (deg_seq(*%w[:A2 1])[idx]))
 
     sleeps = (ring bar/2.0)
     cue :roller
@@ -277,14 +277,14 @@ live_loop :rolling_left do |idx|; with_fx :level, amp: 0.4 do
   end
   idx+=1
 end
-live_loop :rolling_right do |idx|;with_fx :level, amp: 0.4 do
+live_loop :rolling_right do |idx|;with_fx :level, amp: 0.35 do
     notes = knit(*chord(:a3, 'sus4')[0..3].map{|a| [a, 8]}.flatten)
     #notes = (deg_seq(*%w[:A2 3535 1616]))
     notes = (deg_seq(*%w[:A2 1515 5656 :A3 1 :A2 5 :A3 1 :A2 5]))
-    otes = (ring (deg_seq(*%w[:A2 5613 4365])[idx]))
+    notes = (ring (deg_seq(*%w[:A2 5613 4365])[idx]))
     notes = (ring (deg_seq(*%w[:A2 1])[idx]))
 
-    sleeps = (ring bar)
+    sleeps = (ring bar/2.0)
     cue :flow
     1.times{play_rolling(notes, sleeps, direction=(ring 1,-1)[idx], cut=0, detune1=0, detune2=0.0001)}
   end
@@ -312,7 +312,7 @@ end;end
 #145
 #561
 
-live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 0, mix: 1.0 do
+live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 15, mix: 1.0 do
     #m_idx = (m_idx % 16) #+ 16
     sync :whole
     use_synth :beep
@@ -323,9 +323,12 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 0
 #3161 5131 3131 2131
 #3161 5131 3131 3211
 
-        notes = deg_seq(*%w{:A3 3161 5131 2121 3132
-                                3163 5131 3131 4131})
+        notes = deg_seq(*%w{:A3 3161 5131 3131 3131
+                                3163 5131 3131 4121})
                   
+#        notes = deg_seq(*%w{:A3 3161 5131 3 1 :A2 7 :A3 1 :A3 3131
+#                                3163 5131 3131 4121})
+
 #        notes = deg_seq(*%w{:A3 1316 1513 1315 1312})
         #notes = deg_seq(*%w{:A3 4 :A2 7  :A3 1 :A2 7 })
         #notes = deg_seq(*%w{:A3 4363 5333 3331 3131})
@@ -362,11 +365,11 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 0
                                            5 _ _ _ 
                                        :A2 2 _ _ _
                                            })[m_idx], decay: (ring bar*8, 0, 0, 0, 
-                                                                   bar*9, 0, 0, 0)[m_idx],
-                        amp: 1.0*(ring 0.9, 0, 0, 0,
-                                       1.0, 0, 0, 0,
-                                       0.9, 0, 0, 0,
-                                       1.0, 0, 0, 0)[m_idx],  sustain: (bar/2.0) + rrand(0.0,0.1)
+                                                                   bar*8, 0, 0, 0)[m_idx],
+                        amp: 1.0*(ring 0.8, 0, 0, 0,
+                                       0.85, 0, 0, 0,
+                                       0.8, 0, 0, 0,
+                                       0.85, 0, 0, 0)[m_idx],  sustain: (bar/2.0) + rrand(0.0,0.1)
                     end;end
 
         #3161 5131 3131 3121
@@ -383,11 +386,11 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 0
                                        :A3 3 _ _ _
                                        :A2 1 _ _ _
                                        :A2 6 _ _ _
-                                           })[m_idx], decay: bar*4, amp: 1.0, sustain: bar/2.0
+                                           })[m_idx], decay: bar*4, amp: 0.5, sustain: bar/2.0
                     end;end;end;end
         #if m_idx % 4 == 0 
 #                    with_fx :slicer, phase: bar do
-                    with_fx :lpf, cutoff: 50 do
+                    with_fx :lpf, cutoff: 80 do
                     with_synth :dark_ambience do
                       use_synth_defaults release: bar*2
                       play deg_seq(*%w{:A3 _ _ _ _ 
@@ -399,7 +402,7 @@ live_loop :melo do |m_idx|;with_fx :level, amp: 0.45 do; with_fx :lpf, cutoff: 0
                                        :A3 _ _ _ _
                                        :A4 7 _ _ _
                                            _ _ _ _
-                                          })[m_idx],detune2: 12, decay: bar*2, amp: 1.0, sustain: bar/2.0, attack: 0.5
+                                          })[m_idx],detune2: 12, decay: bar*2, amp: 0.7, sustain: bar/2.0, attack: 0.5
                     #end
 end;end;end;end;end;end
     with_fx :reverb, room: 1.0 do                
@@ -409,7 +412,7 @@ end;end;end;end;end;end
 end;end;end;end;
   m_idx+= 1
 end
-live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.3 do
+live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.0 do
   _ = nil
     with_synth :dark_ambience do
       with_fx :reverb, room: 0.8 do
