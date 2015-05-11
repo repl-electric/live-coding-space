@@ -214,11 +214,11 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
   hit_start_min=0.5
   hit_start_max=0.6
   distort_on = true
-  drums_on = false
+  drums_on = true
   use_synth :mod_fm
   use_synth_defaults detune: 0.00, sustain_level: 0.20, res: 1, env_curve: 7 ,sustain: 1.0, attack: 0.01, decay: 0.15, amp: 1.0, release: 0.5, attack_level: 0.8,
     mod_phase: 0
-  with_fx :reverb, mix_slide: 0.2, mix: 0.1 do |r_fx|
+  with_fx :reverb, mix_slide: 0.2, mix: 0.2 do |r_fx|
     #   with_fx :echo, phase: bar/1.0 do
     with_fx :lpf, cutoff: cutoff, cutoff_slide: 20, mix: 1.0  do |c_fx|
       with_fx :distortion, distort: 0.1, cutoff: 90, mix: 0.1 do |d_fx|
@@ -265,10 +265,11 @@ define :play_rolling do |notes, sleeps, direction, cutoff, detune_factor1, detun
         end
         sample :elec_soft_kick, rate: 1, start: rrand(hit_start_min,hit_start_max)
 end;end;end;end;
-live_loop :rolling_left do |idx|; with_fx :level, amp: 0.3 do
+live_loop :rolling_left do |idx|; with_fx :level, amp: 0.3 + (ring 0.02,0.01,0.02,0.01)[idx] do
    notes = knit(*chord(:a3, 'sus4')[0..3].reverse.map{|a| [a, 8]}.flatten)
     notes = (ring (deg_seq(*%w[:A2 1457 6543])[idx]))
-    notes = (ring (deg_seq(*%w[:A2 1])[idx]))
+    #notes = (deg_seq(*%w[:A2 1113 1114]))
+    notes = (ring deg_seq(*%w[:A2 1])[idx])
 
     sleeps = (ring bar/2.0)
     cue :roller
@@ -286,7 +287,7 @@ live_loop :rolling_right do |idx|;with_fx :level, amp: 0.3 do
 
     sleeps = (ring bar/2.0)
     cue :flow
-    1.times{play_rolling(notes, sleeps, direction=(ring 1,-1)[idx], cut=0, detune1=0, detune2=0.0001)}
+    1.times{play_rolling(notes, sleeps, direction=(ring 1,-1)[idx], cut=0, detune1=0.0, detune2=0.0001)}
   end
   idx+=1
 end
@@ -294,7 +295,29 @@ end
 #    1.times{play_rolling(ring(deg_seq(*%w[:A2 1])), (ring bar*2.0), direction=(ring 1,-1)[idx], cut=40, detune1=0, detune2=0.001)}
 #    idx+=1
 #end;end
-live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.02 do
+
+#1457 6543
+#5613 4365
+live_loop :bass do |idx|;with_fx :level, amp: 0.0 do
+1.times{sync :flow}
+with_synth :dark_sea_horn do
+with_fx (ring :echo, :none)[idx], phase: (ring bar/2.0)[idx] do
+play (ring chord_degree(1, :A1, :major),
+           chord_degree(4, :A1, :major),
+           chord_degree(4, :A2, :major),
+           chord(:E3, :major7),
+           chord(:E3, :major7),
+
+           chord_degree(1, :A2, :major),
+           chord_degree(3, :A2, :major),
+           chord_degree(4, :A2, :major),
+           chord_degree(3, :A2, :major)
+)[idx], decay: bar*6, attack: 0.5, amp: (ring 0.85, 0.7, 0.8, 0.7)[idx]
+end;end;end
+idx+=1
+end
+
+live_loop :continuous_flow do |s_idx|; with_fx :level, amp: 0.0 do
     with_fx :pitch_shift, pitch_dis: 0.01 do
       with_fx :reverb do
         with_synth :prophet do 
@@ -416,14 +439,12 @@ end;end;end;end;end;end
 end;end;end;end;
   m_idx+= 1
 end
-live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.3 do
+live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.0 do
   _ = nil
     with_synth :dark_ambience do
       with_fx :reverb, room: 0.8 do
 
-#comment do
-        1.times{sync :whole}
-  play (ring
+notes = (ring
               chord_degree(1, :a3, :major)[0..2],_,_,_,
               _,_,_,chord_degree(4, :a2, :major)[0],
               #
@@ -432,10 +453,18 @@ live_loop :dark_highlight do |n_idx|; with_fx :level, amp: 0.3 do
               #
               chord_degree(5, :a3, :major)[0],_,_,_,
               _,_,_,chord_degree(4, :a3, :major)[0],
-        )[n_idx], release: (ring bar*4, bar*4, bar*4, bar*6)[n_idx], attack: 0.50,
+        )
+#comment do
+        1.times{sync :whole}
+  play notes[n_idx], release: (ring bar*4, bar*4, bar*4, bar*6)[n_idx], attack: 0.50,
           amp: (ring 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5,1.5)[n_idx]
 #end
 
+with_synth :dark_sea_horn do
+if notes[n_idx] == chord_degree(1, :a4, :major)[0]
+play notes[n_idx], amp: 0.2, release: bar*4, attack: 0.1
+end
+end
 
 comment do
         1.times{sync :whole}
