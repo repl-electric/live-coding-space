@@ -1,17 +1,23 @@
+# ____ ____ _  _ ___  ____ _ ___  ____ ____ 
+# |    |__| |\/| |__] |__/ | |  \ | __ |___ 
+# |___ |  | |  | |__] |  \ | |__/ |__] |___                                           
 _ = nil
 bar = 1.0
 use_bpm 60 
-define :perc_s do |name,*args|
-  s = Dir["/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Perc/MicroPerc_*_SP.wav"]
-  s.sort!
-  sample (if name.is_a? Integer
-    s[name]
-  else
-  s.select{|s| s =~ /#{name}/}[0]
-  end), *args
+def chord_seq(*args)
+  args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
-define :ambi_s do |s, *args|
-  sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/#{s}",*args
+module Ambi
+ def self.[](a)
+  samples = Dir["/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/**/*.wav"]
+  samples.select{|s| s=~ /#{a}/}[0]
+ end
+end
+module Chill
+ def self.[](a)
+  samples = Dir["/Users/josephwilk/Workspace/music/samples/Sample\ Magic\ -\ Ambient\ and\ Chill\ -\ Wav/**/*.wav"]
+  samples.select{|s| s=~ /#{a}/}[0]
+ end
 end
 define :deg_seq do |*pattern_and_roots|
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
@@ -70,21 +76,33 @@ end
 
 live_loop :bass do |m_idx|
   sync :foo
-  case (m_idx%8)
+ case (m_idx%8)
   when 0
-    ambi_s "One Shots/Kick/SubKick_01_SP.wav", amp: 3.0+rrand(0.0,0.2)
+    sample Ambi["SubKick_01"], amp: 3.0+rrand(0.0,0.2), rate: rrand(0.9,1.0)
   when 4
-    ambi_s "One Shots/Forest/Impact_05_SP.wav", amp: 0.2
+    sample Ambi["Impact_0#{(stretch (1..5).to_a, 8).tick(:b)}"], amp: 0.2
   end
+  m_idx+=1
+end
 
-  #sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/Bass/135_C_SwellBass_01_SP.wav",  rate: pitch_ratio(note(:Cs3) - note(:C3)), amp: 0.1
-  #bowed_s "F#", rate: 0.5, amp: 0.2
-m_idx+=1
+live_loop :beats do
+  sync :foo
+  #sample Ambi["B_BrokenCres_01_SP"]
+  sample Ambi["Cracklin_01"], rate: 0.95, amp: 0.2
+  sleep sample_duration(Ambi["92_DottedThud_01_SP.wav"])
+end
+
+live_loop :texture do
+sync :foo
+with_fx :bitcrusher do
+sample Chill["am_pad80_warmth_B"], rate: pitch_ratio(note(:B2) - note((ring :FS2, :B2).tick(:d))),
+       amp: 0.01
+end
+sleep sample_duration Chill["am_pad80_warmth_B.wav"], rate: pitch_ratio(note(:B2) - note(:FS2))
 end
 
 live_loop :foo do
-  #sample "/Users/josephwilk/Dropbox/repl-electric/samples/Guitar\ Tails/92_Eb_Plucked_01_SP.wav", rate: pitch_ratio(note(:Fs2) - note(:Eb3))
-  density(@polyrhythm.sort.first) { play :FS2; sleep bar }
+  density(@polyrhythm.sort.first) { play :FS3; sleep bar }
 end
 
 live_loop :bar, autocue: false do
@@ -112,21 +130,21 @@ idx+=1
 end
 
 live_loop :highlight do |idx|
-4.times{sync :foo}
-with_fx (ring :none, :echo).tick(:a), phase: bar/4.0, decay: bar*8 do
+n = chord_seq(*%w{Cs4 7  Fs4 M  B3 M7})
+with_fx (ring :none, :echo).tick(:a), phase: bar/4.0, decay: (knit bar*8, 3, bar*6,1).tick(:q) do
 with_synth :hollow do
-  play degree((knit 3,1,4,1,5,1).tick(:r1), :FS4, :major), attack: 0.5, amp: 0.5
+2.times{sync :foo}
+  play n.tick(:f),  attack: 0.5, amp: 0.7
 end
+1.times{sync :foo}
+  play n.tick(:f), attack: 0.01, amp: 0.4, release: ring(2.0,0.5).tick(:r3)
+1.times{sync :foo}
 end
 end
 
 live_loop :high do
  2.times{sync :start}
- sample (knit "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Perc/MicroPerc_06_SP.wav",3,
-              "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/One\ Shots/Perc/MicroPerc_07_SP.wav",1).tick(:s)
+ sample (knit Ambi["MicroPerc_06"],3,
+              Ambi["MicroPerc_07"],1).tick(:s)
 
 end
-
-
-#33333333 44      55
-#11111111     111111111      11
