@@ -13,7 +13,7 @@ end
 define :ambi_s do |s, *args|
   sample "/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/#{s}",*args
 end
-def deg_seq(*pattern_and_roots)
+define :deg_seq do |*pattern_and_roots|
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
     if(/^[\d_]+$/ =~ accu[-1] && /^[\d_]+$/ =~ id)
       accu[0..-2] << "#{accu[-1]}#{id}"
@@ -41,7 +41,7 @@ def deg_seq(*pattern_and_roots)
   end.flat_map{|x| x}
   (ring *notes)
 end
-def bowed_s(name, *args)
+define :bowed_s do |name, *args|
   s = Dir["/Users/josephwilk/Dropbox/repl-electric/samples/Bowed\ Notes/*_BowedGuitarNote_01_SP.wav"]
   s.sort!
   sample (if name.is_a? Integer
