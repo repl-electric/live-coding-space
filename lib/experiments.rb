@@ -3,14 +3,22 @@ def chord_seq(*args)
 end
 module Ambi
  def self.[](a)
-  samples = Dir["/Users/josephwilk/Workspace/music/samples/AmbientElectronica_Main_SP/**/*.wav"]
-  samples.select{|s| s=~ /#{a}/}[0]
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"].sort
+   if a.is_a? Integer
+     samples[a]
+   else
+     samples.select{|s| s=~ /#{a}/i}[0]
+   end
  end
 end
 module Chill
  def self.[](a)
-  samples = Dir["/Users/josephwilk/Workspace/music/samples/Sample\ Magic\ -\ Ambient\ and\ Chill\ -\ Wav/**/*.wav"]
-  samples.select{|s| s=~ /#{a}/}[0]
+  samples = Dir["/Users/josephwilk/Workspace/music/samples/Chill/**/*.wav"].sort
+  if a.is_a? Integer
+    samples[a]
+  else
+    samples.select{|s| s=~ /#{a}/i}[0]
+  end
  end
 end
 def deg_seq(*pattern_and_roots)
