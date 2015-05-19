@@ -1,9 +1,9 @@
 def chord_seq(*args)
   args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
-module Ambi
+module Mountain
  def self.[](a)
-   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"].sort
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"].sort
    if a.is_a? Integer
      samples[a]
    else
@@ -11,9 +11,19 @@ module Ambi
    end
  end
 end
-module Chill
+module Ether
+  def self.[](a)
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"].sort
+   if a.is_a? Integer
+     samples[a]
+   else
+     samples.select{|s| s=~ /#{a}/i}[0]
+   end
+  end
+end
+module Ambi
  def self.[](a)
-  samples = Dir["/Users/josephwilk/Workspace/music/samples/Chill/**/*.wav"].sort
+  samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"].sort
   if a.is_a? Integer
     samples[a]
   else
