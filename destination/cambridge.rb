@@ -1,4 +1,4 @@
-["experiments"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/sonic-pi/lib/#{f}"}
+["experiments"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}"}
 # ____ ____ _  _ ___  ____ _ ___  ____ ____                         \:o/
 # |    |__| |\/| |__] |__/ | |  \ | __ |___    π=-    π=-   π=-      █
 # |___ |  | |  | |__] |  \ | |__/ |__] |___   π=-   π=-   π=-      .||.   
