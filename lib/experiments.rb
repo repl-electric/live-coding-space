@@ -1,34 +1,49 @@
 def chord_seq(*args)
   args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
-module Mountain
- def self.[](a)
-   samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"].sort
-   if a.is_a? Integer
-     samples[a]
-   else
-     samples.select{|s| s=~ /#{a}/i}[0]
-   end
- end
-end
-module Ether
-  def self.[](a)
-   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"].sort
-   if a.is_a? Integer
-     samples[a]
-   else
-     samples.select{|s| s=~ /#{a}/i}[0]
-   end
-  end
-end
-module Ambi
- def self.[](a)
-  samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"].sort
-  if a.is_a? Integer
+
+module Sample
+def self.matches(samples, a)
+  samples = samples.sort!
+  r = if a.is_a? Integer
     samples[a]
+  elsif a.is_a? Regexp
+    samples.select{|s| s=~ a}
   else
-    samples.select{|s| s=~ /#{a}/i}[0]
+    samples.select{|s| s=~ /#{a}/i}
   end
+  SonicPi::RingVector.new(r)
+end
+end
+
+module Mountain
+  def self.[](a)
+    Mountain.all(a)[0]
+  end
+  def self.all(a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Ether
+  def self.all(a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  
+  def self.[](a)
+    Ether.all(a)[0]
+  end
+end
+
+module Ambi
+ def self.all(a)
+  samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
+  Sample.matches(samples, a)  
+ end
+ def self.[](a)
+   Ambi.all(a)[0]
  end
 end
 def deg_seq(*pattern_and_roots)
