@@ -12,7 +12,7 @@ def self.matches(samples, a)
   else
     samples.select{|s| s=~ /#{a}/i}
   end
-  SonicPi::RingVector.new(r)
+  SonicPi::Core::RingVector.new(r)
 end
 end
 
