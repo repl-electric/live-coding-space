@@ -3,49 +3,59 @@ def chord_seq(*args)
 end
 
 module Sample
-def self.matches(samples, a)
+def self.matches(samples, matchers)
   samples = samples.sort!
-  r = if a.is_a? Integer
-    samples[a]
-  elsif a.is_a? Regexp
-    samples.select{|s| s=~ a}
-  else
-    samples.select{|s| s=~ /#{a}/i}
+
+  r = matchers.reduce(samples) do |filtered_samples,filter|
+    if filtered_samples && !filtered_samples.empty?
+    if filter.is_a?(Integer)
+      filter = filter % filtered_samples.size
+      [filtered_samples[filter]]
+    elsif filter.is_a? Regexp
+      filtered_samples.select{|s| s=~ filter}
+    else
+      filtered_samples.select{|s| s=~ /#{filter}/i}
+    end
+    end
   end
+
+  if r && r.length == 1
+    r[0]
+  else
   if r && !r.empty?
     SonicPi::Core::RingVector.new(r)
+  end
   end
 end
 end
 
 module Mountain
-  def self.[](a)
-    Mountain.all(a)[0]
+  def self.pick(a)
+    Mountain[a]
   end
-  def self.all(a)
+  def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
 
 module Ether
-  def self.all(a)
+  def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"]
     Sample.matches(samples, a)
   end
-  
-  def self.[](a)
-    Ether.all(a)[0]
+  def self.pick(a)
+    Ether[a][0]
   end
 end
 
 module Ambi
- def self.all(a)
-  samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
-  Sample.matches(samples, a)  
+ def self.pick(a)
+   Ambi[a][0]
  end
- def self.[](a)
-   Ambi.all(a)[0]
+ def self.[](*a)
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
+   Sample.matches(samples, a)
  end
 end
 def deg_seq(*pattern_and_roots)
