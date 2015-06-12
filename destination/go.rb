@@ -200,7 +200,7 @@ with_fx :reverb, mix: 0.2, damp: 0.3 do; with_fx :distortion, mix: 0.1 do
     end;end
     #use_synth :prophet
     with_transpose(12) do
-      play n, cutoff: 60, amp: 0.5, release: (knit 2.0*bar,5,2.0*bar,1).tick(:sd), attack: 0.01
+      play n, cutoff: 60, amp: 0.5, release: (knit 2.0*bar,5,2.0*bar,1).tick(:sd), attack: (knit 0.01,12, 0.8,1, 0.01,3).tick(:att)
     end
 #end
 comment do
