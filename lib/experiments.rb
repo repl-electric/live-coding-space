@@ -48,7 +48,24 @@ module Ether
     Ether[a][0]
   end
 end
-
+module Frag
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Frag/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    Ether[a][0]
+  end
+end
+module Eraser
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Eraser/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    Ether[a][0]
+  end
+end
 module Ambi
  def self.pick(a)
    Ambi[a][0]
