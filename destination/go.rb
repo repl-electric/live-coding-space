@@ -22,7 +22,9 @@ with_fx :distortion, amp: 0.3, mix: 0.3 do
 with_synth :beep do
 with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do
   n = play (knit :Fs4, 7, _, 1,
-                 :As4, 7, _, 1).tick, amp: 0.3
+                 :As4, 7, _, 1
+).tick, amp: 0.3
+
 
   if dice(32) == 1
      with_fx :pan, pan: Math.sin(vt*13)/1.5 do
@@ -46,17 +48,17 @@ live_loop :bass do |m_idx|;with_fx :level, amp: 0.5 do
        }
        sample Mountain["subkick",1], amp: 1.0+rrand(0.0,0.2), rate: rrand(0.9,1.0)
      else
-     sample Mountain["subkick",0], amp: 2.0+rrand(0.0,0.2), rate: rrand(0.9,1.0)
+     sample Mountain["subkick",0], amp: 1.0+rrand(0.0,0.2), rate: rrand(0.9,1.0)
      end
     when 1,3,4,5
       #sample Ether["snare",3], amp: 0.5+rrand(0.0,0.2), rate: rrand(0.9,1.0)
     when 7
-      #sample Mountain["Impact_0#{(stretch (1..5).to_a, 16).tick(:b)}"], rate: -1.0,amp: 0.2
+      sample Mountain["Impact_0#{(stretch (1..5).to_a, 16).tick(:b)}"], rate: -1.0,amp: 0.2
     end
     m_idx+=1
 end;end
 
-live_loop :ghost do;with_fx :level, amp: 0.05 do
+live_loop :ghost do;with_fx :level, amp: 0.1 do
 sync :foo
 #comment do
 2.times{sleep bar/2.0;sample knit(Mountain["MICROPERC",3],8, Mountain["MICROPERC",5],2).tick(:asd),
@@ -68,13 +70,13 @@ comment do
 end
 end; end
 
-live_loop :beats do;with_fx :level, amp: 0.5 do
+live_loop :beats do;with_fx :level, amp: 0.6 do
     sync :foo
     sample Mountain["Cracklin_01"], rate: 0.95, amp: 0.2
     sleep sample_duration(Mountain["Cracklin_01"], rate: 0.95)
 end;end
 
-live_loop :foo do;with_fx :level, amp: 0.0 do
+live_loop :foo do;with_fx :level, amp: 0.5 do
     density(@polyrhythm.sort.first) do
       sample Mountain["pebble",0], start: rrand(0.0,0.01), rate: -1.0, amp: 0.4
 
@@ -98,112 +100,107 @@ end
 sleep bar
 end;end;end
 
-#with_fx :reverb do
-#with_fx :distortion do
-#with_fx :slicer, phase: bar*8.0,smooth: 5.0, mix: 0.0 do
-live_loop :bar, autocue: false do; with_fx :level, amp: 1.0 do
+#(knit :As4, 4, :B4, 4,:Cs4, 4, :B4, 4).tick
+#(ring "Fs4", "As4", "Cs4")
+#(knit :Fs4, 7, _, 1,:As4, 7, _, 1)
+
+
+ # control n, note: (knit :As4, 4, :B4, 4,
+ #                        :Cs4, 4, :B4, 4).tick
+ # sleep bar/2.0
+
+# 3 ->  4   AS4 - > B4
+
+# 1    3    1    4    3    5    3     4  
+#FS4->AS4  FS4->B4   AS4->CS4  *AS4->B4*
+
+live_loop :drifty do; with_fx :level, amp: 1.0 do
   1.times {sync :foo}
   density(@polyrhythm.sort.last) do
-     sample Mountain["HarshClash"], start: rrand(0.0,0.02), amp: 0.55
- with_fx :reverb, room: 1.0, mix: 1.0, damp: 0.1 do |fx_r|
-      with_fx (knit :none,7, :echo, (ring 7).tick(:d)).tick(:r2), mix: 0.8, phase: bar/2.0 do
+  with_fx :reverb, room: 1.0, mix: 1.0, damp: 0.1 do |fx_r|
+    with_fx (knit :none,7, :echo, (ring 7).tick(:d)).tick(:r2), mix: 0.8, phase: bar/2.0 do
+      n = (knit
+        (stretch invert_chord(chord(:As3,:m)[0..1], 0),1), 12,              #3
+        (stretch invert_chord(chord(:As3,:m), 0),1), 12,                    #3
+#HIT 1 3 FS3-AS4
+        (stretch invert_chord(chord(:Cs3,:M)[1..-1], 1),1), 12,             #5
+        (stretch invert_chord(chord(:Cs3,:M), 1),1), 12,                    #5
+#HIT FS3-AS4
+        (stretch invert_chord(chord(:Ds4,:m), -2),1), 20,                   #6
+         _, 4,
+#HIT FS4-B4
+        (stretch invert_chord(chord_degree(7, :Fs3, :major,3), -2),1), 20,  #7
+         _, 4,
+#HIT FS4-B4
+        (stretch invert_chord(chord(:Es3,'dim'), 1),1), 10,                 #7
+        (stretch invert_chord(chord(:Es3,'dim'), 1),1), 10,                 #7
+         _, 4,
+#HIT AS4-CS4
+        (stretch invert_chord(chord(:Fs3,'sus4'), -1),1), 20,               #1
+         _, 4,    
+#HIT AS4-CS4
+        (stretch invert_chord(chord(:Fs3,:M), -1),1), 20,                   #1 
+         _, 4,
+#HIT AS4-B4
+        (stretch invert_chord(chord(:B4,:M), -2)[0..2],1), 10,              #4 
+        (stretch invert_chord(chord(:B4,:M), -3)[0..2],1), 10,              #4 
+         _,4,
+#HIT AS4-B4
+).tick(:asb)
+  puts (n||[]).map{|a|note_info(a).midi_string}
+      #n = (stretch chord(:Fs3, 'sus4'),1, chord(:Fs3, "M"),1,
+      #             chord(:As3, 'sus4'),1, chord(:As3, 'M'),1)
 
-#1   2   3   4  5   6       7
-#F♯, G♯, A♯, B, C♯, D♯, and E♯
+puts "#{(n||[]).map{|a|note_info(a).midi_string}  ==  (ring "Fs4", "B4", "Eb4")}"
 
-#3-notes   = 18
-
-n = (knit
-#:As3,8, :B3, 8, :Cs4,2,
-#:As3,8, :B3, 9, :Cs4,1,
-#:As3,8, :B3, 8, :Fs3,1, :Cs4,1,
-
-:Fs3,8, :Es3, 8, :Cs4,2,
-:Fs3,8, :As3, 9, :Cs4,1,
-:Fs3,8, :B3,  8, :Fs3,1, :Cs4,1,
-
-:Fs3,8, :Es3, 8, :Cs4,2,
-:Fs3,8, :As3, 9, :Cs4,1,
-:Fs3,8, :B3,  8, :Fs3,1, :Cs4,1,
-
-#:Fs3,8, :Es3, 8, :Gs3,2,
-#:Fs3,8, :As3, 9, :Gs3,1,
-#:Fs3,8, :As3, 8, :Fs3,1, :Fs3,1,
-
-#:Fs3,8, :Es3, 8, :Gs3,2,
-#:Fs3,8, :As3, 9, :Gs3,1,
-#:Fs3,8, :B3, 8, :Gs3,1, :Gs3,1,
-
-#:B3,2, :As3,1,  :Gs3,1, :Fs3,1, :Cs4,2, :Ds4, 2, :Cs4, 8, :Ds4, 2
-
-).tick(:r1)
-
-notes = (knit :Fs3,8, :Es3, 8, :Cs4, 2,
-          :Fs3,8, :As3, 8, :Cs4, 2,
-          :Fs3,8, :B3,  8, :Fs3,1, :Cs4,1,
-
-:Fs3,8, :Es3, 8, :Gs3,2,
-:Fs3,8, :As3, 9, :Gs3,1,
-:Fs3,8, :As3, 8, :Fs3,1, :Fs3,1,
-
-:Fs3,8, :Es3, 8, :Gs3,2,
-#:Fs3,8, :As3, 9, :Gs3,1,
-:Fs3,8, :B3, 8, :Gs3,1, :Gs3,1,
-)
-
-comment do
-(knit 1,18, 
-      2,1, 1,17,
-      2,1, 1,17,
-      2,1, 1,17,
-      2,1, 1,17,
-      2,1, 1,17,
-      2,1, 1,17,
-).tick(:asdasdasdasd).times { n = notes.tick(:asdasd) }
+if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
+  cue :bhit 
 end
-
-n = notes.tick(:asdasdasdasd)
-#(knit *(1..18).to_a.zip([18].cycle)).tick(:asdasdasdasd).times { n = notes.tick(:asdasd) }
-
-n = (degree (knit 3,8, 4,8, 5,2).tick(:flicker), :Fs3, :major)
-
-n = (stretch chord(:Fs3, 'sus4'),1, chord(:Fs3, 'M'),1,
-             chord(:As3, 'sus4'),1, chord(:As3, 'M'),1)
-
-#n = stretch(chord(:Fs3,'13').shuffle,18).tick(:a)
-
-with_transpose((ring 0).tick(:tock)){
-        #with_synth(:dark_ambience){play n, pan: (Math.sin(vt*13)/1.5), amp: 1.8 ,decay: 0.1} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)
-}
-        with_synth(:beep){play n, pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2), release: 0.3} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)
-
-with_transpose((ring 12).tick(:toack)){
-#       with_synth(:prophet){play n, cutoff: 70, amp: 1.0, attack: 0.1, release: 0.5, pan: (Math.sin(vt*13)/1.5), decay: 0.1} #,release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)      
-}
-        sleep bar
-
-        if n == degree(5, :FS3, :major) || n == :Cs4
-          cue :start
-        end
-      end
+#with_transpose(-12){with_synth(:sine){play (n ? n.sort[0] : n), cutoff: 60, pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2), release: 0.01}}
+      with_synth(:beep){play n, pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2), release: 0.3} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)
+      sleep bar
     end
-
-end;end;end
+  end
+end
+end
+end
+live_loop :bithit do
+  9.times{sync :bhit}
+  with_fx (ring :none, :echo).tick, decay: bar*8 do
+    sample Frag[/coil/i,/f#/i,1], amp: 0.5
+  end
+end
 
 live_loop :bassline do |idx|;with_fx :level, amp: 0.5 do
 with_fx :reverb, mix: 0.2, damp: 0.3 do; with_fx :distortion, mix: 0.1 do
-    #play (knit "Fs3",1).tick(:a), amp: 1.5, release: 2*bar, attack: 0.01
-    4.times{sync :foo}
-#comment do
-    notes = (knit "Cs2" ,3, "Fs1" ,1, "B1", 2)
+    3.times{sync :foo}
+     notes = (knit invert_chord(chord(:As1,:m), -2)[0], 1, 
+                   :Cs2, 2, 
+                   invert_chord(chord(:Ds2,:m), 0)[0], 2,
+                   invert_chord(chord_degree(7, :Fs1, :major,3),-3)[0], 2,
+                   invert_chord(chord(:Es1,'dim'), 1)[0],2,
+                   :Fs1,2,_,1,:Es2,1,
+                   invert_chord(chord(:B1,:M), -1)[0],3)
+
     n = notes.tick(:a)
+
+    sleep bar/2.0
+
+    (ring 1,0).tick(:double).times do
+    with_synth [:pnoise, :growl][0] do
+      play n, amp: 0.6, release: (knit bar,3).tick(:Bass), attack: 0.3, cutoff: 60
+    end
+    end
+
+    1.times{sync :foo}
+
     with_transpose(0) do
     with_synth :beep do
-      play n, amp: 0.9, release: 2*bar, attack: 0.01, cutoff: 60
+      play n, amp: 1.0, release: (knit 2*bar, 9, 8*bar, 2, 2*bar,3).tick(:Bass), attack: 0.01, cutoff: 60
     end;end
     #use_synth :prophet
     with_transpose(12) do
-      play (knit _,1, _,2, "Fs1" ,1, "B1", 2).tick(:a), cutoff: 60, amp: 0.5, release: (knit 2.0*bar,5,2.0*bar,1).tick(:sd), attack: 0.01
+      play n, cutoff: 60, amp: 0.5, release: (knit 2.0*bar,5,2.0*bar,1).tick(:sd), attack: 0.01
     end
 #end
 comment do
@@ -222,12 +219,13 @@ end
 idx+=1
 end;end
 
-live_loop :highlight do |idx|;with_fx :level, amp: 0.5 do
+live_loop :highlight do |idx|;with_fx :level, amp: 1.0 do
     n = chord_seq(*%w{Cs3 7 Fs3 M B3 M7})
     with_fx (ring :none, :echo).tick(:a), phase: bar/4.0, decay: (knit bar*8, 3, bar*6,1).tick(:q) do
       with_synth :hollow do
         2.times{sync :foo}
         play n.tick(:f),  attack: 0.5, amp: 2.0
+#        with_synth(:pnoise){play n.hook(:f), amp: 0.001}
       end
       1.times{sync :foo}
       with_fx(:slicer, mix: 0.1){
@@ -237,7 +235,7 @@ live_loop :highlight do |idx|;with_fx :level, amp: 0.5 do
     end
 end;end
 
-live_loop :high do;with_fx :level, amp: 1.0 do
+live_loop :high do;with_fx :level, amp: 0.5 do
     2.times{sync :start}
     #with_fx :echo, decay: 16 do  
       sample (knit Mountain["microperc_06"],3,Mountain["microperc_07"],1).tick(:s)
