@@ -66,6 +66,15 @@ module Eraser
     Ether[a][0]
   end
 end
+module Scape
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Soundscape/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    Ether[a][0]
+  end
+end
 module Ambi
  def self.pick(a)
    Ambi[a][0]
@@ -102,6 +111,13 @@ def deg_seq(*pattern_and_roots)
     pattern.to_s.split("").map{|d| d == "_" ? nil : degree(d.to_i, root, s)}
   end.flat_map{|x| x}
   (ring *notes)
+end
+def sample_and_sleep(*args)
+  if args
+    s = args.first
+    sample *args
+    sleep sample_duration(s)
+  end
 end
 def bowed_s(name, *args)
   s = Dir["/Users/josephwilk/Dropbox/repl-electric/samples/Bowed\ Notes/*_BowedGuitarNote_01_SP.wav"]
