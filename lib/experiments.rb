@@ -2,6 +2,17 @@ def chord_seq(*args)
   args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
 
+def pat(s, bar, pat, *args)
+pat.length.times do
+ p = ring( *pat.split("\s"))
+ sleep bar/4.0
+ if p.hook == "x"
+  sample *([s]+args)
+ end
+ p.tick
+end
+end
+
 module Sample
 def self.matches(samples, matchers)
   samples = samples.sort!
