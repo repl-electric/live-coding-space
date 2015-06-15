@@ -172,42 +172,51 @@ live_loop :bithit do
 end
 
 live_loop :bassline do |idx|;with_fx :level, amp: 0.5 do
-with_fx :reverb, mix: 0.2, damp: 0.3 do; with_fx :distortion, mix: 0.1 do
+with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0.1  do
     3.times{sync :foo}
-     notes = (knit invert_chord(chord(:As1,:m), -2)[0], 1, 
-                   :Cs2, 2, 
-                   invert_chord(chord(:Ds2,:m), 0)[0], 2,
-                   invert_chord(chord_degree(7, :Fs1, :major,3),-3)[0], 2,
-                   invert_chord(chord(:Es1,'dim'), 1)[0],2,
-                   :Fs1,2,_,1,:Es2,1,
-                   invert_chord(chord(:B1,:M), -1)[0],3)
+     notes = (knit 
+                   chord(:As1,:m,    invert: 2)[0], 1,
+                   :Cs2, 2,
+                   chord(:Ds2,:m,    invert: 0)[0], 2,
+                   chord(:Es1, 'dim',invert: 0)[0], 2,
+                   chord(:Es1,'dim', invert: 2)[0],2,
+                   :Fs1,2,_,1,
+                   :Fs2,1,
+                   chord(:B1,:M,     invert: -1)[0],3,
+)
 
     n = notes.tick(:a)
 
     sleep bar/2.0
 
     (ring 1,0).tick(:double).times do
-    sample Mountain["kick",(ring 7,8).tick(:kicker)], amp: 3.0
-    with_synth [:pnoise, :growl][0] do
-      play n, amp: 0.6, release: (knit bar,3).tick(:Bass), attack: 0.3, cutoff: 60
+      sample Mountain["kick",(ring 7,8).tick(:kicker)], amp: 3.0
+       with_synth [:pnoise, :prophet][0] do
+      play n, amp: 0.7, release: (knit bar,1).tick(:Bass), attack: 0.01, cutoff: 60
     end
     end
 
     1.times{sync :foo}
 
+    with_transpose(12) do
+    with_synth(:beep){
+      play n, cutoff: 60, res: 0.5, release: (knit 2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd), 
+                                     attack: (knit 0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
+                                     amp:    (knit 0.5,13, 0.2, 3).tick(:ampe)
+   }
+    end
+
     with_transpose(0) do
     with_synth :beep do
-      play n, amp: 1.0, release: (knit 2*bar, 9, 8*bar, 2, 2*bar,3).tick(:Bass), attack: 0.01, cutoff: 60
+      play n, amp: 1.0, release: (knit 2.01*bar, 9, 8.02*bar, 2, 2.1*bar,5).tick(:Bass), attack: 0.05, cutoff: 60,  res: 0.5
     end;end
     #use_synth :prophet
-    with_transpose(12) do
-      play n, cutoff: 60, amp: 0.5, release: (knit 2.0*bar,5,2.0*bar,1).tick(:sd), attack: (knit 0.01,12, 0.8,1, 0.01,3).tick(:att)
-    end
-#end
+    6.times{
+    control fx_reverb, damp: (rrand 0.0,1.0) 
+    sleep bar/8.0
+    }
 comment do
 notes = (knit
-#"Fs2",2, "B2",2 ,"Cs2",2,              
-#"Fs2",2, "B2",1, "As2",1, "Gs2",1, "Cs2",1,
 "Cs3",2, "Gs2",2, "As2",2,
 "Cs3",2, "Gs2",2, "As2",2,
 "B2",2,  "Gs2",2, "As2",2,
