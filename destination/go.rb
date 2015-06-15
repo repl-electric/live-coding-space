@@ -189,7 +189,7 @@ with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0
     sleep bar/2.0
 
     (ring 1,0).tick(:double).times do
-      sample Mountain["kick",(ring 7,8).tick(:kicker)], amp: 3.0
+      (ring 1,0).tick(:kickhigh).times{sample Mountain["kick",(ring 7,8).tick(:kicker)], amp: 3.0}
        with_synth [:pnoise, :prophet][0] do
       play n, amp: 0.7, release: (knit bar,1).tick(:Bass), attack: 0.01, cutoff: 60
     end
