@@ -6,10 +6,10 @@ def pat(s, bar, pat, *args)
 pat.length.times do
  p = ring( *pat.split("\s"))
  sleep bar/4.0
- if p.hook == "x"
+ if p.hook(:pattern_ticker) == "x"
   sample *([s]+args)
  end
- p.tick
+ p.tick(:pattern_ticker)
 end
 end
 
