@@ -24,6 +24,10 @@ def self.matches(samples, matchers)
       [filtered_samples[filter]]
     elsif filter.is_a? Regexp
       filtered_samples.select{|s| s=~ filter}
+    elsif filter.is_a? Range
+      filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
+    elsif filter.is_a? Array
+      filter.map{|f| Sample.matches(filtered_samples, [f])}
     else
       filtered_samples.select{|s| s=~ /#{filter}/i}
     end
