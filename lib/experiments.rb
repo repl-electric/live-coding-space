@@ -98,6 +98,15 @@ module Ambi
    Sample.matches(samples, a)
  end
 end
+module Chill
+ def self.pick(a)
+   Chill[a][0]
+ end
+ def self.[](*a)
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Chill/**/*.wav"]
+   Sample.matches(samples, a)
+ end
+end
 module Down
   def self.pick(a)
     Ambi[a][0]
