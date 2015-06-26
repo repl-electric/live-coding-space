@@ -11,28 +11,18 @@ define :pat do |s, p, delta=0, *args|
     sample *([s]+args) if dice(6) > 3
   end
 end
-
-live_loop :beatz, auto_cue: false do
-sync :foo
-density(2) do
- 16.times do
- cue :s
- sleep (bar/16.0)
-end;end;end
-
 define :drum_loop do |name, state, sample, *args|
   state = expand_pattern(state)
-  live_loop name, auto_cue: false do  
-     pat(sample.is_a?(SonicPi::Core::RingVector) ? sample.tick("#{name}_sample".to_sym) : sample, state.tick(name), 
+  live_loop name, auto_cue: false do
+     pat(sample.is_a?(SonicPi::Core::RingVector) ? sample.tick("#{name}_sample".to_sym) : sample, state.tick(name),
          delta=(args[0][:delta] || 0),
          *[args[0].reduce({}){|a,(k,v)|
      v.is_a?(SonicPi::Core::RingVector) ? a[k]=v.tick("#{name}_#{k}".to_sym) : a[k]=v
      a}])
   end
 end
-
 define :expand_pattern do |pat|
-  pat.to_a.map{|slice| 
+  pat.to_a.map{|slice|
   case slice
   when "-*16"
     ("-"*16).split("")
@@ -41,6 +31,14 @@ define :expand_pattern do |pat|
   end
   }.flatten.ring
 end
+
+live_loop :drum_timing_loop, auto_cue: false do
+sync :foo
+density(2) do
+  16.times do
+ cue :s
+ sleep (bar/16.0)
+end;end;end
 
 #Dance music generic
 with_fx :bitcrusher, sample_rate: 44000, mix: 0.15, bits: 12 do
@@ -58,7 +56,7 @@ drum_loop(:clap,   (ring *%w{- - - - - - - - r - - - - - - -    - - - - - - - - 
 drum_loop(:cchat,  (ring *%w{x - - x - - x - - x - - - - - -    - - x - - - r - x - r - - - - -    - - x - - - x - x - - - - - - -    x - - r - - x - - r - - x x - -}),  Ether[/click/i].shuffle.tick, rate: (knit 1.01,3,-1.1,2,-1.2,3), amp: rrand(0.5,0.3), start: rrand(0.0,0.00001))
                                                                                                                                                                           with_fx(:reverb, mix: 0.3){with_fx(:slicer, phase: 0.025, probability: 0.5){
 drum_loop(:ochat,  (ring *%w{- - - - x - - - - - - - x - - -    - - - - x - - - - - - - x - - - }),                                                                       Down[/hat/i, [17, 16,15]], amp: 0.2);}}
-drum_loop(:cymbal, (ring *%w{- - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -     - - - - - - - - - - - - - - - r}), Ether[/noise/i,7], amp: 0.5)  
+drum_loop(:cymbal, (ring *%w{- - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -     - - - - - - - - - - - - - - - r}), Ether[/noise/i,7], amp: 0.5)
 drum_loop(:swipe,  (ring *%w{- - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - r -}),  Ether[/snare/i,12], delta: 0.01, amp: 0.3*(knit 0.5,24, 1.9,8).tick(:amp), start: 0.0, rate: (knit -0.8,16, -1.5,16).tick(:rate))
 drum_loop(:fast,   (ring *%w{- - - - - - x - x - x - - - - -    - - - - - - x - x - x - - - - -}), Ether[/click/i,20], amp: 0.2, rate: (knit -1.0, 2, 1.0,2))
 end;end;end;end;end
