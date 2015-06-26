@@ -7,6 +7,10 @@
     .||.     π=-  π=-  π=-
 ```
 
+### Experimental musical source code
+
+Code that makes noises and sounds with Sonic Pi http://sonic-pi.net
+
 ##License
 
 Copyright © 2014-2015 Joseph Wilk
