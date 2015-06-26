@@ -16,7 +16,6 @@ end
 module Sample
 def self.matches(samples, matchers)
   samples = samples.sort!
-
   r = matchers.reduce(samples) do |filtered_samples,filter|
     if filtered_samples && !filtered_samples.empty?
     if filter.is_a?(Integer)
@@ -98,6 +97,24 @@ module Ambi
    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
    Sample.matches(samples, a)
  end
+end
+module Down
+  def self.pick(a)
+    Ambi[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Down/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Heat
+  def self.pick(a)
+    Heat[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Heat/**/*.wav"]
+    Sample.matches(samples, a)
+  end
 end
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
