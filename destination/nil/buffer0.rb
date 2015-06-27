@@ -1,7 +1,7 @@
 ["experiments.rb"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}"}
 #                        \:o/
 #   π=-    π=-   π=-      █
-# π=-   π=-   π=-      .||.
+#  π=-   π=-   π=-      .||.
 _ = nil#.go
 bar = 1.0
 use_bpm 60
@@ -28,7 +28,7 @@ live_loop :begin, auto_cue: false do
   end
 end
 
-live_loop :crackling, auto_cue: false do;with_fx :level, amp: 0.6 do
+live_loop :bits, auto_cue: false do;with_fx :level, amp: 0.6 do
     sync :next
     sample Mountain["Cracklin_01"], rate: 0.95, amp: 0.2
     sleep sample_duration(Mountain["Cracklin_01"], rate: 0.95)
@@ -52,15 +52,11 @@ with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
   sleep bar/4.0
   control n, note: (knit :As4, 4, :B4, 4,
                          :Cs4, 4, :B4, 4).tick
-
+ 2.times{
   sleep bar/4.0
- if (knit :echo,2, :reverb,2).look(:fx) == :reverb
+  if fx_verb.name =~ /reverb/
   control fx_verb, damp: rrand(0.0,1.0)
-end
-  sleep bar/4.0
- if (knit :echo,2, :reverb,2).look(:fx) == :reverb
-  control fx_verb, damp: rrand(0.0,1.0)
-end
+ end}
 end;end;end;end
 
 live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.5 do
@@ -107,7 +103,6 @@ end
 sleep bar
 end;end;end
 
-
 # 1    3    1    4    3    5    3     4
 #FS4->AS4  FS4->B4   AS4->CS4  *AS4->B4*
 
@@ -144,11 +139,9 @@ live_loop :drifting_through_code, auto_cue: false do; with_fx :level, amp: 2.0 d
          _,4,
 #HIT AS4-B4
 ).tick(:asb)
-  #puts (n||[]).map{|a|note_info(a).midi_string}
-      #n = (stretch chord(:Fs3, 'sus4'),1, chord(:Fs3, "M"),1,
-      #             chord(:As3, 'sus4'),1, chord(:As3, 'M'),1)
 
-#puts "#{(n||[]).map{|a|note_info(a).midi_string}  ==  (ring "Fs4", "B4", "Eb4")}"
+#n = (stretch chord(:Fs3, 'sus4'),1, chord(:Fs3, "M"),1,
+#             chord(:As3, 'sus4'),1, chord(:As3, 'M'),1)
 
 if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
   cue :bhit
@@ -185,8 +178,8 @@ with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0
 
     n = notes.tick(:a)
     sleep bar/2.0
-    (ring 1,0).tick(:ti).times{with_fx(:pitch_shift, mix: 1.0, pitch: 0.025){with_fx(:slicer, mix: 0.5, phase: 0.025, probability: 0.5){sample Heat[/stacked_bells/i,sam(notes.reverse.look(:a),1)], amp: 1.5, attack: 0.2}}}
-    (knit 0,3,1,1).tick(:heat).times {with_fx(:reverb){sample Heat[/low_pad/i,sam(n,1)], amp: 1.0}}
+    #(ring 1,0).tick(:ti).times{with_fx(:pitch_shift, mix: 1.0, pitch: 0.025){with_fx(:slicer, mix: 0.5, phase: 0.025, probability: 0.5){sample Heat[/stacked_bells/i,sam(notes.reverse.look(:a),1)], amp: 1.5, attack: 0.2}}}
+    (knit 1,1).tick(:heat).times {with_fx(:reverb){sample Heat[/low_pad/i,sam(n,1)], amp: 1.0}}
 
     (ring 1,0).tick(:double).times do
       with_fx(:echo, decay: 2.0){sample Frag[/coil/i, /f#/i].tick(:coil), amp: 0.5}
