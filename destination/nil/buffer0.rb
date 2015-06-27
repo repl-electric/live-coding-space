@@ -22,20 +22,20 @@ def sam(n, oct=1)
 end
 
 live_loop :begin, auto_cue: false do
-  sync :foo
+  sync :next
   with_fx :distortion, mix: (knit 0.0,3,1.0,1).tick(:v) do
   #sample Ether.all(/F#/)[2], amp: 3.0+rrand(0.0,0.2), rate: -1.0
   end
 end
 
 live_loop :crackling, auto_cue: false do;with_fx :level, amp: 0.6 do
-    sync :foo
+    sync :next
     sample Mountain["Cracklin_01"], rate: 0.95, amp: 0.2
     sleep sample_duration(Mountain["Cracklin_01"], rate: 0.95)
 end;end
 
 live_loop :indeterminism, auto_cue: false do
-8.times{sync :foo}
+8.times{sync :next}
 with_fx :distortion, amp: 0.8, mix: 0.3 do
 with_synth :beep do
 with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
@@ -64,7 +64,7 @@ end
 end;end;end;end
 
 live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.5 do
-   sync :foo
+   sync :next
     case (m_idx%8)
     when 0,4,2,6
      if m_idx%16 == 0
@@ -83,7 +83,7 @@ live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.5 do
     m_idx+=1
 end;end
 
-live_loop :foo do;with_fx :level, amp: 0.5 do
+live_loop :next do;with_fx :level, amp: 0.5 do
     density(@polyrhythm.sort.first) do
       #sample Mountain["pebble",0], start: rrand(0.0,0.01), rate: -1.0, amp: 0.4
 
@@ -112,7 +112,7 @@ end;end;end
 #FS4->AS4  FS4->B4   AS4->CS4  *AS4->B4*
 
 live_loop :drifting_through_code, auto_cue: false do; with_fx :level, amp: 2.0 do
-  1.times {sync :foo}
+  1.times {sync :next}
   density(@polyrhythm.sort.last) do
   with_fx :reverb, room: 1.0, mix: 1.0, damp: 0.1 do |fx_r|
     with_fx (knit :none,7, :echo, (ring 7).tick(:d)).tick(:r2), mix: 0.8, phase: bar/2.0 do
@@ -172,7 +172,7 @@ end
 
 live_loop :rumbling_loops, auto_cue: false do |idx|;with_fx :level, amp: 0.5 do
 with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0.1  do
-    3.times{sync :foo}
+    3.times{sync :next}
      notes = (knit
                    chord(:As1,:m,    invert: 2)[0], 1,
                    :Cs2, 2,
@@ -196,7 +196,7 @@ with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0
     end
     end
 
-    1.times{sync :foo}
+    1.times{sync :next}
 
     with_transpose(12) do
     with_synth(:beep){
@@ -233,15 +233,15 @@ live_loop :tracing_forward_back, auto_cue: false do |idx|;with_fx :level, amp: 0
     n = chord_seq(*%w{Cs3 7 Fs3 M B3 M7}).ring
     with_fx (ring :none, :echo).tick(:a), phase: bar/4.0, decay: (knit bar*8, 3, bar*6,1).tick(:q) do
       with_synth :hollow do
-        2.times{sync :foo}
+        2.times{sync :next}
         play n.tick(:f),  attack: 0.5, amp: 2.0
 #        with_synth(:pnoise){play n.look(:f), amp: 0.001}
       end
-      1.times{sync :foo}
+      1.times{sync :next}
       with_fx(:slicer, mix: 0.1){
       play n.tick(:f), attack: 0.01, amp: 0.4, release: ring(2.0,0.5).tick(:r3)
       }
-      1.times{sync :foo}
+      1.times{sync :next}
     end
 end;end
 

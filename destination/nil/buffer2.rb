@@ -1,7 +1,7 @@
 _=nil
 bar = 1.0
 live_loop :exceptions do
-  (knit 1,6, 2,1).tick(:time).times{sync :foo}
+  (knit 1,6, 2,1).tick(:time).times{sync :next}
   with_fx :distortion, amp: 0.8, mix: 0.3 do
     with_synth :beep do
       with_fx (knit :reverb,2).tick(:fx), decay: 4.0, room: 1.0, room_lag: 2.0 do |fx_verb|

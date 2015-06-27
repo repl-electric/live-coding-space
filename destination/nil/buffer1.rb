@@ -1,7 +1,7 @@
 ["experiments"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}"}
 bar = 4.0
 define :pat do |s, p, delta=0, *args|
- sync :s
+ sync :drum_hit
  case p
    when  "x" #hit
     sleep(delta) if delta != 0
@@ -33,13 +33,13 @@ define :expand_pattern do |pat|
 end
 
 live_loop(:drum_timing_loop, auto_cue: false){
-density(2){
-  16.times{
- cue :s
- sleep (bar/16.0)}}}
+  sync :next
+  density(2){
+    16.times{ cue :drum_hit
+              sleep (bar/16.0)}}}
 
 with_fx :level, amp: 1.0 do
-with_fx :bitcrusher, sample_rate: 44000, mix: 0.1, bits: 12 do |b_fx|
+with_fx :bitcrusher, sample_rate: 44000, mix: 0.1, bits: 12 do
 with_fx :pitch_shift, mix: 0.5 do
 with_fx :hpf, mix: 0.0 do
 with_fx :lpf, cutoff: 70, mix: 0.0 do
@@ -53,9 +53,7 @@ drum_loop(:clap,   (ring *%w{- - - - - - - - x - - - - - - -    - - - - - - - - 
 drum_loop(:cchat,  (ring *%w{x - - x - - x - - x - - - - - -    - - x - - - x - x - x - - - - -    - - x - - - x - x - x - - - - -    x - - x - - x - - x - - x x - -}),  Ether[/click/i].shuffle.tick, amp: 1.0*rrand(0.5,0.3), rate: (knit 1.01,3,-1.1,2,-1.2,3), start: rrand(0.0,0.00001))
                                                                                                                                                                           with_fx(:reverb, mix: 0.3){with_fx(:slicer, phase: 0.025, probability: 0.5){
 drum_loop(:ochat,  (ring *%w{- - - - x - - - - - - - x - - - }),                                                                                                          Down[/hat/i, [17, 16,15]], amp: 1.0);}}
-drum_loop(:cymbal, (ring *%w{- - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -     - - - - - - - - - - - - - - - r}), Ether[/noise/i,7],  amp: 1.0)  
+drum_loop(:cymbal, (ring *%w{- - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - - - - -     - - - - - - - - - - - - - - - r}), Ether[/noise/i,7],  amp: 0.2)  
 drum_loop(:swipe,  (ring *%w{- - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - r -}),  Ether[/snare/i,12], delta: 0.01, amp: 1.0*(knit 0.5,24, 1.9,8).tick(:amp), start: 0.0, rate: (knit -0.8,16, -1.5,16).tick(:rate))
 drum_loop(:fast,   (ring *%w{- - - - - - x - x - x - - - - - }), Ether[/click/i,20], amp: 0.0, rate: (knit -1.0, 2, 1.0,2))
-
-control b_fx, bits: 9, mix: 1.0
 end;end;end;end;end
