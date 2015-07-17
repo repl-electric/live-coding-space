@@ -2,6 +2,19 @@ def chord_seq(*args)
   args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
 
+def note_to_sample(n, oct=1)
+  if n
+ n = n.is_a?(Integer) ? note_info(n).midi_string : n
+ n = n.to_s
+ n = n.split(/\d/)[0]
+ n = n == "Eb" ? "Ds" : n
+ n = n.gsub("s","#")
+    /#{n}#{oct}/i
+  else
+   false
+  end
+end
+
 def pat(s, bar, pat, *args)
 pat.length.times do
  p = ring( *pat.split("\s"))
