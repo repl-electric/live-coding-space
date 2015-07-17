@@ -166,6 +166,20 @@ def deg_seq(*pattern_and_roots)
   end.flat_map{|x| x}
   (ring *notes)
 end
+
+def note_seq(*patterns)
+  patterns.reject{|a| a.empty?}.
+  map{|a|
+    note, factor = a.last.split("*")
+    factor ||= "1"
+    factor = factor.to_i
+    a[-1] = note
+    a.map{|s| s.gsub(/#/,"s")}.
+      map{|s| [s.to_sym] * factor }.
+      flatten}.
+  flatten.ring
+  end
+
 def sample_and_sleep(*args)
   if args
     s = args.first
@@ -173,6 +187,7 @@ def sample_and_sleep(*args)
     sleep sample_duration(s)
   end
 end
+
 def bowed_s(name, *args)
   s = Dir["/Users/josephwilk/Dropbox/repl-electric/samples/Bowed\ Notes/*_BowedGuitarNote_01_SP.wav"]
   s.sort!
