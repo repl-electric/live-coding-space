@@ -1,5 +1,5 @@
 _=nil
-bar = 1.0
+bar = 4.0
 live_loop :exceptions do
   (knit 1,6, 2,1).tick(:time).times{sync :next}
   with_fx :distortion, amp: 0.8, mix: 0.3 do

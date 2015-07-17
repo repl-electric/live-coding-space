@@ -21,8 +21,8 @@ end
 define :i_bass do |note|
   with_transpose(12) do
     with_synth(:beep) do
-      play note,
-        cutoff: 60, res: 0.5,
+      play note, 
+        cutoff: 60, res: 0.5, 
         release: (knit 2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd),
         attack:  (knit 0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
         amp:     (knit 0.5,13, 0.2, 3).tick(:ampe)
@@ -47,7 +47,7 @@ define :i_deter do |note1, note2|
         end;end;end
         sleep bar/4.0
         control active_synth, note: note2
-
+  
         2.times{
           sleep bar/4.0
           if fx_verb.name =~ /reverb/
@@ -68,20 +68,20 @@ live_loop :begin, auto_cue: false do
   end
 end
 
-live_loop :bits, auto_cue: false do;with_fx :level, amp: 0.6 do
+live_loop :bits, auto_cue: false do;with_fx :level, amp: 0.0 do
     sync :next
     sample Mountain["Cracklin_01"], rate: 0.95, amp: 0.2
     sleep sample_duration(Mountain["Cracklin_01"], rate: 0.95)
 end
 end
 
-live_loop :indeterminism, auto_cue: false do; with_fx :level, amp: 1.0 do
+live_loop :indeterminism, auto_cue: false do; with_fx :level, amp: 0.0 do
   8.times{sync :next}
   i_deter((knit :Fs4, 7, _, 1,  :As4, 7, _, 1).tick,
           (knit :As4, 4, :B4, 4,  :Cs4, 4, :B4, 4).tick)
 end;end
 
-live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.5 do
+live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.0 do
    sync :next
     case (m_idx%8)
     when 0,4,2,6
@@ -101,64 +101,70 @@ live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.5 do
     m_idx+=1
 end;end
 
-live_loop :next do;with_fx :level, amp: 20.5 do
+live_loop :next do;with_fx :level, amp: 0.0 do
   density(@polyrhythm.sort.first) do
     #sample Mountain["pebble",0], start: rrand(0.0,0.01), rate: -1.0, amp: 0.4
     comment do
-      with_synth(:dark_ambience){play (knit
-                                       "Fs4",1,_,1,"Fs2",6,
-                                       "B4", 1, "Ds5",1, "Bs2",6,
-                                       "Ds5",1,_,1,"Ds2",6
-                                       ).tick(:a), cutoff: 80, amp: 0.5, release: 2*bar, attack: 0.01}
+      with_synth(:dark_ambience){play (knit 
+                                         "Fs4",1,_,1,"Fs2",6,
+                                         "B4", 1, "Ds5",1, "Bs2",6,
+                                         "Ds5",1,_,1,"Ds2",6).tick(:a), 
+                                   cutoff: 80, amp: 0.5, release: 2*bar, attack: 0.01}
     end
     sleep bar
 end;end;end
 
-live_loop :drifting_through_code, auto_cue: false do; with_fx :level, amp: 2.0 do
-  1.times {sync :next}
-  density(@polyrhythm.sort.last) do
-  with_fx :reverb, room: 1.0, mix: 1.0, damp: 0.1 do |fx_r|
-    with_fx (knit :none,7, :echo, (ring 7).tick(:d)).tick(:r2), mix: 0.8, phase: bar/2.0 do
-notes = (knit chord(:As3,:m)[0..1], 12,
-              chord(:As3,:m),       12,
-              chord(:Cs3,:M, invert: 2).delete_at(1), 12,
-              chord(:Cs3,:M, invert: 1), 12,
-              chord(:Ds4,:m, invert: -2), 20,
-              _, 4,
-              chord_degree(7, :Fs3, :major, 3, invert: -2), 20,
-              _, 4,
-              chord(:Es3,'dim', invert: 1), 10,
-              chord(:Es3,'dim', invert: 1), 10,
-              _, 4,
-              dice(6) > 6 ? chord(:Fs3,'sus4', invert: -1) : chord(:Fs3,'sus4', invert: 0), 20,
-              _, 4,
-              chord(:Fs3,:M, invert: -1), 20,
-              _, 4,
-              chord(:B4,:M, invert: -2)[0..2], 10,
-              chord(:B4,:M, invert: -3)[0..2], 10,
-              _, 4)
+live_loop :drifting_through_code, auto_cue: false do
+  with_fx :level, amp: 0.0 do
+    1.times {sync :next}
+    density(@polyrhythm.sort.last) do
+      with_fx :reverb, room: 1.0, mix: 1.0, damp: 0.1 do |fx_r|
+        with_fx (knit :none,7, :echo, (ring 7).tick(:d)).tick(:r2), mix: 0.8, phase: bar/2.0 do
+          notes = (knit chord(:As3,:m)[0..1], 12,
+                   chord(:As3,:m),       12,
+                   chord(:Cs3,:M, invert: 2).delete_at(1), 12,
+                   chord(:Cs3,:M, invert: 1), 12,
+                   chord(:Ds4,:m, invert: -2), 20,
+                   _, 4,
+                   chord_degree(7, :Fs3, :major, 3, invert: -2), 20,
+                   _, 4,
+                   chord(:Es3,'dim', invert: 1), 10,
+                   chord(:Es3,'dim', invert: 1), 10,
+                   _, 4,
+                   dice(6) > 6 ? chord(:Fs3,'sus4', invert: -1) : chord(:Fs3,'sus4', invert: 0), 20,
+                   _, 4,
+                   chord(:Fs3,:M, invert: -1), 20,
+                   _, 4,
+                   chord(:B4,:M, invert: -2)[0..2], 10,
+                   chord(:B4,:M, invert: -3)[0..2], 10,
+                   _, 4)
 
-n = notes.tick(:asb)
-n = chord(:Fs3, 'sus4') + chord(:Fs3, "M") + chord(:As3, 'sus4') + chord(:As3, 'M')
-
-if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
-  cue :bhit
+          n = notes.tick(:asb)
+          n = chord(:Fs3, 'sus4') + chord(:Fs3, "M") + chord(:As3, 'sus4') + chord(:As3, 'M')
+          
+          if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
+            cue :bhit
+          end
+          
+          i_int(n)
+          #i_float(n)
+          sleep bar
+        end
+      end
+    end
+  end
 end
-#with_transpose(-12){with_synth(:sine){play (n ? n.sort[0] : n), cutoff: 60, pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2), release: 0.01}}
-      i_int(n)
-      #i_float(n)
-      sleep bar
-end;end;end;end;end
 
 live_loop :recursion, auto_cue: false do; with_fx :level, amp: 0.0 do
-  9.times{sync :bhit}
-  with_fx (ring :none, :echo).tick, decay: bar*8 do
-    sample Frag[/coil/i,/f#/i,1], amp: 0.5
-  end
+    9.times{sync :bhit}
+    with_fx (ring :none, :echo).tick, decay: bar*8 do
+      sample Frag[/coil/i,/f#/i,1], amp: 0.5
+    end
 end;end
 
-live_loop :rumbling_loops, auto_cue: false do |idx|;with_fx :level, amp: 0.5 do
-with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; with_fx :distortion, mix: 0.1  do
+with_fx :distortion, mix: 0.1 do
+live_loop :rumbling_loops, auto_cue: false do |idx|;with_fx :level, amp: 0.0 do
+with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|; 
     3.times{sync :next}
 comment do
     notes = (knit "Cs3",2, "Gs2",2, "As2",2,
@@ -176,7 +182,7 @@ end
                   chord(:B1,:M,     invert: -1)[0],3)
 
     note = notes.tick(:a)
-
+    
     sleep bar/2.0
     #(ring 1,0).tick(:ti).times{with_fx(:pitch_shift, mix: 1.0, pitch: 0.025){with_fx(:slicer, mix: 0.5, phase: 0.025, probability: 0.5){sample Heat[/stacked_bells/i,note_to_sample(notes.reverse.look(:a),1)], amp: 1.5, attack: 0.2}}}
     (knit 1,1).tick(:heat).times {with_fx(:reverb){sample Heat[/low_pad/i,note_to_sample(note,1)], amp: 1.0}}
@@ -191,15 +197,15 @@ end
 
     1.times{sync :next}
 
-    i_bass(note)
+    i_bass(note)                                                                   
 
     6.times{
       control fx_reverb, damp: (rrand 0.0,1.0)
       sleep bar/8.0
     }
-end;end;end
+end;end
 idx+=1
-end
+end;end
 
 live_loop :tracing_forward_back, auto_cue: false do |idx|;with_fx :level, amp: 0.0 do
     n = chord_seq(*%w{Cs3 7 Fs3 M B3 M7}).ring
@@ -217,7 +223,7 @@ live_loop :tracing_forward_back, auto_cue: false do |idx|;with_fx :level, amp: 0
     end
 end;end
 
-live_loop :missing_semi_colon, auto_cue: false do;with_fx :level, amp: 5.0 do
+live_loop :missing_semi_colon, auto_cue: false do;with_fx :level, amp: 0.0 do
     2.times{sync :start}
     sample (knit Mountain["microperc_06"],3,Mountain["microperc_07"],1).tick(:s)
 end;end
