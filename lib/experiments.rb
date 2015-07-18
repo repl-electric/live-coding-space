@@ -145,6 +145,7 @@ module Heat
     Sample.matches(samples, a)
   end
 end
+
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
     if(/^[\d_]+$/ =~ accu[-1] && /^[\d_]+$/ =~ id)
@@ -168,7 +169,8 @@ def deg_seq(*pattern_and_roots)
       else :minor
       end
     end
-    root = root[0] + root[2..-1] if root.length > 2
+    #MESSEY 
+    root = root[0..1] + root[2..-1] if root.length > 2
     pattern.to_s.split("").map{|d| d == "_" ? nil : degree(d.to_i, root, s)}
   end.flat_map{|x| x}
   (ring *notes)
