@@ -1,3 +1,10 @@
+class SonicPi::Core::RingVector
+  include SonicPi::SpiderAPI
+  def stretch(n)
+    super(self.to_a, n)
+  end
+end
+
 def chord_seq(*args)
   args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
 end
