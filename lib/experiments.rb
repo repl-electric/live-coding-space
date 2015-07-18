@@ -158,13 +158,13 @@ def deg_seq(*pattern_and_roots)
   }.flatten
 
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
-    if(/^[\d_]+$/ =~ accu[-1] && /^[\d_]+$/ =~ id)
+    if(/^[-\d_]+$/ =~ accu[-1] && /^[-\d_]+$/ =~ id)
       accu[0..-2] << "#{accu[-1]}#{id}"
     else
       accu << id
   end}
-  patterns = pattern_and_roots.select{|a| /^[\d_]+$|^\d\*\d$/ =~ a.to_s }
-  roots   = pattern_and_roots.select{|a| /^[\d_*]+$/ !~ a.to_s}
+  patterns = pattern_and_roots.select{|a| /^[-\d_]+$/ =~ a.to_s }
+  roots   = pattern_and_roots.select{|a| /^[-\d_*]+$/ !~ a.to_s}
 
   notes = patterns.each_with_index.map do |pattern, idx|
     root = roots[idx]
@@ -182,10 +182,24 @@ def deg_seq(*pattern_and_roots)
     end
     #MESSEY
     root = root[0..1] + root[2..-1] if root.length > 2
-    pattern.to_s.split("").map{|d| d == "_" ? nil : degree(d.to_i, root, s)}
+    pattern.
+      scan(/(\d{1}|-\d{1})/).
+      flatten.
+      map{|d|
+        if(d == "_" )
+           nil
+        elsif(d.to_i < 0) #Only support one octave down
+           octave_shift = (d.to_i/10).abs
+           root = root[0..-2] + (root[-1].to_i - octave_shift).to_s
+           puts root
+           degree(d.to_i.abs, root, s)
+        else
+           degree(d.to_i, root, s)
+        end}
   end.flat_map{|x| x}
-  (ring *notes)
+ (ring *notes)
 end
+
 def note_seq(*patterns)
   patterns.reject{|a| a.empty?}.
   map{|a|
