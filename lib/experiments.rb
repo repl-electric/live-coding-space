@@ -147,6 +147,7 @@ module Heat
 end
 
 def deg_seq(*pattern_and_roots)
+  pattern_and_roots = pattern_and_roots.flatten
   pattern_and_roots = pattern_and_roots.map{|pat|
     if pat =~ /\*/
       note, factor = pat.split("*")

@@ -77,8 +77,8 @@ end
 
 live_loop :indeterminism, auto_cue: false do; with_fx :level, amp: 0.0 do
   8.times{sync :next}
-  i_deter(deg_seq(*%w{FS4 1*7 _ 3*7 _}).tick,
-              deg_seq(*%w{Fs4 34 Fs3 5 Fs4 4}).stretch(4).tick)
+  i_deter(deg_seq(%w{Fs4 1*7 _ 3*7 _}).tick,
+          deg_seq(%w{Fs4 34 Fs3 5 Fs4 4}).stretch(4).tick)
 end;end
 
 live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.0 do
