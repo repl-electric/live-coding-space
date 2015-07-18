@@ -147,14 +147,24 @@ module Heat
 end
 
 def deg_seq(*pattern_and_roots)
+  pattern_and_roots = pattern_and_roots.map{|pat|
+    if pat =~ /\*/
+      note, factor = pat.split("*")
+      ([note] * factor.to_i).join("")
+    else
+      pat
+    end
+  }.flatten
+
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id|
     if(/^[\d_]+$/ =~ accu[-1] && /^[\d_]+$/ =~ id)
       accu[0..-2] << "#{accu[-1]}#{id}"
     else
       accu << id
   end}
-  patterns = pattern_and_roots.select{|a| /^[\d_]+$/ =~ a.to_s }
-  roots   = pattern_and_roots.select{|a| /^[\d_]+$/ !~ a.to_s}
+  patterns = pattern_and_roots.select{|a| /^[\d_]+$|^\d\*\d$/ =~ a.to_s }
+  roots   = pattern_and_roots.select{|a| /^[\d_*]+$/ !~ a.to_s}
+
   notes = patterns.each_with_index.map do |pattern, idx|
     root = roots[idx]
     if(root[0] == ":")
@@ -169,13 +179,12 @@ def deg_seq(*pattern_and_roots)
       else :minor
       end
     end
-    #MESSEY 
+    #MESSEY
     root = root[0..1] + root[2..-1] if root.length > 2
     pattern.to_s.split("").map{|d| d == "_" ? nil : degree(d.to_i, root, s)}
   end.flat_map{|x| x}
   (ring *notes)
 end
-
 def note_seq(*patterns)
   patterns.reject{|a| a.empty?}.
   map{|a|
