@@ -78,7 +78,7 @@ end
 live_loop :indeterminism, auto_cue: false do; with_fx :level, amp: 0.0 do
   8.times{sync :next}
   i_deter((knit :Fs4, 7, _, 1,  :As4, 7, _, 1).tick,
-          (knit :As4, 4, :B4, 4,  :Cs4, 4, :B4, 4).tick)
+              deg_seq(*%w{Fs4 34 Fs3 5 Fs4 4}).stretch(4).tick)
 end;end
 
 live_loop :bang, auto_cue: false do |m_idx|;with_fx :level, amp: 0.0 do
