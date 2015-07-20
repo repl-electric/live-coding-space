@@ -8,7 +8,8 @@ def :shader(endpoint, *args)
   @client ||= OSC::Client.new('localhost', 9177)
   begin
     @client.send(OSC::Message.new(endpoint, *args))
-  rescue e #Its ok, don't worry. ssh
+  rescue Exception 
+    puts "$!> Graphics not loaded"
   end
 end
 
