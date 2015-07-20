@@ -1,6 +1,6 @@
 require 'osc-ruby'
 SHADER_ROOT = "/Users/josephwilk/Workspace/c++/of_v0.8.4_osx_release/apps/myApps/shaderview/bin/data/"
-def :shader(endpoint, *args)
+def shader(endpoint, *args)
   if endpoint == :shader
     args[0] = "#{SHADER_ROOT}/#{args[0]}"
   end
