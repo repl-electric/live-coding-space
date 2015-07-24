@@ -1,7 +1,23 @@
 class SonicPi::Core::RingVector
-  include SonicPi::SpiderAPI
   def stretch(n)
-    super(self.to_a, n)
+    args = [self.to_a, n]
+    res = args.each_slice(2).flat_map do |values, num_its|
+      if !values.respond_to? :flat_map
+              values = [values]
+            end
+            knit(*values.flat_map{|v| [v, num_its]})
+          end
+          (res||[]).ring
+  end
+
+  def knit(*args)
+    res = []
+         args.each_slice(2) do |val, num_its|
+           if num_its > 0
+             res = res + ([val] * num_its)
+           end
+         end
+    res.ring
   end
 end
 
