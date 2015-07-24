@@ -9,6 +9,7 @@ def shader(endpoint, *args)
   endpoint = "/#{endpoint.to_s.gsub("suniform", "smoothed-uniform")}"
   @client ||= OSC::Client.new('localhost', 9177)
   begin
+    args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
     @client.send(OSC::Message.new(endpoint, *args))
   rescue Exception 
     puts "$!> Graphics not loaded"
