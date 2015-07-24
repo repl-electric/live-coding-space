@@ -1,5 +1,7 @@
 require 'osc-ruby'
-SHADER_ROOT = "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lights/"
+unless defined?(SHADER_ROOT)
+  SHADER_ROOT = "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lights/"
+end
 def shader(endpoint, *args)
   if endpoint == :shader
     args[0] = "#{SHADER_ROOT}/#{args[0]}"
