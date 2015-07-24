@@ -3,7 +3,6 @@ uniform float iVolume;
 uniform float iBeat;
 uniform float iGlobalBeatCount;
 uniform sampler2D iChannel0;
-uniform float     iGlobalTime;
 uniform float     iExample;
 
 vec3 hsv2rgb(float h, float s, float v) {
