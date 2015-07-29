@@ -5,8 +5,7 @@ uniform float iGlobalBeatCount;
 uniform sampler2D iChannel0;
 uniform float     iExample;
 uniform float     iMesh;
-uniform float     iCellCount;
-
+uniform int       iCellCount;
 
 uniform float iColorFactor;
 
