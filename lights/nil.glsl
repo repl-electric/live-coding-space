@@ -5,7 +5,8 @@ uniform float iGlobalBeatCount;
 uniform sampler2D iChannel0;
 uniform float     iExample;
 uniform float     iMesh;
-uniform int       iCellCount;
+uniform float     iCellCount;
+uniform float     iCellMotion;
 
 uniform float iColorFactor;
 
@@ -211,17 +212,20 @@ float smoothbump(float center, float width, float x){
 }
 
 float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
-   float motionFactor = 0.1;
+   float bump = iBeat*0.1;
+   //sy+=bump;
+
+   float motionFactor = iCellMotion;
    t = t*motionFactor;
    float xx=x+sin(t*fx)*sx;
    float yy=y+tan(t*fy)*sy;
-   return 0.5/sqrt(xx*xx+yy*yy);
+   return 0.5/sqrt(xx*xx+yy*yy)+bump;
 }
 
 vec4 dropping(void) {
    vec2 p=(gl_FragCoord.xy/iResolution.x)*2.0-vec2(1.0,iResolution.y/iResolution.x);
    float time = iGlobalTime * 0.2;
-   int cells = iCellCount;
+   float cells = iCellCount;
 
    p=p*2.5;
 
