@@ -211,6 +211,8 @@ float smoothbump(float center, float width, float x){
 }
 
 float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
+   float motionFactor = 0.1;
+   t = t*motionFactor;
    float xx=x+sin(t*fx)*sx;
    float yy=y+tan(t*fy)*sy;
    return 0.5/sqrt(xx*xx+yy*yy);
