@@ -166,6 +166,6 @@ live_loop :tracing_forward_back, auto_cue: false do |idx|;with_fx :level, amp: 0
 end;end
 
 live_loop :missing_semi_colon, auto_cue: false do;with_fx :level, amp: 0.0 do
-    2.times{sync :start}
+    2.times{sync :next}
     sample (knit Mountain["microperc_06"],3,Mountain["microperc_07"],1).tick(:s)
 end;end
