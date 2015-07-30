@@ -1,4 +1,6 @@
 ## Instruments
+bar = 1.0
+
 define :i_float do |note|
   with_synth(:prophet){play note, cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
 end
