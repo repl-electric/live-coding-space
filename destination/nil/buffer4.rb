@@ -1,14 +1,19 @@
 ## Instruments
 bar = 1.0
 
-define :i_float do |note|
-  with_synth(:prophet){play note, cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
+define :i_float do |note, *opts|
+  defaults = {cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
+  defaults = defaults.merge(opts[0]||{})
+  with_synth(:prophet){play note, defaults}
 end
 
-define :i_int do |note|
-  with_synth(:beep){play note, pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2),
+define :i_int do |note, *opts|
+  defaults = {pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2),
                     release: 0.3} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
+  defaults = defaults.merge(opts[0]||{})
+  with_synth(:beep){play note, defaults}
 end
+
 
 define :i_bass do |note|
   with_transpose(12) do
