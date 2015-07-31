@@ -1,4 +1,3 @@
-# Live Coding
 ![screenshot 2015-07-31 20 18 47](https://cloud.githubusercontent.com/assets/9792/9014283/c705fb8e-37c1-11e5-8e14-2e7d07adbb77.png)
 ```
  
