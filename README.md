@@ -10,6 +10,10 @@
 
 Code that makes noises and sounds with Sonic Pi http://sonic-pi.net
 
+### Visuals
+
+Visuals are generated using ShaderView: https://github.com/josephwilk/shaderview
+
 ##License
 
 Copyright © 2014-2015 Joseph Wilk
