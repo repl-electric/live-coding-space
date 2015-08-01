@@ -89,6 +89,16 @@ module Mountain
   end
 end
 
+module MountainLoop
+  def self.pick(a)
+    MountainLoop[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/loops/Mountain/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Ether
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"]
