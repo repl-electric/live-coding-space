@@ -1,4 +1,4 @@
-def pat(s, p, delta=0, *args)
+def dpat(s, p, delta=0, *args)
  sync :drum_hit
  case p
    when  "x" #hit
@@ -13,7 +13,7 @@ end
 def drum_loop(name, state, sample, *args)
   state = expand_pattern(state)
   live_loop name, auto_cue: false do  
-     pat(sample.is_a?(SonicPi::Core::RingVector) ? sample.tick("#{name}_sample".to_sym) : sample, state.tick(name), 
+     dpat(sample.is_a?(SonicPi::Core::RingVector) ? sample.tick("#{name}_sample".to_sym) : sample, state.tick(name), 
          delta=(args[0][:delta] || 0),
          *[args[0].reduce({}){|a,(k,v)|
      v.is_a?(SonicPi::Core::RingVector) ? a[k]=v.tick("#{name}_#{k}".to_sym) : a[k]=v
