@@ -24,8 +24,9 @@ end
 def expand_pattern(pat)
   pat.to_a.map{|slice| 
   case slice
-  when "-*16"
-    ("-"*16).split("")
+  when /^-\*(\d+)$/
+    _, n = *slice.match(/^-\*(\d+)$/)
+    ("-"*n.to_i).split("")
   else
     slice
   end
