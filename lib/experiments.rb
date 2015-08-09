@@ -22,7 +22,18 @@ class SonicPi::Core::RingVector
 end
 
 def chord_seq(*args)
-  args.each_slice(2).reduce([]){|acc, notes| acc += chord(notes[0],notes[1])}
+  args.each_slice(2).reduce([]){|acc, notes| 
+    chord_type = notes[1]
+    i = 0
+    if chord_type =~ /[abcxyz]$/
+      invert_char = chord_type[-1]
+      chord_type = chord_type[0..-2]
+      i = {'a' => 1, 'b' => 2, 'c' => 3,
+           'z' => -3, 'x' => -2, 'y' => -1}[invert_char]
+    end
+    puts "invert: #{i}"
+    acc += chord(notes[0],chord_type, invert: i)
+  }
 end
 
 def note_to_sample(n, oct=1)
