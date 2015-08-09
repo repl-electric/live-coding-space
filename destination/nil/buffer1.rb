@@ -23,3 +23,19 @@ drum_loop(:cymbal, (ring *%w{- - - - - - - - - - - - - - - -    - - - - - - - - 
 drum_loop(:swipe,  (ring *%w{- - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - - -    - - - - - - - - - - - - x - - -    - - - - - - - - - - - - - - r -}),  Ether[/snare/i,12], delta: 0.01, amp: 1.0*(knit 0.5,24, 1.9,8).tick(:amp), start: 0.0, rate: (knit -0.8,16, -1.5,16).tick(:rate))
 drum_loop(:fast,   (ring *%w{- - - - - - x - x - x - - - - - }), Ether[/click/i,20], amp: 0.0, rate: (knit -1.0, 2, 1.0,2))
 end;end;end;end;end
+
+
+## Extract bang -> drum_loop
+def ring_gen(n, fn)
+  (ring *((0..n).map{fn.()}))
+end
+
+with_fx(:level, amp: 0.5) do
+                           #1 2 3 4 5 6 7 8
+drum_loop(:bang,  (ring *%w{x - - - - - - -  -*8 -*8 -*8}), Mountain["subkick",4], amp: ring_gen(32, lambda{1.0 + rrand(0.0,0.2)}), 
+                                                                                   rate: ring_gen(32, lambda{rrand(0.9,1.0)}))
+                           #1 2 3 4 5 6 7 8
+drum_loop(:bang2, (ring *%w{-*8 -*8
+                            x - - - - - - -   -*8}), Mountain["subkick",0], amp: ring_gen(32, lambda{1.0 + rrand(0.0,0.2)}), 
+                                                                           rate: ring_gen(32, lambda{rrand(0.9,1.0)}))
+end
