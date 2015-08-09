@@ -88,6 +88,10 @@ notes = (knit chord(:As3,:m)[0..1], 12,
 
 n = notes.tick(:asb)
 n = chord(:Fs3, 'sus4') + chord(:Fs3, "M") + chord(:As3, 'sus4') + chord(:As3, 'M')
+#n = [chord_seq(*%w{Cs3 7 Fs3 M B3 M7}).ring.stretch(2).tick(:notes)]
+#n =  chord_seq(*%w{Cs3 7 Fs3 M B3 M7}).ring
+#n = knit(chord(:Fs3, 1),2, chord(:Fs2, 1),2, chord(:B3, 1),2).tick(:yum)
+#n = [chord_seq(*%w{Fs3 1 Fs2 1 B4 1}).ring.tick(:n)]
 
 if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
   cue :bhit
