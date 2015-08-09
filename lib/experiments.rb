@@ -183,6 +183,16 @@ module Heat
   end
 end
 
+module Sop
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/soprano/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.flatten
   pattern_and_roots = pattern_and_roots.map{|pat|
