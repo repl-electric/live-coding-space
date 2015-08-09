@@ -124,6 +124,7 @@ live :recursion, amp: 0.0 do
 end
 
 with_fx :distortion, mix: 0.1 do
+with_fx(:pitch_shift, window_size: 4.0) do
 live_loop :rumbling_loops, auto_cue: false do |idx|;with_fx :level, amp: 0.0 do
 with_fx :reverb, mix: 0.2, damp: 0.3 do |fx_reverb|;
     3.times{sync :next}
@@ -166,7 +167,7 @@ end
     }
 end;end
 idx+=1
-end;end
+end;end;end
 
 live :tracing_forward_back, amp: 0.0 do
   n = chord_seq(*%w{Cs3 7 Fs3 M B3 M7}).ring
