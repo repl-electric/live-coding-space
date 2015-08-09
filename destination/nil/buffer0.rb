@@ -107,6 +107,8 @@ n = chord(:Fs3, 'sus4') + chord(:Fs3, "M") + chord(:As3, 'sus4') + chord(:As3, '
 #n = knit(chord(:Fs3, 1),2, chord(:Fs2, 1),2, chord(:B3, 1),2).tick(:yum)
 #n = [chord_seq(*%w{Fs3 1 Fs2 1 B4 1}).ring.tick(:n)]
 
+puts "Harmony[#{(([]|n).map{|n| note_info(n).midi_string})}]"
+
 if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
   cue :bhit
 end
@@ -144,6 +146,8 @@ end
                   chord(:B1,:M,     invert: -1)[0],3)
 
     note = notes.tick(:a)
+
+    puts "BASS[#{note_info(note||0)}]"
 
     sleep bar/2.0
     #(ring 1,0).tick(:ti).times{with_fx(:pitch_shift, mix: 1.0, pitch: 0.025){with_fx(:slicer, mix: 0.5, phase: 0.025, probability: 0.5){sample Heat[/stacked_bells/i,note_to_sample(notes.reverse.look(:a),1)], amp: 1.5, attack: 0.2}}}
