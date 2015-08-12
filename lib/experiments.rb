@@ -31,7 +31,6 @@ def chord_seq(*args)
       i = {'a' => 1, 'b' => 2, 'c' => 3,
            'z' => -3, 'x' => -2, 'y' => -1}[invert_char]
     end
-    puts "invert: #{i}"
     acc += chord(notes[0],chord_type, invert: i)
   }
 end
