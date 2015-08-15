@@ -15,19 +15,26 @@ define :i_int do |note, *opts|
 end
 
 
-define :i_bass do |note|
-  with_transpose(12) do
-    with_synth(:beep) do
-      play note,
+define :i_bass do |note, *opts|
+  defaults = {
         cutoff: 60, res: 0.5,
         release: (knit 2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd),
         attack:  (knit 0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
-        amp:     (knit 0.5,13, 0.2, 3).tick(:ampe)
+        amp:     (knit 0.5,13, 0.2, 3).tick(:ampe)}
+  defaults = defaults.merge(opts[0]||{})
+  with_transpose(12) do
+    with_synth(:beep) do
+      play note, defaults
     end
   end
+
+  defaults = {
+    amp: 1.0, release: (knit 2.01*bar, 9, 8.02*bar, 2, 2.1*bar,5).tick(:Bass), 
+    attack: 0.05, cutoff: 60,  res: 0.5}
+  defaults = defaults.merge(opts[0]||{})
   with_transpose(0) do
     with_synth :beep do
-      play note, amp: 1.0, release: (knit 2.01*bar, 9, 8.02*bar, 2, 2.1*bar,5).tick(:Bass), attack: 0.05, cutoff: 60,  res: 0.5
+      play note, defaults
     end
   end
 end
@@ -53,5 +60,15 @@ define :i_deter do |note1, note2|
         }
       end
     end
+  end
+end
+
+define :i_nil do |n, *opts|
+  defaults = {release: 2.0, amp: 2.0}
+  defaults = defaults.merge(opts[0]||{})
+  with_synth(:hollow) do
+  with_fx :pitch_shift, pitch_dis: 0.001, time_dis: 0.1, window_size: 1.5  do
+    play n, defaults
+  end
   end
 end
