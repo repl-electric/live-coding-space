@@ -1,4 +1,4 @@
-["experiments.rb", "log.rb"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}"}
+["experiments", "log"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}
 #                        \:o/ - nil.music.lights
 #   π=-    π=-   π=-      █
 #  π=-   π=-   π=-      .||.
