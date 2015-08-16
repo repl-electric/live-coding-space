@@ -19,8 +19,10 @@ end
 
 live :begin, amp: 0.0 do
   sync :next
-  with_fx :distortion, mix: (knit 0.0,3,1.0,1).tick(:v) do
-    sample Ether[/F#/,2], amp: 3.0+rrand(0.0,0.2), rate: -1.0
+  comment do
+    with_fx :distortion, mix: (knit 0.0,3,1.0,1).tick(:v) do
+      sample Ether[/F#/,2], amp: 3.0+rrand(0.0,0.2), rate: -1.0
+    end
   end
 end
 
