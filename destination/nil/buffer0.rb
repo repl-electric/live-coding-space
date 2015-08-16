@@ -101,7 +101,7 @@ n = chord(:Fs3, 'sus4') + chord(:Fs3, "M") + chord(:As3, 'sus4') + chord(:As3, '
 #n = knit(chord(:Fs3, 1),2, chord(:Fs2, 1),2, chord(:B3, 1),2).tick(:yum)
 #n = [chord_seq(*%w{Fs3 1 Fs2 1 B4 1}).ring.tick(:n)]
 
-puts "Harmony[#{(([]|n).map{|n| note_info(n).midi_string})}]"
+puts note_inspect(n)
 
 if (n||[]).map{|a|note_info(a).midi_string} == (ring "Fs4", "B4", "Eb4")
   cue :bhit
