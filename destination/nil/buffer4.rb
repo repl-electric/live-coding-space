@@ -39,16 +39,13 @@ define :i_bass do |note, *opts|
   end
 end
 
-define :i_deter do |note1, note2|
+define :i_deter do |note1, note2, *opts|
+  defaults = {amp: 0.3}
+  defaults = defaults.merge(opts[0]||{})
   with_fx :distortion, amp: 0.8, mix: 0.3 do
     with_synth :beep do
       with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
-        active_synth = play note1, amp: 0.3
-        if dice(32) == 1
-          with_fx :pan, pan: Math.sin(vt*13)/1.5 do
-            with_fx :bitcrusher, bits: 7, sample_rate: 32000 do
-              #sample Mountain[/bow/i, /f#/i, 0],amp: 0.4
-        end;end;end
+        active_synth = play note1, defaults
         sleep bar/4.0
         control active_synth, note: note2
 
@@ -62,6 +59,7 @@ define :i_deter do |note1, note2|
     end
   end
 end
+
 
 define :i_nil do |n, *opts|
   defaults = {release: 2.0, amp: 2.0}
