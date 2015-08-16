@@ -40,14 +40,22 @@ define :i_bass do |note, *opts|
 end
 
 define :i_deter do |note1, note2, *opts|
+  opts = opts[0] || {}
   defaults = {amp: 0.3}
-  defaults = defaults.merge(opts[0]||{})
+  s = opts[:synth] || :beep
+  werble = if opts[:werble] != nil
+    opts[:werble]
+  else
+    true
+  end
+
+  defaults = defaults.merge(opts)
   with_fx :distortion, amp: 0.8, mix: 0.3 do
-    with_synth :beep do
+    with_synth(s) do
       with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
         active_synth = play note1, defaults
         sleep bar/4.0
-        control active_synth, note: note2
+        control(active_synth, note: note2) if werble
 
         2.times{
           sleep bar/4.0
@@ -59,6 +67,7 @@ define :i_deter do |note1, note2, *opts|
     end
   end
 end
+
 
 
 define :i_nil do |n, *opts|
