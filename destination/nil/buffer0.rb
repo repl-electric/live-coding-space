@@ -9,6 +9,14 @@ set_volume! 0.2
 @polyrhythm = [2,3]
 load_snippets("~/.sonic-pi/snippets/")
 
+live :next, amp: 0.5 do
+  density(@polyrhythm.sort.first) do
+    cue :half
+    sample Mountain["pebble",0], start: rrand(0.0,0.01), rate: -1.0, amp: 0.4
+    sleep bar
+  end
+end
+
 live :begin, amp: 0.0 do
   sync :next
   with_fx :distortion, mix: (knit 0.0,3,1.0,1).tick(:v) do
@@ -60,20 +68,6 @@ live :bang, amp: 0.0 do |m_idx|
       sample Mountain["Impact_0#{(stretch *(1..5), 16).tick(:b)}"], rate: -1.0,amp: 0.25
     end
     m_idx+=1
-end
-
-live :next, amp: 0.5 do
-  density(@polyrhythm.sort.first) do
-    sample Mountain["pebble",0], start: rrand(0.0,0.01), rate: -1.0, amp: 0.4
-    comment do
-      with_synth(:dark_ambience){play (knit
-                                       "Fs4",1,_,1,"Fs2",6,
-                                       "B4", 1, "Ds5",1, "Bs2",6,
-                                       "Ds5",1,_,1,"Ds2",6
-                                       ).tick(:a), cutoff: 80, amp: 0.5, release: 2*bar, attack: 0.01}
-    end
-    sleep bar
-end
 end
 
 live :drifting_through_code, amp: 0.0 do
