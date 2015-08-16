@@ -36,15 +36,16 @@ live :indeterminism, amp: 0.0 do
   4.times{sync :next}
   
   comment do
-  with_fx(:distortion, mix: 1.0, distort: 0.8) do |fx_r|
-  with_synth(:hollow) do
-  play deg_seq(%w{Fs4 1 3}).tick, decay: bar*2, attack: 4, amp: 0.2, release: 1.0
-  end
-  4.times{
-    sleep bar/4.0
-    control fx_r, distort: (ring 0.8, 0.8, 0.5, 0.0).tick(:distory)
-  }
-  end
+    with_fx(:distortion, mix: 1.0, distort: 0.8) do |fx_r|
+    with_synth(:hollow) do
+      play deg_seq(%w{Fs4 1 3}).tick, decay: bar*2, attack: 4, amp: 0.4, release: 1.0
+    end
+    notes = dice(6) > 3 ? deg_seq(%w{Fs3 1}) : deg_seq(%w{Fs4 1})
+    with_fx(:reverb, room: 0.9) do
+      with_synth(:dark_ambience) do
+        play notes.tick(:note), decay: bar*6, attack: 1, amp: 1.0, release: 2.0
+      end
+    end
   end
 
   4.times{sync :next}
