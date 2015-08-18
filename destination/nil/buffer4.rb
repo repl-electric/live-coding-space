@@ -43,6 +43,8 @@ define :i_deter do |note1, note2, *opts|
   opts = opts[0] || {}
   defaults = {amp: 0.3}
   s = opts[:synth] || :beep
+  d = opts[:mix]   || 0.3
+  distort_amp = opts[:distort_amp] || 0.8
   werble = if opts[:werble] != nil
     opts[:werble]
   else
@@ -50,7 +52,7 @@ define :i_deter do |note1, note2, *opts|
   end
 
   defaults = defaults.merge(opts)
-  with_fx :distortion, amp: 0.8, mix: 0.3 do
+  with_fx :distortion, amp: distort_amp, mix: d do
     with_synth(s) do
       with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
         active_synth = play note1, defaults
@@ -67,8 +69,6 @@ define :i_deter do |note1, note2, *opts|
     end
   end
 end
-
-
 
 define :i_nil do |n, *opts|
   defaults = {release: 2.0, amp: 2.0}
