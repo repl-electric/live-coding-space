@@ -46,9 +46,12 @@ define :i_deter do |note1, note2, *opts|
   d = opts[:mix]   || 0.3
   fx_pattern  = opts[:fx_pattern] || (knit :echo,2, :reverb,2)
   distort_amp = opts[:distort_amp] || 0.8
+  
+  damp_time = opts[:damp_time] || bar/4.0
 
   opts.delete(:fx_pattern)
   opts.delete(:distory_amp)
+  opts.delete(:damp_time)
 
   werble = if opts[:werble] != nil
     opts[:werble]
@@ -61,11 +64,11 @@ define :i_deter do |note1, note2, *opts|
     with_synth(s) do
       with_fx fx_pattern.tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
         active_synth = play note1, defaults
-        sleep bar/4.0
+        sleep damp_time
         control(active_synth, note: note2) if werble
 
         2.times{
-          sleep bar/4.0
+          sleep damp_time
           if fx_verb.name =~ /reverb/
             control fx_verb, damp: rrand(0.0,1.0)
           end
@@ -74,7 +77,6 @@ define :i_deter do |note1, note2, *opts|
     end
   end
 end
-
 define :i_nil do |n, *opts|
   defaults = {release: 2.0, amp: 2.0}
   defaults = defaults.merge(opts[0]||{})
