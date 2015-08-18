@@ -46,6 +46,10 @@ define :i_deter do |note1, note2, *opts|
   d = opts[:mix]   || 0.3
   fx_pattern  = opts[:fx_pattern] || (knit :echo,2, :reverb,2)
   distort_amp = opts[:distort_amp] || 0.8
+
+  opts.delete(:fx_pattern)
+  opts.delete(:distory_amp)
+
   werble = if opts[:werble] != nil
     opts[:werble]
   else
