@@ -44,6 +44,7 @@ define :i_deter do |note1, note2, *opts|
   defaults = {amp: 0.3}
   s = opts[:synth] || :beep
   d = opts[:mix]   || 0.3
+  fx_pattern  = opts[:fx_pattern] || (knit :echo,2, :reverb,2)
   distort_amp = opts[:distort_amp] || 0.8
   werble = if opts[:werble] != nil
     opts[:werble]
@@ -54,7 +55,7 @@ define :i_deter do |note1, note2, *opts|
   defaults = defaults.merge(opts)
   with_fx :distortion, amp: distort_amp, mix: d do
     with_synth(s) do
-      with_fx (knit :echo,2, :reverb,2).tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
+      with_fx fx_pattern.tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
         active_synth = play note1, defaults
         sleep bar/4.0
         control(active_synth, note: note2) if werble
