@@ -124,7 +124,16 @@ module Frag
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Ether[a][0]
+    Frag[a][0]
+  end
+end
+module Fraz
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Frag2/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    Frag[a][0]
   end
 end
 module Eraser
@@ -133,7 +142,7 @@ module Eraser
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Ether[a][0]
+    Eraser[a][0]
   end
 end
 module Scape
@@ -142,7 +151,7 @@ module Scape
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Ether[a][0]
+    Scape[a][0]
   end
 end
 module Ambi
@@ -165,7 +174,7 @@ module Chill
 end
 module Down
   def self.pick(a)
-    Ambi[a][0]
+    Down[a][0]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Down/**/*.wav"]
