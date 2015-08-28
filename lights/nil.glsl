@@ -1,12 +1,15 @@
 //nil. by Joseph Wilk <joseph@repl-electric.com>
 uniform float iVolume;
 uniform float iBeat;
+uniform float iOffBeat;
 uniform float iGlobalBeatCount;
 uniform sampler2D iChannel0;
 uniform float     iExample;
 uniform float     iMesh;
 uniform float     iCellCount;
 uniform float     iCellMotion;
+uniform float     iSpaceMotion;
+
 
 uniform float iColorFactor;
 
@@ -212,14 +215,27 @@ float smoothbump(float center, float width, float x){
 }
 
 float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
-   float bump = iBeat*0.1;
+   float bump = iBeat*0.2;
    //sy+=bump;
 
+   float cellSize = 0.5+iBeat*0.2;
+   cellSize = cellSize-iOffBeat*0.1;
+
    float motionFactor = iCellMotion;
-   t = t*motionFactor;
+   t = t*(motionFactor);
    float xx=x+sin(t*fx)*sx;
    float yy=y+tan(t*fy)*sy;
-   return 0.5/sqrt(xx*xx+yy*yy)+bump;
+   xx += bump*0.025;
+   yy += bump*0.025;
+
+   float d = 0.0;
+      d = sqrt(xx*xx+yy*yy);
+      //      if(iOffBeat == 1.0){
+        //       d *= dot(xx+yy,xx+yy)*10.0;
+        d -= dot(xx+yy*0.0001,xx+yy*0.0001)*0.5;
+        //      }
+
+   return cellSize/d;
 }
 
 vec4 dropping(void) {
@@ -321,19 +337,19 @@ vec4 dropping(void) {
    //a*=1.0;
    //c*=1.0;
 
-   vec3 d=vec3(a,b,c)/20.0;
+   vec3 d=vec3(0.0);
+   //   vec3 aa = vec3(a*0.01,a*0.01,a*0.2+iBeat*0.1);
+   //   vec3 bb = vec3(b*0.2,b*0.1,b*0.01);
+   //vec3 cc = vec3(c*1.0,c*1.0,c*1.0);
 
-   vec3 aa = vec3(a*0.01,a*0.01,a*0.2+iBeat*0.1);
-   vec3 bb = vec3(b*0.2,b*0.1,b*0.1);
-   vec3 cc = vec3(c*0.1,c*0.1,c*0.2);
-
-   float speed = 0.09;
+   float speed = iGlobalTime*0.01;
    vec2 px = (-iResolution.xy + 2.0*gl_FragCoord.xy)/iResolution.y;
    vec3 color = backgroundColors(px, speed);
 
-   d = mix(aa+bb+cc, color, 0.2);
+   d = c*0.1+ color;
 
-   return vec4(d.x-1.8,d.y-1.8,d.z-8,1.0);
+   float circleScale = 0.1;
+   return vec4(d.x-1.0*circleScale,d.y-1.3,d.z-1.1,1.0);
 }
 
 const int MAGIC_BOX_ITERS = 9;
@@ -346,6 +362,15 @@ float magicBox(vec3 p){
 
     float lastLength = length(p);
     float tot = 0.0;
+    float movement = 0.0;
+
+    movement = (-iBeat) + (iOffBeat);
+    movement = iGlobalTime*0.0001;
+    vec2 uv = gl_FragCoord.xy / iResolution.yy;
+
+    p.x += iBeat*0.1;
+    p.y += iOffBeat*0.1;
+
     for (int i=0; i < MAGIC_BOX_ITERS; i++) {
       p = abs(p)/(lastLength*lastLength) - MAGIC_BOX_MAGIC;
       float newLength = length(p);
@@ -361,19 +386,26 @@ const mat3 M = mat3(0.28862355854826727, 0.6997227302779844, 0.6535170557707412,
                     -0.9548821651308448, 0.26025457467376617, 0.14306504491456504);
 
 vec4 starlight(void) {
-	vec2 modp = mod( floor( gl_FragCoord.xy ), 2. );
-	float m = mod( sum( modp ), 2. ) * 1.5 - .5;
+  vec2 modp = mod( floor( gl_FragCoord.xy ), 2. );
+  float m = mod( sum( modp ), 2. ) * 1.5 - .5;
+  vec3 p = 0.5*M*vec3(uv, 0.0);
+  vec2 uv = gl_FragCoord.xy / iResolution.yy;
 
-	vec2 uv = gl_FragCoord.xy / iResolution.yy;
-    uv.x += iGlobalTime * .01;
-    vec3 p = 0.5*M*vec3(uv, 0.0);
-    float result = magicBox(p);
-    result *= 0.03;
-    result = clamp( result, 0., 1. );
+  if(rand2(uv) > 0.5){
+    uv.y += iGlobalTime * 0.04 * iSpaceMotion;
+  }
+  else{
+    uv.y -= iGlobalTime * 0.01 * iSpaceMotion;
+  }
+
+
+  float result = magicBox(p);
+  result *= 0.1;
+  //result = clamp( result, 0., 1. );
     if ( gl_FragCoord.x < iResolution.x / 2. ) {
-        return vec4(vec3(min( result, fwidth( m * result ) / 3. )),1.0);
+      return vec4(vec3(min( result, fwidth( m * result ) / 3. )),1.0);
     } else {
-		  return vec4(vec3(result),1.0);
+      return vec4(vec3(result),1.0);
     }
 }
 
