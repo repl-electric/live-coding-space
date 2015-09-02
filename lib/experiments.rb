@@ -91,7 +91,7 @@ end
 
 module Mountain
   def self.pick(a)
-    Mountain[a]
+    self[a]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"]
@@ -101,7 +101,7 @@ end
 
 module MountainLoop
   def self.pick(a)
-    MountainLoop[a]
+    self[a]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/loops/Mountain/**/*.wav"]
@@ -115,7 +115,7 @@ module Ether
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Ether[a][0]
+    self[a][0]
   end
 end
 module Frag
@@ -124,16 +124,16 @@ module Frag
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Frag[a][0]
+    self[a][0]
   end
 end
 module Fraz
   def self.[](*a)
-    samples = Dir["/Users/josephwilk/Workspace/music/samples/Frag2/**/*.wav"]
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Frag2/**/*.wav"]
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Frag[a][0]
+    self[a][0]
   end
 end
 module Eraser
@@ -142,7 +142,7 @@ module Eraser
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Eraser[a][0]
+    self[a][0]
   end
 end
 module Scape
@@ -151,12 +151,12 @@ module Scape
     Sample.matches(samples, a)
   end
   def self.pick(a)
-    Scape[a][0]
+    self[a][0]
   end
 end
 module Ambi
  def self.pick(a)
-   Ambi[a][0]
+   self[a][0]
  end
  def self.[](*a)
    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
@@ -165,7 +165,7 @@ module Ambi
 end
 module Chill
  def self.pick(a)
-   Chill[a][0]
+   self[a][0]
  end
  def self.[](*a)
    samples = Dir["/Users/josephwilk/Workspace/music/samples/Chill/**/*.wav"]
@@ -174,7 +174,7 @@ module Chill
 end
 module Down
   def self.pick(a)
-    Down[a][0]
+    self[a][0]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Down/**/*.wav"]
@@ -183,20 +183,28 @@ module Down
 end
 module Heat
   def self.pick(a)
-    Heat[a][0]
+    self[a][0]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Heat/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
-
 module Sop
   def self.pick(a)
     self[a][0]
   end
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/soprano/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Dust
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Dust/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
