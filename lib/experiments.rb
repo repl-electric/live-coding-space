@@ -68,6 +68,10 @@ def self.matches(samples, matchers)
       filter = filter % filtered_samples.size
       [filtered_samples[filter]]
     elsif filter.is_a? Regexp
+      if filter.inspect[-1] == "/" #We have no flags
+        reg_str = filter.inspect[1..-2]
+        filter = Regexp.new(reg_str,"i")
+      end
       filtered_samples.select{|s| s=~ filter}
     elsif filter.is_a? Range
       filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
