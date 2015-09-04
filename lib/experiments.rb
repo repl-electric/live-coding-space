@@ -216,6 +216,15 @@ module Dust
     Sample.matches(samples, a)
   end
 end
+module Vocals
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Vocals/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
 
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.flatten
