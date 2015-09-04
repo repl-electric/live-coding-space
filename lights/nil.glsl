@@ -2,6 +2,7 @@
 uniform float iVolume;
 uniform float iBeat;
 uniform float iOffBeat;
+uniform float iHat;
 uniform float iGlobalBeatCount;
 uniform sampler2D iChannel0;
 uniform float     iExample;
@@ -9,6 +10,7 @@ uniform float     iMesh;
 uniform float     iCellCount;
 uniform float     iCellMotion;
 uniform float     iSpaceMotion;
+uniform float     iSpaceWeight;
 
 
 uniform float iColorFactor;
@@ -221,19 +223,23 @@ float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
    float cellSize = 0.5+iBeat*0.2;
    cellSize = cellSize-iOffBeat*0.1;
 
+   cellSize -= max(iHat,0.9);
+
    float motionFactor = iCellMotion;
    t = t*(motionFactor);
    float xx=x+sin(t*fx)*sx;
    float yy=y+tan(t*fy)*sy;
    xx += bump*0.025;
    yy += bump*0.025;
+   vec2 uv = gl_FragCoord.xy / iResolution.x;
+   float sound = texture2D(iChannel0, vec2(uv.x,.15)).x;
 
    float d = 0.0;
-      d = sqrt(xx*xx+yy*yy);
-      //      if(iOffBeat == 1.0){
-        //       d *= dot(xx+yy,xx+yy)*10.0;
-        d -= dot(xx+yy*0.0001,xx+yy*0.0001)*0.5;
-        //      }
+   d = sqrt(xx*xx+yy*yy)+sound*0.05;
+   //      if(iOffBeat == 1.0){
+   //       d *= dot(xx+yy,xx+yy)*10.0;
+   d -= dot(xx+yy*0.0001,xx+yy*0.0001)*0.5;
+   //      }
 
    return cellSize/d;
 }
@@ -344,7 +350,7 @@ vec4 dropping(void) {
 
    float speed = iGlobalTime*0.01;
    vec2 px = (-iResolution.xy + 2.0*gl_FragCoord.xy)/iResolution.y;
-   vec3 color = backgroundColors(px, speed);
+   vec3 color = backgroundColors(px, speed*0.001);
 
    d = c*0.1+ color;
 
@@ -388,16 +394,16 @@ const mat3 M = mat3(0.28862355854826727, 0.6997227302779844, 0.6535170557707412,
 vec4 starlight(void) {
   vec2 modp = mod( floor( gl_FragCoord.xy ), 2. );
   float m = mod( sum( modp ), 2. ) * 1.5 - .5;
-  vec3 p = 0.5*M*vec3(uv, 0.0);
   vec2 uv = gl_FragCoord.xy / iResolution.yy;
 
   if(rand2(uv) > 0.5){
-    uv.y += iGlobalTime * 0.04 * iSpaceMotion;
+    uv.y += iGlobalTime * 0.9 * iSpaceMotion;
   }
   else{
-    uv.y -= iGlobalTime * 0.01 * iSpaceMotion;
+    uv.y -= iGlobalTime * 0.9 * iSpaceMotion;
   }
 
+  vec3 p = 0.5*M*vec3(uv, 0.0);
 
   float result = magicBox(p);
   result *= 0.1;
@@ -436,7 +442,10 @@ void main(void){
 
   if(iMesh <= 0.0){
     c+= dropping();
-    c+= starlight();
+    vec4 spWeight = vec4(0.0);
+    if(iSpaceWeight > 0.0){
+      c+= starlight()*iSpaceWeight;
+    }
   }
   else{
     c = mix(c,vec4(color,0.0),0.5);
