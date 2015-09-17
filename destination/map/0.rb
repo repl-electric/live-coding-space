@@ -68,7 +68,7 @@ notes = (knit
          chord(:Ds3, "m7")[1..-1], 8,   #D F A C
       )
       4.times{control r_fx, dry: rrand(0.0,1.0) ; sleep 0.25/4.0}
-      play notes.tick(:h), amp: (knit 1.0,4, 0.0,4).tick(:amp), release: 0.5, decay: 0.5
+      play notes.tick(:h), amp: (knit 1.0,4, 0.0,4).tick(:amp), release: 0.5, decay: 0.5, cutoff: (ring 80,100,110,130).tick(:cut)
       puts note_inspect(notes.look(:h), "CHORD")
     
 
