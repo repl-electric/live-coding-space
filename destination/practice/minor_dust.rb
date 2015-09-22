@@ -1,7 +1,10 @@
+f=false
+t=true
+
 live_loop :hollow_inside do
   with_fx(:lpf, cutoff: (ramp *(range 30, 130,5)).tick(:kf)) do
   with_fx :reverb, room: 1, reps: 4 do
-    use_random_seed 300
+    use_random_seed 200
     notes = (scale :fs3, :minor_pentatonic, num_octaves: 4).take(4)
     16.times{
     with_synth(:blade){
@@ -64,6 +67,11 @@ if spread(6,11).tick(:hat)
   sample Dust[/hat/,[10,10]].tick(:d), amp: 0.1+rand*0.2, 
                           pan: -0.025,
                           cutoff: (range 100,80,10).tick(:r2)
+end
+
+if (knit f, 29, t, 1, f, 2).tick(:hatz)
+  #sample Dust[/hat/,14], amp: 1.0, rate: (ring 0.5, 1.0, 2.0, 1.5).tick
+  sample Scape[/SoftBrushHat/,0], cutoff: 130, amp: rand+0.1
 end
 end
 end
