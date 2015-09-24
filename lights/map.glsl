@@ -35,11 +35,10 @@ vec4 generateSpaceLights(vec2 uv1){
 
   #define STEPS 8
 
-
-  smoothedVolume += (iVolume  - smoothedVolume) * 0.1;
+  smoothedVolume += (0.8  - smoothedVolume) * 0.1;
 
   float inc = smoothedVolume / float(STEPS);
-  if (iVolume <=0.01){
+  if (1.0 <=0.01){
     inc = 0;
   }
   else{
@@ -47,36 +46,31 @@ vec4 generateSpaceLights(vec2 uv1){
   }
 
   vec3 acc = vec3(0.0);
-
+  float hyperSpace = 0.05;//cos(iGlobalTime*0.001);
+  float corruption = 0.001;
   for(int i = 0; i < STEPS; i ++){
-    vec3 p = ray * 0.4;
+    vec3 p = ray * hyperSpace;
 
     for(int i = 0; i < 14; i ++){
-      p = abs(p) / dot(p, p) * 2.0 - 1.0;
+      p = abs(p) / dot(p, p+0.02) * 2.0 - 1.0;
     }
-    float it = 0.001 * length(p * p);
+    float it = corruption * length(p * p);
     v += it;
 
     acc += sqrt(it) * texture2D(iChannel1, ray.xy * 0.1 + ray.z * 0.1).xyz;
     ray += dir * inc;
   }
-
-  float br = pow(v * 2.0, 1.0) * 0.5;
-  vec3 col = pow(acc * 4.1, vec3(2.2)) + br;
+  float br = pow(v * 2.0, 1.0) * 0.5 + 0.1;
+  vec3 col = pow(vec3(acc*4.1), vec3(2.2)) + br;
   return vec4(col, 1.0);
 }
 
 vec2 hash( vec2 p ){
   float sound = texture2D(iChannel0, vec2(p.x,.15)).x;
-  //CRAZy 
      mat2 m = mat2( 15.32, 83.43,
                      117.38, 289.59);
                      vec2 uv = ( gl_FragCoord.xy / iResolution.xy ) * 2.0 - 1.0;
    
-                     //We have access to the sound in
-                     //An FFT with data as a texture
-
-       //Now the frequency is controlling the cells
      return fract( sin( m * p) * 46783.289+ sound*0.01 );
 }
 
