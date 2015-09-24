@@ -1,10 +1,12 @@
 uniform float iBeat;
+uniform float iKick;
 uniform float iHat;
 uniform sampler2D iChannel0;
 uniform float iWobble;
 uniform sampler2D iChannel1;
 //No we just need to plug it in somewhere...
 uniform float iFizzle;
+uniform float invertTheCells;
 
 uniform float iStars;
 uniform float iCells;
@@ -12,6 +14,14 @@ uniform float iCells;
 #ifdef GL_ES
 precision mediump float;
 #endif
+
+float rand(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(2.9898,78.233))) * 58.5453);
+}
+
+float rand2(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 vec2 rotate(vec2 p, float a){
   return vec2(p.x * cos(a) - p.y * sin(a), p.x * sin(a) + p.y * cos(a));
@@ -66,12 +76,10 @@ vec4 generateSpaceLights(vec2 uv1){
 }
 
 vec2 hash( vec2 p ){
-  float sound = texture2D(iChannel0, vec2(p.x,.15)).x;
+     float sound = texture2D(iChannel0, vec2(p.x,.15)).x;
      mat2 m = mat2( 15.32, 83.43,
                      117.38, 289.59);
-                     vec2 uv = ( gl_FragCoord.xy / iResolution.xy ) * 2.0 - 1.0;
-   
-     return fract( sin( m * p) * 46783.289+ sound*0.01 );
+     return fract( sin( m * p+iKick*0.0001) * 46783.289);
 }
 
 float voronoi( vec2 p ){
@@ -83,21 +91,29 @@ float voronoi( vec2 p ){
      {
           for( int x = -1; x <= 1.0; ++x )
           {
-               vec2 latticePoint = vec2( x, y );
+              
+               vec2 latticePoint = vec2( x, y);
+//               if(rand2(g)> 0.9){
+//                 latticePoint.y = y+sin(rand2(g));
+//               }
                float h = distance( latticePoint + hash( g + latticePoint), f );
 		  
 		distanceFromPointToCloestFeaturePoint = min( distanceFromPointToCloestFeaturePoint, h ); 
           }
      }
     
-     return 1.0 - sin(distanceFromPointToCloestFeaturePoint);
+     return sin(distanceFromPointToCloestFeaturePoint);
 }
 
 float texture(vec2 uv )
 {
+  //float sound = texture2D(iChannel0, vec2(0.1,uv.x)).x;
+	//float t = voronoi( uv/4.0 * 8.0 + vec2(iGlobalTime*0.1) );
 	float t = voronoi( uv * 8.0 + vec2(iGlobalTime*0.1) );
-    t *= 1.0-length(uv * 2.0);
-	
+  float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
+  //t *= 1.0-length(uv * 10.10);
+  t *= 1.0-length(uv * 2.0);
+  //t /= (iKick);
 	return t;
 }
 
@@ -110,7 +126,6 @@ float fbm( vec2 uv ){
 		sum += texture( uv ) * amp;
 		uv += uv;
 		amp *= 0.1 * iFizzle;
-    //nice! accident but I like it
 	}
 	return sum;
 }
@@ -147,10 +162,13 @@ void main(void){
       lights = generateSpaceLights(uv);
     }
     vec4 cells = vec4(0.0);
-    if(iCells > 0.0){
+    if(iCells == 0.0){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
       float t = pow( fbm( uv * zoom ), 2.0);
       cells = vec4( vec3( t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
+      //if(invertTheCells > 0.0){
+      //cells = 1.0 - cells;
+      //}
     }
     
     vec4 result = cells + lights;
