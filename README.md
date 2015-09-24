@@ -12,7 +12,7 @@ Code that makes noises and sounds with Sonic Pi http://sonic-pi.net
 
 #### Tracks
 
-[nil](https://github.com/repl-electric/live-coding-space/tree/master/destination/nil).[map](https://github.com/repl-electric/live-coding-space/tree/master/destination/map).frozen?
+[[nil]](https://github.com/repl-electric/live-coding-space/tree/master/destination/nil).[map](https://github.com/repl-electric/live-coding-space/tree/master/destination/map)(&:frozen?)
 
 
 ### Visuals
