@@ -166,6 +166,7 @@ void main(void){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
       float t = pow( fbm( uv * zoom ), 2.0);
       cells = vec4( vec3( t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
+      cells *= vec4(1.0,1.0,1.0,1.0); //colors
       //if(invertTheCells > 0.0){
       //cells = 1.0 - cells;
       //}
