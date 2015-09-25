@@ -1,6 +1,7 @@
+["log","experiments", "shaderview"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}
 # (i, iio, III, iv, v,   VI, VII)
 # F#, G#, A,    B, C#,   D,  E. 
-f=false;t=true
+f=false;t=true;_=nil
 
 live_loop :frozen? do
   with_fx(:lpf, cutoff: (ramp *(range 30, 130,5)).tick(:kf)) do
