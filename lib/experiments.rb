@@ -71,15 +71,16 @@ def self.matches(samples, matchers)
       if filter.inspect[-1] == "/" #We have no flags
         reg_str = filter.inspect[1..-2]
         exact_note = false
-        if(reg_str =~ /[^#]/)
+        if(reg_str =~ /[ABCDEFG]{1}[^#]/i)
           exact_note = true
         end
-        if(reg_str[-1] != 'm')
+        if(reg_str[-1] != 'm' && reg_str =~ /[ABCDEFG]{1}/i)
           exact_note = true
         end
         if exact_note
           reg_str = "_"+ reg_str + "_"
         end
+        puts reg_str
         filter = Regexp.new(reg_str,"i")
       end
       filtered_samples.select{|s| s=~ filter}
