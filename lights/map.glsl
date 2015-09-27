@@ -7,6 +7,7 @@ uniform sampler2D iChannel1;
 //No we just need to plug it in somewhere...
 uniform float iFizzle;
 uniform float invertTheCells;
+uniform float iGlobalBeatCount;
 
 uniform float iStars;
 uniform float iCells;
@@ -14,6 +15,17 @@ uniform float iCells;
 #ifdef GL_ES
 precision mediump float;
 #endif
+
+vec3 hsvToRgb(float mixRate, float colorStrength){
+  float colorChangeRate = 18.0;
+  float time = fract(iGlobalTime/colorChangeRate);
+  float movementStart = (mod(iGlobalBeatCount,16) == 0) ? 1.0 : 0.5;
+  vec3 x = abs(fract((mod(iGlobalBeatCount,16)-1+time) + vec3(2.,3.,1.)/3.) * 6.-3.) - 1.;
+  vec3 c = clamp(x, 0.,1.);
+  //c = c*iBeat;
+  //c = c * clamp(iBeat, 0.1, 0.4)+0.6;
+  return mix(vec3(1.0), c, mixRate) * colorStrength;
+}
 
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(2.9898,78.233))) * 58.5453);
@@ -35,7 +47,8 @@ vec4 generateSpaceLights(vec2 uv1){
 
   float v = 0.0;
 
-  vec3 ray = vec3(sin(iGlobalTime * 0.1) * 0.2, cos(iGlobalTime * 0.13) * 0.2, 1.5);
+  vec3 ray = vec3(sin(iGlobalTime * 0.1) * 0.2, 
+                  cos(iGlobalTime * 0.13) * 0.2, 1.5);
   vec3 dir;
   dir = normalize(vec3(uv, 1.0));
 
@@ -48,7 +61,7 @@ vec4 generateSpaceLights(vec2 uv1){
   smoothedVolume += (0.8  - smoothedVolume) * 0.1;
 
   float inc = smoothedVolume / float(STEPS);
-  if (1.0 <=0.01){
+  if (iVolume <= 0.01){
     inc = 0;
   }
   else{
@@ -56,13 +69,13 @@ vec4 generateSpaceLights(vec2 uv1){
   }
 
   vec3 acc = vec3(0.0);
-  float hyperSpace = 0.05;//cos(iGlobalTime*0.001);
+  float hyperSpace = 0.4;//cos(iGlobalTime*0.001);
   float corruption = 0.001;
   for(int i = 0; i < STEPS; i ++){
     vec3 p = ray * hyperSpace;
 
     for(int i = 0; i < 14; i ++){
-      p = abs(p) / dot(p, p+0.02) * 2.0 - 1.0;
+      p = abs(p) / dot(p, p) * 2.0 - 1.0;
     }
     float it = corruption * length(p * p);
     v += it;
@@ -70,7 +83,8 @@ vec4 generateSpaceLights(vec2 uv1){
     acc += sqrt(it) * texture2D(iChannel1, ray.xy * 0.1 + ray.z * 0.1).xyz;
     ray += dir * inc;
   }
-  float br = pow(v * 2.0, 1.0) * 0.5 + 0.1;
+  float br = pow(v * 2.0, 1.0) * 0.5;
+//  vec3 col = pow(vec3(acc*4.1)+hsvToRgb(0.5,0.4), vec3(2.2)) + br;
   vec3 col = pow(vec3(acc*4.1), vec3(2.2)) + br;
   return vec4(col, 1.0);
 }
@@ -102,7 +116,7 @@ float voronoi( vec2 p ){
           }
      }
     
-     return sin(distanceFromPointToCloestFeaturePoint);
+     return 1.0 - sin(distanceFromPointToCloestFeaturePoint);
 }
 
 float texture(vec2 uv )
@@ -113,7 +127,7 @@ float texture(vec2 uv )
   float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
   //t *= 1.0-length(uv * 10.10);
   t *= 1.0-length(uv * 2.0);
-  //t /= (iKick);
+  t /= (iKick);
 	return t;
 }
 
@@ -154,24 +168,25 @@ vec4 lineDistort(vec4 cTextureScreen, vec2 uv1){
 }
 
 void main(void){
+
     vec2 uv = ( gl_FragCoord.xy / iResolution.xy ) * 2.0 - 1.0;
     uv.x *= iResolution.x / iResolution.y;
   
     vec4 lights = vec4(0.0);
-    if(iStars > 0.0){
+    if(iStars >= 0.0){
       lights = generateSpaceLights(uv);
     }
     vec4 cells = vec4(0.0);
-    if(iCells == 0.0){
+    if(iCells > 0.0){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
       float t = pow( fbm( uv * zoom ), 2.0);
-      cells = vec4( vec3( t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
+      cells = vec4( vec3(t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
       cells *= vec4(1.0,1.0,1.0,1.0); //colors
       //if(invertTheCells > 0.0){
       //cells = 1.0 - cells;
       //}
     }
     
-    vec4 result = cells + lights;
+   vec4 result = cells + lights;
     gl_FragColor = lineDistort(result, uv);
 }
