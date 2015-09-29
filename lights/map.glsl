@@ -18,6 +18,7 @@ uniform float iOffBeat;
 uniform float iCellMotion;
 uniform float iCellCount;
 uniform float iStarLight;
+uniform float iWave;
 
 #ifdef GL_ES
 precision mediump float;
@@ -137,8 +138,8 @@ float texture(vec2 uv )
   float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
   //t *= 1.0-length(uv * 10.10);
   t *= 1.0-length(uv * 2.0);
-  t /= (iKick);
-	return t;
+  t /= (iWave);
+  return t;
 }
 
 float fbm( vec2 uv ){
@@ -543,13 +544,17 @@ void main(void){
       lights = generateSpaceLights(uv);
     }
     vec4 cells = vec4(0.0);
-    if(iCells > 0.0){
+    if(iCells == 0.0){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
       float t = pow( fbm( uv * zoom ), 2.0);
       cells = vec4( vec3(t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
       cells *= vec4(1.0,1.0,1.0,1.0); //colors
       //if(invertTheCells > 0.0){
-      //cells = 1.0 - cells;
+      cells = 1.0 - cells;
+      //cells.x *= hsvToRgb(1.0,0.01).x;
+      cells.y *= hsvToRgb(1.0,0.01).y * iWave;
+      cells.z *= hsvToRgb(1.0,0.01).z * iWave;
+
       //}
     }
     vec4 starLight = vec4(0.0);
