@@ -9,6 +9,7 @@ uniform float iFizzle;
 uniform float invertTheCells;
 uniform float iGlobalBeatCount;
 
+uniform float iFlyingSpeed;
 uniform float iStars;
 uniform float iCells;
 
@@ -70,6 +71,9 @@ vec4 generateSpaceLights(vec2 uv1){
 
   vec3 acc = vec3(0.0);
   float hyperSpace = 0.4;//cos(iGlobalTime*0.001);
+  if(FlyingSpeed > 0.0){
+    hyperSpace = cos(iGlobalTime*0.001);    
+  }
   float corruption = 0.001;
   for(int i = 0; i < STEPS; i ++){
     vec3 p = ray * hyperSpace;
@@ -173,7 +177,7 @@ void main(void){
     uv.x *= iResolution.x / iResolution.y;
   
     vec4 lights = vec4(0.0);
-    if(iStars >= 0.0){
+    if(iStars > 0.0){
       lights = generateSpaceLights(uv);
     }
     vec4 cells = vec4(0.0);
