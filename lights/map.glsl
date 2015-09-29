@@ -71,7 +71,7 @@ vec4 generateSpaceLights(vec2 uv1){
 
   vec3 acc = vec3(0.0);
   float hyperSpace = 0.4;//cos(iGlobalTime*0.001);
-  if(FlyingSpeed > 0.0){
+  if(iFlyingSpeed > 0.0){
     hyperSpace = cos(iGlobalTime*0.001);    
   }
   float corruption = 0.001;
