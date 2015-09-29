@@ -4,6 +4,7 @@ uniform float iHat;
 uniform sampler2D iChannel0;
 uniform float iWobble;
 uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
 //No we just need to plug it in somewhere...
 uniform float iFizzle;
 uniform float invertTheCells;
@@ -48,8 +49,7 @@ vec4 generateSpaceLights(vec2 uv1){
 
   float v = 0.0;
 
-  vec3 ray = vec3(sin(iGlobalTime * 0.1) * 0.2, 
-                  cos(iGlobalTime * 0.13) * 0.2, 1.5);
+  vec3 ray = vec3(sin(iGlobalTime * 0.1) * 0.2, cos(iGlobalTime * 0.13) * 0.2, 1.5);
   vec3 dir;
   dir = normalize(vec3(uv, 1.0));
 
@@ -59,10 +59,10 @@ vec4 generateSpaceLights(vec2 uv1){
 
   #define STEPS 8
 
-  smoothedVolume += (0.8  - smoothedVolume) * 0.1;
+  smoothedVolume += (iVolume  - smoothedVolume) * 0.1;
 
   float inc = smoothedVolume / float(STEPS);
-  if (iVolume <= 0.01){
+  if (iVolume<=0.01){
     inc = 0;
   }
   else{
@@ -70,26 +70,27 @@ vec4 generateSpaceLights(vec2 uv1){
   }
 
   vec3 acc = vec3(0.0);
-  float hyperSpace = 0.4;//cos(iGlobalTime*0.001);
-  if(iFlyingSpeed > 0.0){
-    hyperSpace = cos(iGlobalTime*0.001);    
-  }
+  float hyperSpace = 0.4;
   float corruption = 0.001;
-  for(int i = 0; i < STEPS; i ++){
-    vec3 p = ray * hyperSpace;
-
-    for(int i = 0; i < 14; i ++){
-      p = abs(p) / dot(p, p) * 2.0 - 1.0;
-    }
-    float it = corruption * length(p * p);
-    v += it;
-
-    acc += sqrt(it) * texture2D(iChannel1, ray.xy * 0.1 + ray.z * 0.1).xyz;
-    ray += dir * inc;
+  if(iFlyingSpeed > 0.0){
+    hyperSpace = cos(iGlobalTime*(0.0090*iFlyingSpeed));    
   }
-  float br = pow(v * 2.0, 1.0) * 0.5;
-//  vec3 col = pow(vec3(acc*4.1)+hsvToRgb(0.5,0.4), vec3(2.2)) + br;
-  vec3 col = pow(vec3(acc*4.1), vec3(2.2)) + br;
+  for(int i = 0; i < STEPS; i ++){
+      vec3 p = ray * hyperSpace;
+
+      for(int i = 0; i < 14; i ++){
+        p = abs(p) / dot(p, p) * 2.0 - 1.0;
+      }
+      float it = corruption * length(p * p);
+      v += it;
+
+      acc += sqrt(it) * texture2D(iChannel2, ray.xy * 0.1 + ray.z * 0.1).xyz;
+      ray += dir * inc;
+    }
+
+  float br = pow(v * 4.0, 3.0) * 0.1;
+  vec3 col = pow(vec3(acc*0.5)+hsvToRgb(0.1,0.1), vec3(1.2)) + br;
+  //vec3 col = pow(vec3(acc.x * 0.5, 0.1,0.1), vec3(1.2)) + br;
   return vec4(col, 1.0);
 }
 
