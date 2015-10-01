@@ -492,13 +492,16 @@ float magicBox(vec3 p){
     movement = iGlobalTime*0.0001;
     vec2 uv = gl_FragCoord.xy / iResolution.yy;
 
-    p.x += iBeat*0.1;
+    float sound = texture2D(iChannel0  , vec2(p.x,.15)).x;
+
+    p.x += iBeat*0.001;
     p.y += iOffBeat*0.1;
+    float thing = sin(iGlobalTime*0.1);
 
     for (int i=0; i < MAGIC_BOX_ITERS; i++) {
       p = abs(p)/(lastLength*lastLength) - MAGIC_BOX_MAGIC;
       float newLength = length(p);
-      tot += abs(newLength-lastLength);
+      tot += abs(newLength-lastLength)+sound;
       lastLength = newLength;
     }
 
@@ -514,22 +517,33 @@ vec4 starlight(void) {
   float m = mod( sum( modp ), 2. ) * 1.5 - .5;
   vec2 uv = gl_FragCoord.xy / iResolution.yy;
 
-  if(rand2(uv) > 0.5){
-    uv.y += iGlobalTime * 0.9 * iSpaceMotion;
-  }
-  else{
-    uv.y -= iGlobalTime * 0.9 * iSpaceMotion;
-  }
-
   vec3 p = 0.5*M*vec3(uv, 0.0);
-
   float result = magicBox(p);
   result *= 0.1;
+
+  if(result > 0.8){
+    if(rand2(uv) > 0.5){
+      uv.y += sin(iGlobalTime*0.1) * iSpaceMotion;
+       p = 0.5*M*vec3(uv, 0.0);
+       result = magicBox(p);
+       result *= 0.09;
+      
+    }
+    else{
+      p = 0.5*M*vec3(uv, 0.0);
+      result = magicBox(p);
+      result *= 0.09;
+      uv.y -= cos(iGlobalTime*0.1) * iSpaceMotion;
+    }
+    
+  }
   //result = clamp( result, 0., 1. );
+  float colorFactor = 1.0;
     if ( gl_FragCoord.x < iResolution.x / 2. ) {
-      return vec4(vec3(min( result, fwidth( m * result ) / 3. )),1.0);
+      float f = min(result, fwidth( m * result ) / 3. );
+      return vec4(vec3(f, f*colorFactor,f*colorFactor),1.0);
     } else {
-      return vec4(vec3(result),1.0);
+      return vec4(vec3(result, result*colorFactor,result*colorFactor),1.0);
     }
 }
 
@@ -544,7 +558,7 @@ void main(void){
       lights = generateSpaceLights(uv);
     }
     vec4 cells = vec4(0.0);
-    if(iCells == 0.0){
+    if(iCells > 0.0){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
       float t = pow( fbm( uv * zoom ), 2.0);
       cells = vec4( vec3(t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
