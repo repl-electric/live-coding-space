@@ -555,7 +555,7 @@ void main(void){
   
     vec4 lights = vec4(0.0);
     if(iStars > 0.0){
-      lights = generateSpaceLights(uv);
+      lights = generateSpaceLights(uv) * iStars;
     }
     vec4 cells = vec4(0.0);
     if(iCells > 0.0){
@@ -568,7 +568,7 @@ void main(void){
       //cells.x *= hsvToRgb(1.0,0.01).x;
       cells.y *= hsvToRgb(1.0,0.01).y * iWave;
       cells.z *= hsvToRgb(1.0,0.01).z * iWave;
-
+      cells *= iCells;
       //}
     }
     vec4 starLight = vec4(0.0);
