@@ -138,7 +138,9 @@ float texture(vec2 uv )
   float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
   //t *= 1.0-length(uv * 10.10);
   t *= 1.0-length(uv * 2.0);
-  t /= (iWave);
+  if(iWave > 0.0){
+  	t /= (iWave);
+  }
   return t;
 }
 
