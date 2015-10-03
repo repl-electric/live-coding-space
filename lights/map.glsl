@@ -102,33 +102,36 @@ vec4 generateSpaceLights(vec2 uv1){
 }
 
 vec2 hash( vec2 p ){
-     float sound = texture2D(iChannel0, vec2(p.x,.15)).x;
-     mat2 m = mat2( 15.32, 83.43,
-                     117.38, 289.59);
-     return fract( sin( m * p+iKick*0.0001) * 46783.289);
+     float sound = texture2D(iChannel0, vec2(p.x,.0)).x;
+     mat2 m = mat2( 0.32, 3000.43,
+                    1700.38, 9000.59);
+     vec2 result = fract( sin( m * p+iKick*0.0001) * 46783.289);
+     return result;
 }
 
 float voronoi( vec2 p ){
      vec2 g = floor( p );
      vec2 f = fract( p );
+      float sound = texture2D(iChannel0, vec2(0.1,p.x)).x;
     
-     float distanceFromPointToCloestFeaturePoint = 1.0;
-     for( int y = -1; y <= 1.0; ++y )
-     {
-          for( int x = -1; x <= 1.0; ++x )
-          {
-              
-               vec2 latticePoint = vec2( x, y);
+     float distanceFromPointToClosestFeaturePoint = 1.0;
+     float alignmentFactor = 1.0;
+     float corruptionFactor = 0.8; //0.5 is lovely
+     for( int y = -1; y <= 1.0; ++y ){
+          for( int x = -1; x <= 1.0; ++x ){
+               vec2 latticePoint = vec2(x, y);
 //               if(rand2(g)> 0.9){
 //                 latticePoint.y = y+sin(rand2(g));
 //               }
-               float h = distance( latticePoint + hash( g + latticePoint), f );
+               float h = distance(latticePoint*corruptionFactor + 
+                 hash(g + latticePoint)/alignmentFactor, 
+                 f);
 		  
-		distanceFromPointToCloestFeaturePoint = min( distanceFromPointToCloestFeaturePoint, h ); 
+		distanceFromPointToClosestFeaturePoint = min( distanceFromPointToClosestFeaturePoint, h); 
           }
      }
     
-     return 1.0-sin(distanceFromPointToCloestFeaturePoint);
+     return 1.0-sin(distanceFromPointToClosestFeaturePoint);
 }
 
 float texture(vec2 uv )
@@ -136,9 +139,9 @@ float texture(vec2 uv )
   //float sound = texture2D(iChannel0, vec2(0.1,uv.x)).x;
 	//float t = voronoi( uv/4.0 * 8.0 + vec2(iGlobalTime*0.1) );
 	float t = voronoi( uv * 8.0 + vec2(iGlobalTime*0.1) );
-  float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
+  //float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
   //t *= 1.0-length(uv * 10.10);
-  t *= 1.0-length(uv * 2.0);
+  t *= 1.0-length(uv * 0.5); //play with me
   if(iWave > 0.0){
     t /= (iWave);
   }
@@ -563,8 +566,12 @@ void main(void){
     vec4 cells = vec4(0.0);
     if(iCells > 0.0){
       float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
-      float t = pow( fbm( uv * zoom ), 2.0);
-      cells = vec4( vec3(t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
+      float sound = texture2D(iChannel0, vec2(uv.y,.0)).x;
+      float entryFactor = 2.0;     
+      float t = pow( fbm( uv * zoom ), entryFactor);
+      cells = vec4( vec3(t * iBeat+(iHat*0.2), 
+                         t * iBeat, 
+                         t * iBeat), 1.0 );
       cells *= vec4(1.0,1.0,1.0,1.0); //colors
       if(iInvert > 0.0){
         cells = 2.0 - cells;
