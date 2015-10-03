@@ -19,6 +19,7 @@ uniform float iCellMotion;
 uniform float iCellCount;
 uniform float iStarLight;
 uniform float iWave;
+uniform float iInvert;
 
 #ifdef GL_ES
 precision mediump float;
@@ -127,7 +128,7 @@ float voronoi( vec2 p ){
           }
      }
     
-     return 1.0 - sin(distanceFromPointToCloestFeaturePoint);
+     return 1.0-sin(distanceFromPointToCloestFeaturePoint);
 }
 
 float texture(vec2 uv )
@@ -139,7 +140,7 @@ float texture(vec2 uv )
   //t *= 1.0-length(uv * 10.10);
   t *= 1.0-length(uv * 2.0);
   if(iWave > 0.0){
-  	t /= (iWave);
+    t /= (iWave);
   }
   return t;
 }
@@ -565,13 +566,14 @@ void main(void){
       float t = pow( fbm( uv * zoom ), 2.0);
       cells = vec4( vec3(t * iBeat+(iHat*0.2), t * iBeat, t * iBeat ), 1.0 );
       cells *= vec4(1.0,1.0,1.0,1.0); //colors
-      //if(invertTheCells > 0.0){
-      cells = 1.0 - cells;
+      if(iInvert > 0.0){
+        cells = 2.0 - cells;
+      }
       //cells.x *= hsvToRgb(1.0,0.01).x;
+      cells.x *= 0.1;
       cells.y *= hsvToRgb(1.0,0.01).y * iWave;
       cells.z *= hsvToRgb(1.0,0.01).z * iWave;
       cells *= iCells;
-      //}
     }
     vec4 starLight = vec4(0.0);
     if(iStarLight > 0.0){
