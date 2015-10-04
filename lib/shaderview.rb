@@ -6,8 +6,9 @@ def shader(endpoint, *args)
   if endpoint == :shader
     args[0] = "#{SHADER_ROOT}/#{args[0]}"
   end
-  endpoint = "/#{endpoint.to_s.gsub("smooth", "smoothed-uniform")}"
-  endpoint = "/#{endpoint.to_s.gsub("decay", "decaying-uniform")}"
+  endpoint = "#{endpoint.to_s.gsub("smooth", "smoothed-uniform")}"
+  endpoint = "#{endpoint.to_s.gsub("decay", "decaying-uniform")}"
+  endpoint = "/#{endpoint}"
   @client ||= OSC::Client.new('localhost', 9177)
   begin
     args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
