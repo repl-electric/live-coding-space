@@ -9,6 +9,7 @@ uniform sampler2D iChannel2;
 uniform float iFizzle;
 uniform float invertTheCells;
 uniform float iGlobalBeatCount;
+uniform float iDrop;
 
 uniform float iFlyingSpeed;
 uniform float iStars;
@@ -347,7 +348,7 @@ float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
    float cellSize = 0.5+iBeat*0.2;
    cellSize = cellSize-iOffBeat*0.1;
 
-   cellSize -= max(iHat,0.9);
+   //cellSize -= max(iHat,0.1);
 
    float motionFactor = iCellMotion;
    t = t*(motionFactor);
@@ -362,7 +363,7 @@ float makePoint(float x,float y,float fx,float fy,float sx,float sy,float t){
    d = sqrt(xx*xx+yy*yy)+sound*0.05;
    //      if(iOffBeat == 1.0){
    //       d *= dot(xx+yy,xx+yy)*10.0;
-   d -= dot(xx+yy*0.0001,xx+yy*0.0001)*0.5;
+   //d -= dot(xx+yy*0.0001,xx+yy*0.0001)*0.5;
    //      }
 
    return cellSize/d;
@@ -502,11 +503,19 @@ float magicBox(vec3 p){
 
     p.x += iBeat*0.001;
     p.y += iOffBeat*0.1;
-    float thing = sin(iGlobalTime*0.1);
+    float thing = sin(iGlobalTime*0.1)*0.05;
+    //p.x *= thing;
+    //p.y *= thing;
 
     for (int i=0; i < MAGIC_BOX_ITERS; i++) {
-      p = abs(p)/(lastLength*lastLength) - MAGIC_BOX_MAGIC;
-      float newLength = length(p);
+      p = abs(p)/(lastLength*lastLength) - (MAGIC_BOX_MAGIC);
+      float newLength;
+      if(iSpaceMotion> 0.0){
+        newLength = length(p)+(thing);
+      }
+      else{
+        newLength = length(p);
+      }
       tot += abs(newLength-lastLength)+sound;
       lastLength = newLength;
     }
@@ -529,7 +538,7 @@ vec4 starlight(void) {
 
   if(result > 0.8){
     if(rand2(uv) > 0.5){
-      uv.y += sin(iGlobalTime*0.1) * iSpaceMotion;
+      uv.y += sin(iGlobalTime*0.1) * iSpaceMotion ;
        p = 0.5*M*vec3(uv, 0.0);
        result = magicBox(p);
        result *= 0.09;
@@ -544,7 +553,7 @@ vec4 starlight(void) {
     
   }
   //result = clamp( result, 0., 1. );
-  float colorFactor = 1.0;
+  float colorFactor = 1.0; //uniform me?
     if ( gl_FragCoord.x < iResolution.x / 2. ) {
       float f = min(result, fwidth( m * result ) / 3. );
       return vec4(vec3(f, f*colorFactor,f*colorFactor),1.0);
@@ -586,7 +595,17 @@ void main(void){
     if(iStarLight > 0.0){
       starLight = starlight() * iStarLight;
     }
+
+    vec4 drop = vec4(0.0);    
+    if(iDrop > 0.0){
+      drop = dropping();
+    }
     
-   vec4 result = cells + lights + starLight;
-    gl_FragColor = lineDistort(result, uv);
+   vec4 result = cells + lights + starLight + drop;
+   if(result == vec4(0.0)){
+     gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+   }
+   else{
+     gl_FragColor = lineDistort(result, uv);
+   }
 }
