@@ -1,29 +1,23 @@
-#We will need to mix in SonicPi's DSL
-include(SonicPi::Lang::Core)
-include(SonicPi::Lang::Sound)
-#include(SonicPi::Lang::Minecraft)
-include(SonicPi::Lang::Pattern)
-
-define :i_hollow do |n, *opts|
+def i_hollow(n, *opts)
   defaults = {release: 8}
   defaults.merge(opts[0]||{})
   with_fx(:reverb) do
-    with_synth(:hollow){
+    with_synth(:hollow) do
       with_fx :pitch_shift, pitch_dis: 0.001, time_dis: 0.1, window_size: 1.5  do
         #        with_fx :slicer, phase: 1.0 do
         play n, defaults
       end
-    }
+    end
   end
 end
 
-define :i_float do |note, *opts|
+def i_float(note, *opts)
   defaults = {cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
   defaults = defaults.merge(opts[0]||{})
   with_synth(:prophet){play note, defaults}
 end
 
-define :i_int do |note, *opts|
+def i_int(note, *opts)
   defaults = {pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2),
               release: 0.3} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
   defaults = defaults.merge(opts[0]||{})
@@ -31,9 +25,8 @@ define :i_int do |note, *opts|
 end
 
 
-define :i_bass do |note, *opts|
-  defaults = {
-    cutoff: 60, res: 0.5,
+def i_bass(note, *opts)
+  defaults = {cutoff: 60, res: 0.5,
     release: (knit 2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd),
     attack:  (knit 0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
   amp:     (knit 0.5,13, 0.2, 3).tick(:ampe)}
@@ -55,7 +48,7 @@ define :i_bass do |note, *opts|
   end
 end
 
-define :i_deter do |note1, note2, *opts|
+def i_deter(note1, note2, *opts)
   opts = opts[0] || {}
   defaults = {amp: 0.3}
   s = opts[:synth] || :beep
@@ -93,7 +86,8 @@ define :i_deter do |note1, note2, *opts|
     end
   end
 end
-define :i_nil do |n, *opts|
+
+def i_nil(n, *opts)
   defaults = {release: 2.0, amp: 2.0}
   defaults = defaults.merge(opts[0]||{})
   with_synth(:hollow) do
