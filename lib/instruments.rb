@@ -12,13 +12,13 @@ def i_hollow(n, *opts)
 end
 
 def i_float(note, *opts)
-  defaults = {cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
+  defaults = {cutoff: 70, attack: 0.01, pan: (Math.sin(vt*13)/1.5), amp: 0.5, decay: 0.1 + rrand(0.1,0.2), release: ring(1.0,0.25,0.4,0.25).tick(:dasd)}
   defaults = defaults.merge(opts[0]||{})
   with_synth(:prophet){play note, defaults}
 end
 
 def i_int(note, *opts)
-  defaults = {pan: (Math.sin(vt*13)/1.5), amp: (ring 0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2),
+  defaults = {pan: (Math.sin(vt*13)/1.5), amp: ring(0.25).tick(:sdf), decay: 0.1 + rrand(0.1,0.2),
               release: 0.3} #, release: (ring 1.0,0.25,0.4,0.25).tick(:dasd)}
   defaults = defaults.merge(opts[0]||{})
   with_synth(:beep){play note, defaults}
@@ -27,9 +27,9 @@ end
 
 def i_bass(note, *opts)
   defaults = {cutoff: 60, res: 0.5,
-    release: (knit 2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd),
-    attack:  (knit 0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
-  amp:     (knit 0.5,13, 0.2, 3).tick(:ampe)}
+    release: knit(2.5*bar,10, 8.0*bar,1,    5.0*bar,2,     5.0*bar,1, 2.5*bar,1, 2.5*bar,1).tick(:sd),
+    attack:  knit(0.01,10,    0.15,1,        0.15,2,        0.25,1,    0.25,1,     0.01,1,).tick(:att),
+  amp:     knit(0.5,13, 0.2, 3).tick(:ampe)}
   defaults = defaults.merge(opts[0]||{})
   with_transpose(12) do
     with_synth(:beep) do
@@ -38,7 +38,7 @@ def i_bass(note, *opts)
   end
 
   defaults = {
-    amp: 1.0, release: (knit 2.01*bar, 9, 8.02*bar, 2, 2.1*bar,5).tick(:Bass),
+    amp: 1.0, release: knit(2.01*bar, 9, 8.02*bar, 2, 2.1*bar,5).tick(:Bass),
   attack: 0.05, cutoff: 60,  res: 0.5}
   defaults = defaults.merge(opts[0]||{})
   with_transpose(0) do
