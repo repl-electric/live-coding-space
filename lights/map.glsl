@@ -11,12 +11,15 @@ uniform float invertTheCells;
 uniform float iGlobalBeatCount;
 uniform float iDrop;
 
-uniform float iFlyingSpeed;
+
 uniform float iStars;
 uniform float iCells;
+
 uniform float iSpaceMotion;
-uniform float iOffBeat;
+uniform float iStarMotion;
 uniform float iCellMotion;
+
+uniform float iOffBeat;
 uniform float iCellCount;
 uniform float iStarLight;
 uniform float iWave;
@@ -80,8 +83,8 @@ vec4 generateSpaceLights(vec2 uv1){
   vec3 acc = vec3(0.0);
   float hyperSpace = 0.4;
   float corruption = 0.001 + iKick * 0.001;
-  if(iFlyingSpeed > 0.0){
-    hyperSpace = cos(iGlobalTime*(0.0090*iFlyingSpeed));    
+  if(iStarMotion > 0.0){
+    hyperSpace = cos(iGlobalTime*(0.0090*iStarMotion));    
   }
   for(int i = 0; i < STEPS; i ++){
       vec3 p = ray * hyperSpace;
@@ -97,7 +100,7 @@ vec4 generateSpaceLights(vec2 uv1){
     }
 
   float br = pow(v * 4.0, 3.0) * 0.1;
-  vec3 col = pow(vec3(acc*0.5)+hsvToRgb(0.1,0.1), vec3(1.2)) + br;
+  vec3 col = pow(vec3(acc*0.5) + hsvToRgb(iKick,0.1), vec3(1.2)) + br;
   //vec3 col = pow(vec3(acc.x * 0.5, 0.1,0.1), vec3(1.2)) + br;
   return vec4(col, 1.0);
 }
@@ -503,7 +506,7 @@ float magicBox(vec3 p){
 
     p.x += iBeat*0.001;
     p.y += iOffBeat*0.1;
-    float thing = sin(iGlobalTime*0.1)*0.05;
+    float thing = sin(iGlobalTime*0.05)*0.05;
     //p.x *= thing;
     //p.y *= thing;
 
@@ -538,7 +541,7 @@ vec4 starlight(void) {
 
   if(result > 0.8){
     if(rand2(uv) > 0.5){
-      uv.y += sin(iGlobalTime*0.1) * iSpaceMotion ;
+      uv.y += sin(iGlobalTime*0.05) * iSpaceMotion ;
        p = 0.5*M*vec3(uv, 0.0);
        result = magicBox(p);
        result *= 0.09;
@@ -548,7 +551,7 @@ vec4 starlight(void) {
       p = 0.5*M*vec3(uv, 0.0);
       result = magicBox(p);
       result *= 0.09;
-      uv.y -= cos(iGlobalTime*0.1) * iSpaceMotion;
+      uv.y -= cos(iGlobalTime*0.05) * iSpaceMotion;
     }
     
   }
@@ -598,7 +601,7 @@ void main(void){
 
     vec4 drop = vec4(0.0);    
     if(iDrop > 0.0){
-      drop = dropping();
+      drop = dropping() * iDrop;
     }
     
    vec4 result = cells + lights + starLight + drop;
