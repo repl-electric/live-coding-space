@@ -11,6 +11,11 @@ uniform float invertTheCells;
 uniform float iGlobalBeatCount;
 uniform float iDrop;
 
+uniform float iColorKick;
+
+uniform float iDarkSea;
+
+uniform float iCellActivity;
 
 uniform float iStars;
 uniform float iCells;
@@ -82,7 +87,7 @@ vec4 generateSpaceLights(vec2 uv1){
 
   vec3 acc = vec3(0.0);
   float hyperSpace = 0.4;
-  float corruption = 0.001 + iKick * 0.001;
+  float corruption = 0.001 + iKick  * 0.001;
   if(iStarMotion > 0.0){
     hyperSpace = cos(iGlobalTime*(0.0090*iStarMotion));    
   }
@@ -100,23 +105,41 @@ vec4 generateSpaceLights(vec2 uv1){
     }
 
   float br = pow(v * 4.0, 3.0) * 0.1;
-  vec3 col = pow(vec3(acc*0.5) + hsvToRgb(iKick,0.1), vec3(1.2)) + br;
+  vec3 col = pow(vec3(acc*0.5), vec3(1.2)) + br;
   //vec3 col = pow(vec3(acc.x * 0.5, 0.1,0.1), vec3(1.2)) + br;
   return vec4(col, 1.0);
 }
 
 vec2 hash( vec2 p ){
+     float cellActivity = iCellActivity;
      float sound = texture2D(iChannel0, vec2(p.x,.0)).x;
+     sound = clamp(sound, 0.0,0.01);
+
+     float circleRadius = sin(iGlobalTime);
+     vec2 circleCenter = vec2(0.5,0.5);
+     float dist = length(p - circleCenter);
+     float circle = smoothstep(circleRadius,circleRadius - 0.05,dist);
+
+     if(circle > 0.2 && circle < 0.3){
+       cellActivity += circle*0.1; 
+     }
+
      mat2 m = mat2( 0.32, 3000.43,
                     1700.38, 9000.59);
-     vec2 result = fract( sin( m * p+iKick*0.0001) * 46783.289);
+
+     vec2 result = fract( sin( m * p+sin(iKick)*0.0001) * 46783.289);
+
+     if(cellActivity != 0.0){
+       result.xy *= ((sin(iGlobalTime*0.1)*0.5+0.5)+0.3)*iCellActivity;
+     }
+
      return result;
 }
 
 float voronoi( vec2 p ){
      vec2 g = floor( p );
      vec2 f = fract( p );
-      float sound = texture2D(iChannel0, vec2(0.1,p.x)).x;
+     float sound = texture2D(iChannel0, vec2(0.1,p.x)).x;
     
      float distanceFromPointToClosestFeaturePoint = 1.0;
      float alignmentFactor = 1.0;
@@ -135,7 +158,13 @@ float voronoi( vec2 p ){
           }
      }
     
-     return 1.0-sin(distanceFromPointToClosestFeaturePoint);
+     if(iInvert > 0.0){
+       return 1.0-sin(distanceFromPointToClosestFeaturePoint);       
+     }
+     else{
+       return sin(distanceFromPointToClosestFeaturePoint);
+     }
+
 }
 
 float texture(vec2 uv )
@@ -152,7 +181,7 @@ float texture(vec2 uv )
   return t;
 }
 
-float fbm( vec2 uv ){
+float growCells( vec2 uv ){
 	float sum = 0.00;
 	float amp = 1.0;
 	
@@ -506,7 +535,7 @@ float magicBox(vec3 p){
 
     p.x += iBeat*0.001;
     p.y += iOffBeat*0.1;
-    float thing = sin(iGlobalTime*0.05)*0.05;
+    float thing = tan(cos(iGlobalTime*0.05))*0.05;
     //p.x *= thing;
     //p.y *= thing;
 
@@ -556,7 +585,10 @@ vec4 starlight(void) {
     
   }
   //result = clamp( result, 0., 1. );
-  float colorFactor = 1.0; //uniform me?
+  float colorFactor = 0.5; //uniform me?
+  if(iColorKick > 0.0){
+    colorFactor = iColorKick;
+  }
     if ( gl_FragCoord.x < iResolution.x / 2. ) {
       float f = min(result, fwidth( m * result ) / 3. );
       return vec4(vec3(f, f*colorFactor,f*colorFactor),1.0);
@@ -577,16 +609,16 @@ void main(void){
     }
     vec4 cells = vec4(0.0);
     if(iCells > 0.0){
-      float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + iBeat;
+      float zoom = sin(iGlobalTime*0.01)*0.5 + 0.5 + (iBeat*5);
       float sound = texture2D(iChannel0, vec2(uv.y,.0)).x;
       float entryFactor = 2.0;     
-      float t = pow( fbm( uv * zoom ), entryFactor);
-      cells = vec4( vec3(t * iBeat+(iHat*0.2), 
-                         t * iBeat, 
-                         t * iBeat), 1.0 );
+      float t = pow( growCells( uv * zoom ), entryFactor);
+      cells = vec4( vec3(t * (iBeat)+(iHat*0.2), 
+                         t * (iBeat), 
+                         t * (iBeat)), 1.0 );
       cells *= vec4(1.0,1.0,1.0,1.0); //colors
       if(iInvert > 0.0){
-        cells = 2.0 - cells;
+        //cells = 2.0 - cells;
       }
       //cells.x *= hsvToRgb(1.0,0.01).x;
       cells.x *= 0.1;
