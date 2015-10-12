@@ -176,7 +176,7 @@ float texture(vec2 uv )
   //t *= 1.0-length(uv * 10.10);
   t *= 1.0-length(uv * 0.5); //play with me
   if(iWave > 0.0){
-    t /= (iWave);
+    t /= iWave/ sin(iGlobalTime)*8;
   }
   return t;
 }
@@ -515,7 +515,7 @@ vec4 dropping(void) {
    return vec4(d.x-1.0*circleScale,d.y-1.3,d.z-1.1,1.0);
 }
 
-const int MAGIC_BOX_ITERS = 9;
+const int MAGIC_BOX_ITERS = 8;
 const float MAGIC_BOX_MAGIC = 0.76;
 
 float sum( vec2 a ) { return a.x + a.y; }
@@ -523,6 +523,8 @@ float sum( vec2 a ) { return a.x + a.y; }
 float magicBox(vec3 p){
     p = 1.0 - abs(1.0 - mod(p, 2.0));
 
+    p.x -= tan(iGlobalTime*0.02)*0.1;
+    //p.y -= 0.5;
     float lastLength = length(p);
     float tot = 0.0;
     float movement = 0.0;
@@ -534,10 +536,7 @@ float magicBox(vec3 p){
     float sound = texture2D(iChannel0  , vec2(p.x,.15)).x;
 
     p.x += iBeat*0.001;
-    p.y += iOffBeat*0.1;
-    float thing = tan(cos(iGlobalTime*0.05))*0.05;
-    //p.x *= thing;
-    //p.y *= thing;
+    float thing = tan(cos(iGlobalTime*0.05))*0.9;
 
     for (int i=0; i < MAGIC_BOX_ITERS; i++) {
       p = abs(p)/(lastLength*lastLength) - (MAGIC_BOX_MAGIC);
@@ -616,7 +615,7 @@ void main(void){
       cells = vec4( vec3(t * (iBeat)+(iHat*0.2), 
                          t * (iBeat), 
                          t * (iBeat)), 1.0 );
-      cells *= vec4(1.0,1.0,1.0,1.0); //colors
+      cells *= vec4(1.0+iOffBeat,1.0,1.0,1.0); //colors
       if(iInvert > 0.0){
         //cells = 2.0 - cells;
       }
