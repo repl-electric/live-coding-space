@@ -3,6 +3,11 @@ unless defined?(SHADER_ROOT)
   SHADER_ROOT = "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lights/"
 end
 def shader(endpoint, *args)
+  endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
+  if args.count == 1
+    args = [endpoint] + args
+    endpoint = :uniform
+  end
   if endpoint == :shader
     args[0] = "#{SHADER_ROOT}/#{args[0]}"
   end
