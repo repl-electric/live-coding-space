@@ -69,19 +69,21 @@ def i_deter(note1, note2, *opts)
   end
 
   defaults = defaults.merge(opts)
-  with_fx :distortion, amp: distort_amp, mix: d do
-    with_synth(s) do
-      with_fx fx_pattern.tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
-        active_synth = play note1, defaults
-        sleep damp_time
-        control(active_synth, note: note2) if werble
-
-        2.times{
+  with_fx(:lpf, cutoff: 100) do
+    with_fx :distortion, amp: distort_amp, mix: d do
+      with_synth(s) do
+        with_fx fx_pattern.tick(:fx), decay: 4.0, room: 1.0 do |fx_verb|
+          active_synth = play note1, defaults
           sleep damp_time
-          if fx_verb.name =~ /reverb/
-            control fx_verb, damp: rrand(0.0,1.0)
-          end
-        }
+          control(active_synth, note: note2) if werble
+
+          2.times{
+            sleep damp_time
+            if fx_verb.name =~ /reverb/
+              control fx_verb, damp: rrand(0.0,1.0)
+            end
+          }
+        end
       end
     end
   end
