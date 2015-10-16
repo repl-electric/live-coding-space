@@ -97,6 +97,16 @@ def self.matches(samples, matchers)
 end
 end
 
+module Organ
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/TownHallOrgan_SP/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Corrupt
   def self.pick(a)
     self[a]
