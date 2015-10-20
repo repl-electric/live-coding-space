@@ -13,7 +13,7 @@ uniform float iDrop;
 
 uniform float iColorKick;
 
-uniform float iDarkSea;
+uniform float iDarkSeaHorn;
 
 uniform float iCellActivity;
 
@@ -73,7 +73,21 @@ vec4 generateSpaceLights(vec2 uv1){
   dir.xz = rotate(dir.xz, sin(iGlobalTime * 0.001) * 0.1);
   dir.xy = rotate(dir.xy, iGlobalTime * 0.01);
 
-  #define STEPS 8
+
+  float STEPS = 10.0;
+
+  //My computer is hurting :)
+
+  //Really need a midi -> note map here
+  
+  //TODO: JOE DO A midnote map fn
+  
+  if(iDarkSeaHorn > 52){
+   STEPS = 5.0;   
+  }
+  else if(iDarkSeaHorn > 60){
+    STEPS = 8.0;   
+  }
 
   smoothedVolume += (iVolume  - smoothedVolume) * 0.1;
 
@@ -86,10 +100,19 @@ vec4 generateSpaceLights(vec2 uv1){
   }
 
   vec3 acc = vec3(0.0);
+
   float hyperSpace = 0.4;
-  float corruption = 0.001 + iKick  * 0.001;
+
+  
+  
+  float corruption = 0.002*sin(iGlobalTime*0.1)*0.5 + iBeat  * 0.001;
+  
+  float sound = texture2D(iChannel0, vec2(uv.x,.0)).x;
+
   if(iStarMotion > 0.0){
     hyperSpace = cos(iGlobalTime*(0.0090*iStarMotion));    
+    
+        
   }
   for(int i = 0; i < STEPS; i ++){
       vec3 p = ray * hyperSpace;
@@ -100,14 +123,14 @@ vec4 generateSpaceLights(vec2 uv1){
       float it = corruption * length(p * p);
       v += it;
 
-      acc += sqrt(it) * texture2D(iChannel2, ray.xy * 0.1 + ray.z * 0.1).xyz;
-      ray += dir * inc;
+      acc += sqrt(it) * texture2D(iChannel2, ray.xy * 0.2 + ray.z * 0.9).xyz;
+      ray += dir * inc + sound*0.01;
     }
 
-  float br = pow(v * 4.0, 3.0) * 0.1;
-  vec3 col = pow(vec3(acc*0.5), vec3(1.2)) + br;
+  float br = pow(v * 5.0, 3.0) * 0.1;
+  vec3 col = pow(vec3(acc*0.7), vec3(1.2)) + br;
   //vec3 col = pow(vec3(acc.x * 0.5, 0.1,0.1), vec3(1.2)) + br;
-  return vec4(col, 1.0);
+  return vec4(col.x*8, 0.0,0.0, 1.0);
 }
 
 vec2 hash( vec2 p ){
@@ -174,10 +197,10 @@ float texture(vec2 uv )
 	float t = voronoi( uv * 8.0 + vec2(iGlobalTime*0.1) );
   //float bonus = sin(iGlobalTime*1.0)*0.5+0.5;
   //t *= 1.0-length(uv * 10.10);
-  t *= 1.0-length(uv * 0.5); //play with me
-  if(iWave > 0.0){
-    t /= iWave/ sin(iGlobalTime)*8;
-  }
+  t *= 1.0-length(uv * 0.2); //play with me
+  //if(iWave > 0.0){
+    t /= sin(iBeat+iGlobalTime*0.1)*iBeat;
+  //}
   return t;
 }
 
@@ -189,7 +212,9 @@ float growCells( vec2 uv ){
 	{
 		sum += texture( uv ) * amp;
 		uv += uv;
-		amp *= 0.1 * iFizzle;
+    //Changes here are live in the shader...
+    //Well live-ish takes a little time
+		amp *= 0.1;
 	}
 	return sum;
 }
@@ -520,6 +545,7 @@ const float MAGIC_BOX_MAGIC = 0.76;
 
 float sum( vec2 a ) { return a.x + a.y; }
 
+
 float magicBox(vec3 p){
     p = 1.0 - abs(1.0 - mod(p, 2.0));
 
@@ -620,7 +646,7 @@ void main(void){
         //cells = 2.0 - cells;
       }
       //cells.x *= hsvToRgb(1.0,0.01).x;
-      cells.x *= 0.1;
+      cells.x *= 0.3;
       cells.y *= hsvToRgb(1.0,0.01).y * iWave;
       cells.z *= hsvToRgb(1.0,0.01).z * iWave;
       cells *= iCells;
