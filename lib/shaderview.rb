@@ -4,7 +4,7 @@ unless defined?(SHADER_ROOT)
 end
 def shader(endpoint, *args)
   endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
-  if args.count == 1
+  if args.count == 1 && endpoint.to_s != "shader"
     args = [endpoint] + args
     endpoint = :uniform
   end
