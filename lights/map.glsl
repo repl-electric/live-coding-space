@@ -34,6 +34,24 @@ uniform float iInvert;
 precision mediump float;
 #endif
 
+
+float octave(int note){
+  if(note >= 30 && note < 42){
+    return 1
+  }
+  else if (note >= 42 && note < 54){
+    return 2
+  }
+  else if (note >= 54 && note < 66){
+    return 3
+
+  }
+  else if (note >= 66 && note < 78){
+    return 4
+  }
+}
+
+
 vec3 hsvToRgb(float mixRate, float colorStrength){
   float colorChangeRate = 18.0;
   float time = fract(iGlobalTime/colorChangeRate);
