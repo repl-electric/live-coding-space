@@ -14,3 +14,13 @@ live_loop :atoms do
     beat_stretch: 16
   sleep 16
 end
+
+live_loop :dark do
+  with_fx(:reverb, room: 1.0, reps: 4) do
+    n = scale(:G1, :minor_pentatonic).take(3).shuffle.choose
+    16.times{
+      synth :dark_ambience, note: n, decay: 4, attack: 1.0, amp: 4.0
+      sleep 8
+    }
+  end
+end
