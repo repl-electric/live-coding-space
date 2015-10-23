@@ -17,13 +17,19 @@ live_loop :atoms do
   sleep 10
 end
 
+with_fx(:reverb) do
 live_loop :dark do
-  with_fx(:echo, room: 1.0, mix: 1.0, decay: 8.0, reps: 4) do
-    n = scale(:G2, :minor_pentatonic, num_octaves: 3).take(3).shuffle
+  with_fx(:echo, room: 1.0, mix: 0.8, decay: 8.0, reps: 4) do
+    n = scale(:G3, :minor_pentatonic, num_octaves: 3).take(3).shuffle
     16.times{
+      with_transpose(-24) do
+      synth :dark_ambience, note: n.choose, decay: 4, attack: 4.0, amp: 0.5
+      end
       sleep 8
       synth :dark_ambience, note: n.choose, decay: 4, attack: 4.0, amp: 0.5,
       cutoff: 120, detune1: 12, detune2: 24
+      sleep 8
     }
-  end
+end
+end
 end
