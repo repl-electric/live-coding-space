@@ -5,7 +5,7 @@ with_fx(:reverb, room: 1.0, mix: 1.0, mix_slide: 0.1, damp: 0.5, damp_slide: 1) 
     mix = rrand(0.5, 1.0)
     use_random_seed 300
     sample Corrupt[/Guitar/, /Gm/, /fx/].take(5).shuffle.tick(:sample),
-      cutoff: 100, amp: rand, beat_stretch: 16
+      cutoff: rrand(80,100), amp: rand+0.01, beat_stretch: 16
     32.times{ sleep 1; control r_fx, damp: rand, mix: [1.0, mix+0.01].min}
   end
 end
@@ -13,17 +13,17 @@ end
 live_loop :atoms do
   sleep 6
   sample Ether[/interference/, /Gm/, 0], cutoff: rrand(80,100),
-    beat_stretch: 32, amp: rand+0.1
+    beat_stretch: 32, amp: rand+0.01
   sleep 10
 end
 
 live_loop :dark do
-  with_fx(:reverb, room: 1.0, mix: 1.0, damp: 0.0, reps: 4) do
-    n = scale(:G3, :minor_pentatonic, num_octaves: 3).take(3).shuffle.choose
+  with_fx(:echo, room: 1.0, mix: 1.0, decay: 8.0, reps: 4) do
+    n = scale(:G2, :minor_pentatonic, num_octaves: 3).take(3).shuffle
     16.times{
       sleep 8
-      synth :dark_ambience, note: n, decay: 4, attack: 1.0, amp: 0.8, cutoff: 120, detune1: 12, 
-      detune2: 12
+      synth :dark_ambience, note: n.choose, decay: 4, attack: 4.0, amp: 0.5,
+      cutoff: 120, detune1: 12, detune2: 24
     }
   end
 end
