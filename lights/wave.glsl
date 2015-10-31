@@ -4,13 +4,13 @@ uniform float     iBeat;
 uniform float     iWave;
 uniform float iGlow;
 
-#define PI  3.14159  
-#define EPS .8  
+#define PI  3.14159
+#define EPS .8
 
-#define T 1.5  // Thickness  
-#define W 1.5   // Width  
-#define A .5  // Amplitude  
-#define V 0.1   // Velocity  
+#define T 1.5  // Thickness
+#define W 1.5   // Width
+#define A .5  // Amplitude
+#define V 0.1   // Velocity
 
 
 vec4 lineDistort(vec4 cTextureScreen, vec2 uv1){
@@ -38,11 +38,11 @@ vec4 lineDistort(vec4 cTextureScreen, vec2 uv1){
 
 
 void main(void){
-vec2 c = gl_FragCoord.xy / iResolution.xy;  
-	vec4 s = texture2D(iChannel0, c * .5)*iWave+0.5;  
-	c = vec2(0., A*s.y*sin((c.x*W+iGlobalTime*V)* 2.5)) + (c*2.-1.);  
-	float g = max(abs(s.y/(pow(c.y, 0.1*sin(s.x*PI))))*T,  
-				  abs(.1/(c.y+EPS)));  
+vec2 c = gl_FragCoord.xy / iResolution.xy;
+	vec4 s = texture2D(iChannel0, c * .1)*0.1+0.5;
+	c = vec2(0., A*s.y*sin((c.x*W+iGlobalTime*V)* 2.5)) + (c*2.-1.);
+	float g = max(abs(s.y/(pow(c.y, 0.1*sin(s.x*PI))))*T,
+				  abs(.1/(c.y+EPS)));
   vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), g*s.w*.1, g*g * iGlow, 1.);
-	gl_FragColor = lineDistort(wave, c);  
-} 
+	gl_FragColor = lineDistort(wave, c);
+}
