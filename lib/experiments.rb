@@ -48,6 +48,14 @@ def note_to_sample(n, oct=1)
   end
 end
 
+def scale_to_regex(scale)
+  case scale
+    when scale == :fsm
+      /f#|g#|a_|b_|c#|d_|e_/
+    end
+  end
+end
+
 def pat(s, bar, pat, *args)
 pat.length.times do
  p = ring( *pat.split("\s"))
