@@ -50,7 +50,7 @@ end
 
 def scale_to_regex(scale)
   case scale
-    when scale == :fsm
+    when :fsm
       /f#|g#|a_|b_|c#|d_|e_/
     end
   end
