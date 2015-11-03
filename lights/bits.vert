@@ -1,6 +1,8 @@
 
 uniform sampler2D iChannel0;
 uniform float iBeat;
+uniform float iConstrict;
+uniform float iMotion;
 
 vec3 posf2(float t, float i) {
 	return vec3(
@@ -28,31 +30,37 @@ vec3 posf(float t, float i) {
 }
 
 vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
-  vec3 pos = posf(t,i)+ofs;
+  float snd = pow(texture2D(iChannel0, vec2(.02+.5 * ofs.x, 0.)).x, 8.);
+
+  vec3 pos = posf(t,i) + ofs;
+  
+  //pos += iBeat*0.1;
   
   vec3 posf = fract(pos+.5)-.5;
   
   float l = length(posf)*2.;
-  return (- posf + posf/l)*(1.-smoothstep(lerpEnd,1.,l));
+  return (- posf + posf/l)*(1.0-smoothstep(lerpEnd,1.,l));
 }
 
 void main() {
   // more or less random movement
-  float t = iGlobalTime*.1;
-  float i = gl_VertexID+sin(gl_VertexID)*100.;
+  float t = iGlobalTime * iMotion;
+  
+  float constrict = 1.0;
+  float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
+  
+  float i = (gl_VertexID + cos(gl_VertexID))*constrict;
 
   vec3 pos = posf(t,i);
-  vec3 ofs = vec3(0);
+  vec3 ofs = vec3(snd);
   for (float f = -10.; f < 0.; f++) {
-    float snd = pow(texture2D(iChannel0, vec2(.02+.5 * f, 0.)).x, 8.);
-	  ofs += push(t+f*.05,i,ofs,2.-exp(-f*.1));
+	  ofs += push(t+f*.05,i,ofs, 2.-exp(-f*.1));
   }
   ofs += push(t,i,ofs,.999);
   
   pos -= posf0(t);
   
   pos += ofs;
-  
   
   pos.yz *= mat2(.8,.6,-.6,.8);
   pos.xz *= mat2(.8,.6,-.6,.8);
@@ -63,9 +71,9 @@ void main() {
   pos.xy *= .6/pos.z;
   
   gl_Position = vec4(pos.x, pos.y*iResolution.x/iResolution.y, 0, 1);
-  float size = (1./pos.z);
-  if(mod(i, 128) > 64){
-    size = (1./pos.z)*(2+iBeat);
+  float size = (1./pos.z)*6;
+  if(mod(iGlobalTime, 128.0) > 64.0){
+    size = (1./pos.z)*(2+iBeat*8);
   }
   gl_PointSize  = size; 
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
