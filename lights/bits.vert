@@ -3,6 +3,11 @@ uniform sampler2D iChannel0;
 uniform float iBeat;
 uniform float iConstrict;
 uniform float iMotion;
+uniform float iKick;
+
+float rand2(vec2 co){
+  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 vec3 posf2(float t, float i) {
 	return vec3(
@@ -31,20 +36,30 @@ vec3 posf(float t, float i) {
 
 vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
   float snd = pow(texture2D(iChannel0, vec2(.02+.5 * ofs.x, 0.)).x, 8.);
-
   vec3 pos = posf(t,i) + ofs;
   
   //pos += iBeat*0.1;
-  
+    
   vec3 posf = fract(pos+.5)-.5;
   
+  
+  
   float l = length(posf)*2.;
-  return (- posf + posf/l)*(1.0-smoothstep(lerpEnd,1.,l));
+  vec3 r = (- posf + posf/l)*(1.0-smoothstep(lerpEnd,1.,l));
+
+  //Lines through jumping
+  //return 0.01*rand2(vec2(t,i))+r;
+  
+  float shapeDistort = 1.0;
+  r.x += shapeDistort*rand2(vec2(i,i));
+  return r;
 }
 
 void main() {
   // more or less random movement
   float t = iGlobalTime * iMotion;
+  //t = t + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
+  t += iKick*0.01;
   
   float constrict = 1.0;
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
