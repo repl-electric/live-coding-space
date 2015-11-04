@@ -4,6 +4,7 @@ uniform float iBeat;
 uniform float iConstrict;
 uniform float iMotion;
 uniform float iKick;
+uniform float iDistort;
 
 float rand2(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -50,8 +51,9 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
   //Lines through jumping
   //return 0.01*rand2(vec2(t,i))+r;
   
-  float shapeDistort = 1.0;
-  r.x += shapeDistort*rand2(vec2(i,i));
+  if(iDistort > 0.0){
+    r.x += iDistort*rand2(vec2(i,i));
+  }
   return r;
 }
 
