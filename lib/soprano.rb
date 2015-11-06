@@ -18,3 +18,19 @@ module Sop
   end
   
 end
+
+def sop(note, short=0)
+  n = case note.to_s.downcase.to_sym
+  when :a3
+    6
+  when :c4
+    7
+  when :d3
+    1
+  when :e3
+    3
+  when :b3
+    5
+  end
+  Sop[/vor_sopr_sustain_mm_p_0#{n}/, short]
+end
