@@ -1,5 +1,4 @@
 //nil. by Joseph Wilk <joseph@repl-electric.com>
-uniform float iVolume;
 uniform float iBeat;
 uniform float iOffBeat;
 uniform float iHat;
