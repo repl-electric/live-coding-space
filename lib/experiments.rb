@@ -48,14 +48,6 @@ def note_to_sample(n, oct=1)
   end
 end
 
-def scale_to_regex(scale)
-  case scale
-    when :fsm
-      /f#|g#|a_|b_|c#|d_|e_/
-    end
-  end
-end
-
 def pat(s, bar, pat, *args)
 pat.length.times do
  p = ring( *pat.split("\s"))
@@ -263,6 +255,17 @@ module Vocals
     Sample.matches(samples, a)
   end
 end
+
+module Live
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Live/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.flatten
