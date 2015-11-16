@@ -1,4 +1,9 @@
-require 'osc-ruby'
+#require "/Users/josephwilk/Workspace/josephwilk/c++/sonic-pi/app/server/sonicpi/lib/sonicpi/osc/osc.rb"
+
+$LOAD_PATH.unshift("/Users/josephwilk/Workspace/ruby/osc-ruby/lib/")
+require "osc-ruby.rb"
+
+#require 'osc-ruby'
 unless defined?(SHADER_ROOT)
   SHADER_ROOT = "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lights/"
 end
