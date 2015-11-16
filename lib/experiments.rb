@@ -266,6 +266,15 @@ module Live
   end
 end
 
+module Words
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/repl-electric/samples/matz/*"]
+    Sample.matches(samples, a)
+  end
+end
 
 def deg_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.flatten
