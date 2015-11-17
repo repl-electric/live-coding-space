@@ -1,3 +1,240 @@
+module Sample
+def self.matches(samples, matchers)
+  samples = samples.sort!
+  r = matchers.reduce(samples) do |filtered_samples,filter|
+    if filtered_samples && !filtered_samples.empty?
+    if filter.is_a?(Integer)
+      filter = filter % filtered_samples.size
+      [filtered_samples[filter]]
+    elsif filter.is_a? Regexp
+      if filter.inspect[-1] == "/" #We have no flags
+        reg_str = filter.inspect[1..-2]
+        filter = Regexp.new(reg_str,"i")
+      end
+      filtered_samples.select{|s| s=~ filter}
+    elsif filter.is_a? Range
+      filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
+    elsif filter.is_a? SonicPi::Core::RingVector
+      filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
+    elsif filter.is_a? Array
+      filter.map{|f| Sample.matches(filtered_samples, [f])}
+    elsif filter == nil
+      nil
+    else
+      filtered_samples.select{|s| s=~ /#{filter}/i}
+    end
+    end
+  end
+
+  if r && r.length == 1
+    r[0]
+  else
+  if r && !r.empty?
+    SonicPi::Core::RingVector.new(r)
+  end
+  end
+end
+end
+
+module Organ
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/TownHallOrgan_SP/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Corrupt
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/DeviantAcoustics/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module ChillD
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/CHILLSTEP/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Mountain
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module MountainLoop
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/loops/Mountain/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Ether
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
+  end
+end
+module Frag
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Frag/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
+  end
+end
+module Fraz
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Frag2/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
+  end
+end
+module Eraser
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Eraser/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
+  end
+end
+module Scape
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Soundscape/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
+  end
+end
+module Ambi
+ def self.pick(a)
+   self[a][0]
+ end
+ def self.[](*a)
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambi/**/*.wav"]
+   Sample.matches(samples, a)
+ end
+end
+module Chill
+ def self.pick(a)
+   self[a][0]
+ end
+ def self.[](*a)
+   samples = Dir["/Users/josephwilk/Workspace/music/samples/Chill/**/*.wav"]
+   Sample.matches(samples, a)
+ end
+end
+module Down
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Down/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Heat
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Heat/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Sop
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/soprano/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Dust
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Dust/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+module Vocals
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/Music/samples/Vocals/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Future
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Future/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Organic
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Organic/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Live
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Live/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Words
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Dropbox/repl-electric/samples/matz/*"]
+    Sample.matches(samples, a)
+  end
+end
+
 module S
 def self.halixic              
   csample "halixic.wav"
