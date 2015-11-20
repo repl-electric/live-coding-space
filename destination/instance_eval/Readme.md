@@ -9,5 +9,5 @@
 ```
 
 ```ruby
-niil.instance_eval{}
+nil.instance_eval{not nil}
 ```
