@@ -4,12 +4,12 @@ with_fx(:reverb, room: 0.8, mix: 0.9, damp: 0.5) do |r_fx|
   live_loop :warm_up do
     #    sample Corrupt[/acoustic guitar/, /fx/].tick, cutoff: 75, amp: 1.5, beat_stretch: 8.0
     #sync :organ
-    #    with_fx(:slicer, phase: 0.25*1, probability: 0) do
 
-    with_synth :dark_sea_horn do
-      play :fs3, cutoff: 0, decay: 8.1, amp: 1.0
+    with_fx(:slicer, phase: 0.25*1, probability: 0) do
+      with_synth :dark_sea_horn do
+        play :e3, cutoff: 50, decay: 8.1, amp: 1.0
+      end
     end
-    #   end
 
     sleep 8
   end
@@ -21,24 +21,24 @@ shader :iWave, 0.5
 
 live_loop :Matz do
   with_fx :reverb, room: 1.0 do
-    #    with_fx(:pitch_shift, mix: 0.8, window_size: 0.1, pitch_dis: 0.05) do
-    #      with_fx(:flanger, feedback: 0.8, decay: 0.5, mix: 0.4) do |r_fx|
-    sample Words[/guy/,0], amp: 2.0
+    with_fx(:pitch_shift, mix: 0.8, window_size: 0.1, pitch_dis: 0.05) do
+      with_fx(:flanger, feedback: 0.8, decay: 0.5, mix: 0.4) do |r_fx|
+        sample Words[/guy/,0], amp: 2.0
+      end
+    end
   end
-  #   end
-  # end
   sleep 32
 end
 
 live_loop :heart do
   sync :organ
   #New samples to play with...
-  with_fx(:krush, mix: 0.4) do |r_fx|
+  with_fx(:krush, mix: 0.1) do |r_fx|
     #sample Organic[/kick/,2], cutoff: 80, amp: 1.0
   end
 
   #  with_fx :slicer, phase: 2.0 do
-  #sample ChillD[/drum_loop/,10], cutoff: 110, amp: 0.3, beat_stretch: 8.0
+  #sample ChillD[/drum_loop/,10], cutoff: 135, amp: 1.5, beat_stretch: 8.0
   # end
   #sample Organic[/drum_loops/,0],amp: 1.0
 
@@ -53,9 +53,9 @@ end
 
 live_loop :perc do
   with_fx(:krush, mix: 0.1) do |r_fx|
-    with_fx(:slicer, phase: 0.25, probability: 0) do
-      # sample Organic[/loop/,/perc/, 2], cutoff: 75,
-      #   beat_stretch: 16.0, amp: 1.0
+    with_fx(:slicer, phase: 0.25, probability: 0, mix: 0.0) do
+      sample Organic[/loop/,/perc/, 2], cutoff: 75,
+        beat_stretch: 16.0, amp: 1.5
     end
   end
   sleep 16
@@ -89,7 +89,6 @@ end
 
 
 live_loop :fx do
-
   sync :organ
   with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
     synth :dsaw, note: :Fs1, cutoff: 40, amp: 0.1, decay: 16, detune: 12
@@ -104,25 +103,24 @@ end
 
 #This is the Leeds organ. Its lovely...
 live_loop :organ do
-  stop
-  synth :hollow, note: :gs3, attack: 1.0, decay: 4.0, amp: 2.0
+  synth :hollow, note: :e3, attack: 1.0, decay: 4.0, amp: 2.0
   slices = [1,2,4].shuffle
-  notes = [[/f#1/, /a2/, /c#2/],
-           [/a2/, /c#2/, /_e1_/],
-           [/c#2/, /_e1_/, /g#2/]].choose
+  notes = [[/f#2/, /a2/, /c#2/],
+           [/a2/, /c#2/, /_e2_/],
+           [/c#2/, /_e2_/, /g#2/]].choose
 
-  #notes = [/f#2/, /g#1/, /b1/]
+  #notes = [/f#2/, /b2/, /cs2/]
 
-  sample Organ[/f#0/,[0,0]].tick(:sample), cutoff: 100, amp: 2.0
+  sample Organ[/f#0/,[0,0]].tick(:sample), cutoff: 100, amp: 2.5
   with_fx(:slicer, phase: 0.25*slices[0], probability: 0) do
-    sample Organ[notes[0],[0,0]].tick(:sample), cutoff: 100, amp: 3.0
+    sample Organ[notes[0],[0,0]].tick(:sample), cutoff: 100, amp: 3.5
   end
 
   with_fx :echo, phase: 0.25*2 do
     #sample Instruments[/violin/, /fs4_1|a4_1|cs4_1/].tick, amp: 1, attack: 0.5
   end
 
-  synth :dark_ambience, note: :e3, decay: 8.0, amp: 4.0, attack: 0.001
+  synth :dark_ambience, note: :e3, decay: 8.0, amp: 2.5, attack: 0.001
 
   with_fx :slicer, mix: [0.0,0.2].choose do
     with_fx :echo, decay: 8.0 do
@@ -134,9 +132,8 @@ live_loop :organ do
     end
   end
 
-
-  with_fx(:echo, phase: 0.25*2, decay: 16.0) do
-    sample Organic[/kick/,4], amp: 4.0
+  with_fx(:echo, phase: 0.25*2, decay: 8.0) do
+    sample Organic[/kick/,4], amp: 3.0
     #sample Organic[/kick/,4], amp: 2.0, rate
 
     #sample Instruments[/violin/, /fs4/].tick(:oboe), amp: 1
@@ -159,34 +156,39 @@ live_loop :organ do
   sleep 8
 end
 
-with_fx(:reverb, room: 0.8, mix: 0.9, damp: 0.5) do |r_fx|
-  live_loop :warm_up do
-    #    sample Corrupt[/acoustic guitar/, /fx/].tick, cutoff: 75, amp: 1.5, beat_stretch: 8.0
-    #sync :organ
-    with_fx(:slicer, phase: 0.25*1, probability: 0) do
 
-      with_synth :dark_sea_horn do
-        play :e3, cutoff: 80, decay: 8.1, amp: 1.6
-      end
-    end
+uncomment do
+  live_loop :looper do
+    sync :organ
 
-    sleep 8
+    sample ChillD[/drum_loop/, 10], beat_stretch: 8.0, amp: 0.8, cutoff: 90
+    sample Frag[/kick/,0], amp: 0.5
+    sleep 1.0
+    sample Frag[/kick/,1], amp: 0.5
+
+    sleep 2.0
+    sleep 1.0
+    sample Frag[/kick/,0], amp: 0.5
+    sleep 2.0
+    sample Frag[/kick/,1], amp: 0.5
+    sleep 8-6
   end
-end
-shader :iWave, 0.5
-#--Log of activity---------------------------------------->
 
-#The code here creates and controls the sounds you are hearing.
-
-live_loop :Matz do
-  with_fx :reverb, room: 0.5 do
-    with_fx(:pitch_shift, mix: 0.8, window_size: 0.1, pitch_dis: 0.05) do
-      with_fx(:flanger, feedback: 0.8, decay: 0.5, mix: 0.4) do |r_fx|
-        sample Words[/guy/,0], amp: 2.9
-      end
-    end
+  live_loop :hat do
+    sleep 0.25/2.0
+    #sample Frag[/hat/,0], amp: 1.0, cutoff: rrand(80,100)
   end
-  sleep 32
+
+  live_loop :clapper do
+    #sync :looper
+    6.times{
+      sleep 1
+      #      sample Ambi[/clap/,3], amp: 1.0
+
+    }
+    sleep 2
+
+  end
 end
 
 set_volume! 0.2
@@ -214,7 +216,7 @@ live_loop :kickit do
   # sync :beat
   #with_fx(:krush, pre_amp: 10) do |r_fx|
   #with_fx :slicer, phase: 2.0, invert_wave: 1, wave: 1, smooth: 0.2  do
-  #sample ChillD[/drum_loop/, 10], beat_stretch: 8.0, amp: 1.0, cutoff: 70
+  #sample ChillD[/drum_loop/, 10], beat_stretch: 8.0, amp: 1.0, cutoff: 75
   #end
 
   #end
@@ -235,7 +237,7 @@ live_loop :kickit do
 end
 
 live_loop :next do
-  #sample Corrupt[/kick/,[1,1]].tick(:sample), cutoff: 120, amp: 1.2
+  # sample Corrupt[/kick/,[1,1]].tick(:sample), cutoff: 120, amp: 1.2
   #sample Corrupt[/drum_loop/,10], beat_stretch: 2.0
 
   # sync :kick
@@ -257,36 +259,43 @@ end
 
 live_loop :dark do
   stop
-  use_synth :dark_sea_horn
-  #play :fs3, decay: 0.01, attack: 0.001, amp: 1.5, cutoff: 70, attack: 0.001
-  #sample Organ[/g#0/,0], amp: 3.0
+  with_fx :lpf, cutoff: 80 do
+    use_synth :dark_sea_horn
+    #   play :fs3, decay: 0.01, attack: 0.001, amp: 1.5, cutoff: 70, attack: 0.001
+    #    sample Organ[/g#0/,0], amp: 3.0
 
-  #  with_fx :krush do
-  with_fx(:slicer, phase: 0.25*2, wave: 0, amp: 8.0) do
-    #sample Organ[/_f#0_/,0], amp: 2.0
+    #  with_fx :krush do
+    with_fx(:slicer, phase: 0.25*2, wave: 0, amp: 8.0) do
+      #    sample Organ[/_f#0_/,0], amp: 2.0
+
+      #   sample Organ[/_f#1_/,0], amp: 2.0
+    end
+
+    with_fx(:slicer, phase: 0.25*4, invert_wave: 1.0, wave: 0, amp: 8.0) do
+      #  sample Organ[/_f#2_/,0], amp: 2.0
+
+      #      sample Organ[/_a1_/,0], amp: 2.0
+    end
+
+    #sample Corrupt[/acoustic guitar/, /f#/], amp: 9.0
+
+    #sample Organ[/_a1_/,0], amp: 1.0
+
+    with_fx(:slicer, phase: 0.25*2, wave: 0, amp: 8.0) do
+      # sample Organ[/_c#2_/,0], amp: 2.0
+      # sample Organ[/_a1_/,2], amp: 2.0
+    end
+    # end
+
+    with_fx(:slicer, phase: 0.25*2, wave: 0, amp: 8.0,invert_wave: 1) do
+      #      sample Organ[/_g#2_/,0], amp: 2.0
+      #sample Organ[/_a1_/,0], amp: 2.0
+    end
+
+
+
+    sleep 8
   end
-
-  with_fx(:slicer, phase: 0.25*4, invert_wave: 1.0, wave: 0, amp: 8.0) do
-    #sample Organ[/_f#1_/,0], amp: 2.0
-  end
-
-  #sample Corrupt[/acoustic guitar/, /f#m/], amp: 4.0
-
-  #  with_fx :krush, pre_amp: 0.5 do
-  #  with_fx(:slicer, phase: 0.25, wave: 1, amp: 8.0) do
-  #sample Organ[/a3/,0], amp: 2.0
-  #sample Organ[/c#3_/,0], amp: 2.0
-  #    sample Organ[/_b3_/,0], amp: 4.0
-  #  end
-  # end
-
-  with_fx(:slicer, phase: 0.25*2, wave: 0, amp: 8.0) do
-    #sample Organ[/_c#1_/,0], amp: 2.0
-    #sample Organ[/_a1_/,0], amp: 2.0
-  end
-  # end
-
-  sleep 8
 end
 
 live_loop :break do
@@ -295,7 +304,7 @@ live_loop :break do
 end
 
 live_loop :nextlevel do
-  #  stop
+  stop
   sleep 16
   #sample Fraz[/kick/, 0], amp: 4.0
   sample Fraz[/coil/, /c#m/, 0], rate: 1.0, amp: 1.0, cutoff: 80
