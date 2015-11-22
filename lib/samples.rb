@@ -215,6 +215,16 @@ module Organic
   end
 end
 
+module Instruments
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/instruments/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Live
   def self.pick(a)
     self[a]
