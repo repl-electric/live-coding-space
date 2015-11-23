@@ -16,8 +16,7 @@ shader :iWave, 0.5
 live_loop :perc do
   with_fx(:krush, mix: 0.1) do |r_fx|
     with_fx(:slicer, phase: 0.25, probability: 0) do
-      #  sample Organic[/loop/,/perc/, 2], cutoff: 75,
-      #   beat_stretch: 16.0, amp: 1.0
+      #sample Organic[/loop/,/perc/, 2], cutoff: 75, beat_stretch: 16.0, amp: 1.2
     end
   end
   sleep 16
@@ -44,8 +43,8 @@ end
 live_loop :fx do
   sync :organ
   with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
-    # synth :dsaw, note: :Fs1, cutoff: 40, amp: 0.3, decay: 16, detune: 12
-    # synth :prophet, note: :Fs1, cutoff: 40, amp: 0.3, decay: 16, detune: 12
+    #synth :dsaw, note: :Fs1, cutoff: 40, amp: 0.3, decay: 16, detune: 12
+    #synth :prophet, note: :Fs1, cutoff: 40, amp: 0.3, decay: 16, detune: 12
   end
   #sample Organic[/f#/,/strings/,0], amp: 0.5
   sleep 32
@@ -56,7 +55,7 @@ live_loop :sop do
   sleep 16
   if spread(1,4).tick(:sop)
     with_fx(:echo, room: 1.0, mix: 0.8, damp: 0.5, decay: 8) do |r_fx|
-      sample Sop[/eh/,/release/, 3..4].tick(:sop), amp: 1.5, cutoff: 100
+      sample Sop[/eh/,/release/, 3..4].tick(:sop), amp: 1.2, cutoff: 100
     end
   end
   sleep 16
@@ -64,12 +63,12 @@ end
 
 #This is the Leeds organ. Its lovely...
 live_loop :organ do
-  with_fx :lpf, cutoff: 0, mix: 0.0 do
+  with_fx :lpf, cutoff: 135, mix: 1.0 do
     synth :hollow, note: :e3, attack: 1.0, decay: 4.0, amp: 1.0
-    with_fx  :bitcrusher, bits: 10, sample_rate: 20000, cutoff: 100, mix: 0.2 do #:distortion, feedback: 0.5, mix: 0.0 do
+    with_fx  :bitcrusher, bits: 10, sample_rate: 20000, cutoff: 100, mix: 0.0 do #:distortion, feedback: 0.5, mix: 0.0 do
       slices = [1,2,4].shuffle
       notes = [[/f#2/, /a2/, /c#2/],
-               [/a2/, /c#2/, /_e2_/],# /g#2/],
+               [/a2/, /c#2/, /_e2_/], #/g#2/],
                [/c#2/, /_e2_/, /g#2/],# /_b2_/]
                ].choose
 
@@ -79,7 +78,7 @@ live_loop :organ do
       #with_fx :echo, phase: 0.125 do
       with_fx :slicer, phase: 0.25*2, invert_wave: 1, wave: 0 do
         sample Organ[notes[-1],1], cutoff: 100, amp: 3.5#, pan: Math.sin(vt*13)/1.5
-        #sample Organ[/c#1/,1], cutoff: 100, amp: 3.5#, pan:
+        # sample Organ[/c#1/,1], cutoff: 100, amp: 3.5#, pan:
 
       end
       #end
