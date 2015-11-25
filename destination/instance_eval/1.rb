@@ -74,6 +74,17 @@ live_loop :organ do
 
       #notes = [/f#2/, /b2/, /cs2/]
 
+      root = notes[0]
+      at do
+        with_fx :reverb, room: 1.0, damp: 0  do
+          d = [0.1, 0.2, 0.3].choose
+          with_fx(:distortion, mix: 0.5, distort: d) do |r_fx|
+            sample Instruments[/double-bass/,Regexp.new(root.inspect[1..-2].gsub("#","s").gsub("2","1")),/_25_/,3], amp: 4.0
+          end
+          sleep 2
+          sample Instruments[/double-bass/,Regexp.new(notes[-1].inspect[1..-2].gsub("#","s").gsub("2","2")),/_1_/,3], amp: 0.5
+        end
+      end
 
       #with_fx :echo, phase: 0.125 do
       with_fx :slicer, phase: 0.25*2, invert_wave: 1, wave: 0 do
