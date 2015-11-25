@@ -55,7 +55,8 @@ live_loop :sop do
   sleep 16
   if spread(1,4).tick(:sop)
     with_fx(:echo, room: 1.0, mix: 0.8, damp: 0.5, decay: 8) do |r_fx|
-      sample Sop[/eh/,/release/, 3..4].tick(:sop), amp: 1.2, cutoff: 100
+      sample Sop[ring(/eh/,/ye/).tick(:types),/release/, 3..4].tick(:sop),
+        amp: 1.4, cutoff: 100
     end
   end
   sleep 16
