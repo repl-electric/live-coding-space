@@ -1,4 +1,4 @@
-["instruments","shaderview","experiments", "log"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
+["instruments","shaderview","experiments", "log", "samples"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
 
 with_fx(:reverb, room: 1.0, mix: 1.0, mix_slide: 0.1, damp: 0.5, damp_slide: 1) do |r_fx|
   live_loop :guitar do
@@ -30,6 +30,29 @@ with_fx(:reverb) do
         cutoff: 120, detune1: 12, detune2: 24
         sleep 8
       }
+    end
+  end
+end
+
+with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5, damp_slide: 0.5) do |r_fx|
+  live_loop :warmup do
+    with_fx :bpf, centre: 100 do
+      with_synth :dark_sea_horn do
+        s = play :FS2, cutoff: 50, amp: 0.4, sustain: 4.0, decay: 12.0, note_slide: 0.02, cutoff_slide: 0.2
+        sleep 1
+        shader :decay, :iWave, rrand(0.0,0.5), 0.0001
+        shader :decay, :iFat, rrand(1.0,2.0)
+        shader :iR, rand
+        shader :iG, rand
+        shader :iB, rand
+
+
+        14.times{
+          sleep 1
+          control s, note: scale("fs#{[3,3,4].choose}", :minor_pentatonic, num_octaves: 1).shuffle.choose, cutoff: 70
+          control r_fx, damp: rand
+        }
+      end
     end
   end
 end
