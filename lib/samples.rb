@@ -245,6 +245,36 @@ module Words
   end
 end
 
+module Abstract
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Abstract/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module CineAmbi
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/CineAmbi/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module FutureE
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/FutureE/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module S
 def self.halixic              
   csample "halixic.wav"
