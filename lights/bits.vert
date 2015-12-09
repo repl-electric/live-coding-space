@@ -1,6 +1,6 @@
-
 uniform sampler2D iChannel0;
 uniform float iBeat;
+uniform float iScale;
 uniform float iConstrict;
 uniform float iMotion;
 uniform float iKick;
@@ -63,7 +63,7 @@ void main() {
   //t = t + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
   t += iKick*0.01;
   
-  float constrict = 1.0;
+  float constrict = min(iDistort,1.0);
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
   
   float i = (gl_VertexID + cos(gl_VertexID))*constrict;
@@ -71,7 +71,7 @@ void main() {
   vec3 pos = posf(t,i);
   vec3 ofs = vec3(snd);
   for (float f = -10.; f < 0.; f++) {
-	  ofs += push(t+f*.05,i,ofs, 2.-exp(-f*.1));
+	  ofs += push(t+f*.05+iBeat*0.005,i,ofs, 2.-exp(-f*.1));
   }
   ofs += push(t,i,ofs,.999);
   
@@ -90,7 +90,7 @@ void main() {
   gl_Position = vec4(pos.x, pos.y*iResolution.x/iResolution.y, 0, 1);
   float size = (1./pos.z)*6;
   if(mod(iGlobalTime, 128.0) > 64.0){
-    size = (1./pos.z)*(2+iBeat*8);
+    size = (1./pos.z)*iScale;
   }
   gl_PointSize  = size; 
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
