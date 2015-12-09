@@ -71,7 +71,7 @@ void main() {
   vec3 pos = posf(t,i);
   vec3 ofs = vec3(snd);
   for (float f = -10.; f < 0.; f++) {
-	  ofs += push(t+f*.05+iBeat*0.005,i,ofs, 2.-exp(-f*.1));
+	  ofs += push(t+f*.05+iBeat*0.002,i,ofs, 2.-exp(-f*.1));
   }
   ofs += push(t,i,ofs,.999);
   
@@ -91,8 +91,11 @@ void main() {
   float size = (1./pos.z)*6;
   if(iScale < 0.1){
     if(mod(iGlobalTime, 128.0) > 64.0){
-      size = (1./pos.z)*iScale;
+      size = ((1./pos.z)*iScale)+iBeat;
     } 
+  }
+  else{
+    size = ((1./pos.z)*iScale)+iBeat*5;
   }
   gl_PointSize  = size; 
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
