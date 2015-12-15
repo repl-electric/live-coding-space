@@ -23,13 +23,16 @@ d[-_-]b
   .Π.
 ```
 
-Recordings on: 
-* https://soundcloud.com/repl-electric
-* https://livecoding.tv/josephwilk
-
 ### Visuals
 
 Visuals are generated using ShaderView: https://github.com/josephwilk/shaderview
+
+### Material
+
+Recordings on: 
+* http://soundcloud.com/repl-electric
+* http://livecoding.tv/josephwilk
+* http://www.repl-electric.com
 
 ##License
 
