@@ -23,13 +23,17 @@ d[-_-]b
   .Π.
 ```
 
+Recordings on: 
+* https://soundcloud.com/repl-electric
+* https://livecoding.tv/josephwilk
+
 ### Visuals
 
 Visuals are generated using ShaderView: https://github.com/josephwilk/shaderview
 
 ##License
 
-Copyright © 2014-2015 Joseph Wilk
+Copyright © 2014-2016 Joseph Wilk
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
