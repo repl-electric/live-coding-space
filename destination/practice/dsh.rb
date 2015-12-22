@@ -1,3 +1,5 @@
+#Dark Sea Horses
+
 set_volume! 1.3
 _=nil
 live_loop :go do
@@ -20,6 +22,18 @@ live_loop :go do
     chord(:D3, :M),
     chord(:E3, :M) + [:D3],
   )
+  
+  comment do #Part 2
+    cs = (ring    
+    chord(:FS3, :m, invert: 0),
+    chord(:FS3, :m, invert: -1),
+    chord(:A2, :maj11),
+    chord(:A3, :M, invert: -1),
+    chord(:Cs3, :m),
+    chord(:D3, '7-5'),
+    chord(:E3, :M) + [])
+  end
+  
   c = cs.tick(:main)
   #c = []
   puts c
