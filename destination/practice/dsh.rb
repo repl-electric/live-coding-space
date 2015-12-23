@@ -99,7 +99,7 @@ live_loop :go do
   #synth :hollow, note: ring(c[0]-5, c[0], c[0]).tick(:cut), release: 4.0, decay: 10.0, amp: 0.2, attack: 4.0, cutoff: 80
 
   with_fx(:reverb, room: 0.8, mix: 0.4, damp: 0.5) do |r_fx|
-    #sample Organ[/_#{note_info(c[2]+(ring 5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5
+    #sample Organ[/_#{note_info(c[2]+(ring 5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5, attack: 0.5
   end
 
   with_transpose -12*2 do
