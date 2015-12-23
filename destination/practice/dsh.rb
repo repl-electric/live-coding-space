@@ -129,9 +129,9 @@ live_loop :go do
       #synth :leadsaw, note: c, attack: 0.1, cutoff: 130, amp: 0.1, release: 8.0, decay: 8.0, sustain: 8.0
     end
     #s = synth :dsaw,  note: c, attack: 0.1, cutoff: 80, sustain: 1.0, release: 1.0, decay: 8.0, amp: 0.1, detune: 12
-    #s1 = synth :dark_sea_horn, note: c[2], decay: 16.1, cutoff: 60+rand, amp: 0.2+rand*0.1
+    #s1 = synth :dark_sea_horn, note: c[1], decay: 16.1, cutoff: 60+rand, amp: 0.2+rand*0.1
     sleep 1
-    #    s2 = synth :dark_sea_horn, note: c[1], decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    #    s2 = synth :dark_sea_horn, note: c[2], decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
     #    s3 = synth :dark_sea_horn, note: c[0], decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
 
