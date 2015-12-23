@@ -91,8 +91,8 @@ live_loop :go do
           chord(:D3, '7-5'),
           chord(:E3, :M) + [])
   end
-  c = cs.tick(:main)
-  #c = []
+  #c = cs.tick(:main)
+  c = []
   puts note_inspect(c)
 
   with_fx(:reverb, room: 0.9, mix: 0.9, damp: 0.5) do |r_fx|
@@ -117,7 +117,7 @@ live_loop :go do
 
   #synth :hollow, note: ring(c[0]-5, c[0], c[0]).tick(:cut), release: 4.0, decay: 10.0, amp: 0.2, attack: 4.0, cutoff: 80
 
-  with_fx :pitch_shift, time_dis: 0.01, mix: 0.0 do
+  with_fx :pitch_shift do
     with_transpose -12*2 do
       # s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.1, attack: 0.0, noise1: 2.1,
       #  noise2: 2.1
@@ -132,7 +132,6 @@ live_loop :go do
     s2 = synth :dark_sea_horn, note: :E3, decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
     s3 = synth :dark_sea_horn, note: :Cs3, decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
-
   end
 
   sop_notes = (ring 14, 15, 16, 15).look(:main)
@@ -158,7 +157,6 @@ live_loop :go do
     #s3 = synth :dark_sea_horn, note: c[-1], decay: 8.0, cutoff: 130, amp: 1.0,  noise1: 0.1, noise2: 3, attack: 4.0
   end
 
-  sleep 0
   mess = [s1,s2,s3].reject{|x|x.nil?}.choose
   (16-2).times{ |n|
     #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 2).shuffle.choose
@@ -178,7 +176,6 @@ live_loop :go do
         #   s1 = synth :gpa, note: ring(  c[0]).look(:bassvoice), decay: 4.0, cutoff: 60, amp: 2.0, wave: 6
       end
     end
-
   }
 end
 
@@ -204,8 +201,6 @@ live_loop :hollow do
     sleep 0.25
   }
 end
-
-
 
 live_loop :beat do
   sync :go
@@ -241,7 +236,6 @@ live_loop :beat do
         with_fx(:slicer, phase: 0.25*2) do
           # sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80, rate: -1
         end
-
       end
     end
   end
@@ -296,5 +290,4 @@ live_loop :beat do
     sleep 2
   end
   #sleep 16
-
 end
