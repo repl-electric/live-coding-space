@@ -81,8 +81,7 @@ live_loop :go do
 
   )
   comment do
-
-    cs = (ring   chord(:FS3, :m, invert: 0),        # 5 in
+    cs = (ring   chord(:FS3, :m, invert: 0),
           chord(:FS3, :m, invert: -1),
 
           chord(:A2, :maj11),
@@ -96,9 +95,7 @@ live_loop :go do
   #c = []
   puts note_inspect(c)
 
-  #synth :hollow, note: ring(c[0]-5, c[0], c[0]).tick(:cut), release: 4.0, decay: 10.0, amp: 0.2, attack: 4.0, cutoff: 80
-
-  with_fx(:reverb, room: 0.8, mix: 0.4, damp: 0.5) do |r_fx|
+  with_fx(:reverb, room: 0.9, mix: 0.9, damp: 0.5) do |r_fx|
     #sample Organ[/_#{note_info(c[2]+(ring 5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5, attack: 0.5
   end
 
@@ -109,7 +106,7 @@ live_loop :go do
   #synth :dsaw,  note: :Gs4, cutoff: 60, amp: 0.4, decay: 16.0, detune: 12, attack: 0.1
 
   with_transpose -12 do
-    with_fx(:reverb, room: 0.9, mix: 0.4, damp: 0.5) do |r_fx|
+    with_fx(:reverb, room: 0.9, mix: 0.8, damp: 0.5) do |r_fx|
       #   synth :dsaw,  note: c[0]+0, cutoff: 60, amp: 0.5, decay: 8.0, detune: 12, attack: 0.1
       #   synth :prophet, note: c[0]+0, cutoff: 60, amp: 0.5, decay: 8.0,attack: 0.1
     end
@@ -118,10 +115,11 @@ live_loop :go do
   _=nil
   s1,s2,s3=nil
 
-  with_fx :pitch_shift, time_dis: 0.1 do
+  #synth :hollow, note: ring(c[0]-5, c[0], c[0]).tick(:cut), release: 4.0, decay: 10.0, amp: 0.2, attack: 4.0, cutoff: 80
 
+  with_fx :pitch_shift, time_dis: 0.01, mix: 0.0 do
     with_transpose -12*2 do
-      # s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.9, attack: 0.0, noise1: 2.1,
+      # s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.1, attack: 0.0, noise1: 2.1,
       #  noise2: 2.1
     end
 
@@ -129,15 +127,15 @@ live_loop :go do
       #synth :leadsaw, note: c, attack: 0.1, cutoff: 130, amp: 0.1, release: 8.0, decay: 8.0, sustain: 8.0
     end
     #s = synth :dsaw,  note: c, attack: 0.1, cutoff: 80, sustain: 1.0, release: 1.0, decay: 8.0, amp: 0.1, detune: 12
-    #s1 = synth :dark_sea_horn, note: c[1], decay: 16.1, cutoff: 60+rand, amp: 0.2+rand*0.1
+    s1 = synth :dark_sea_horn, note: :FS2, decay: 16.1, cutoff: 60+rand, amp: 0.2+rand*0.1
     sleep 1
-    #    s2 = synth :dark_sea_horn, note: c[2], decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    s2 = synth :dark_sea_horn, note: :E3, decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
-    #    s3 = synth :dark_sea_horn, note: c[0], decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    s3 = synth :dark_sea_horn, note: :Cs3, decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
 
   end
 
-  sop_notes = (ring 14, 15, 16, 15).tick(:sop)
+  sop_notes = (ring 14, 15, 16, 15).look(:main)
   cue :apeg
 
   at do
@@ -160,23 +158,15 @@ live_loop :go do
     #s3 = synth :dark_sea_horn, note: c[-1], decay: 8.0, cutoff: 130, amp: 1.0,  noise1: 0.1, noise2: 3, attack: 4.0
   end
 
-  with_fx(:reverb, room: 0.9, mix: 0.4, damp: 0.5) do |r_fx|
-    #synth :hollow,        note: c[-1], amp: 1.5, release: knit( 8.0,3, 16,1).tick(:release), decay: 8.0, attack: 4.0, cutoff: 70
-    #synth :dark_ambience, note: c[-1] + ring( 0).tick(:bass), amp: 0.2, release: knit( 8.0,3, 16,1).tick(:release)/2.0, decay: 8.0/2.0, attack: 4.0, cutoff: 70
-  end
-
-
   sleep 0
   mess = [s1,s2,s3].reject{|x|x.nil?}.choose
   (16-2).times{ |n|
-    #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 1).shuffle.choose
+    #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 2).shuffle.choose
     #control mess, note: :Fs3
 
     sleep 1
 
     if n == 5
-      puts "ping"
-
       #s3 = synth :dark_sea_horn, note: c[2], decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     end
 
@@ -194,7 +184,7 @@ end
 
 with_fx :pitch_shift, time_dis: 0.8,  pitch_dis: 0.8 do
   live_loop :end do
-    sample_and_sleep Mountain[/cracklin/], rate: 0.9, amp: 0.2
+    sample_and_sleep Mountain[/cracklin/], rate: 0.9, amp: 0.05
   end
 end
 
@@ -219,14 +209,27 @@ end
 
 live_loop :beat do
   sync :go
-  #sample Mountain[/subkick/,[0,0,0,0]].tick(:sample), cutoff: 80, amp: 0.2
+  #with_fx :echo, phase: 1.0, decay: 0.5 do
+  #  sample Mountain[/subkick/,[0,0,0,0]].tick(:sample), cutoff: 80, amp: 0.1
+  #end
   #  with_fx(:slicer, phase: ring( 2.0,2.0,1,1).tick(:ph), probability: 0) do
 
-  with_fx :bpf, centre: (ring :FS1, :FS2, :FS3, :FS4).tick(:bcut) do
-    #sample Mountain[/perc/,/loop/, 22], beat_stretch: 16, cutoff: 100, amp: 0.1
+  with_fx :bpf, centre: (ring :FS1, :FS2, :FS3, :FS4).tick(:bcut), mix: 1.0 do
+    #sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80
   end
   #sample Abstract[/perc/, 11], cutoff: 130, beat_stretch: 16, amp: 0.2
-  sample Dust[/perc/, 1], beat_stretch: 16.0, cutoff: 90
+  #sample Dust[/perc/, 1], beat_stretch: 16.0, cutoff: 90
+
+  comment do
+    with_fx :bpf do
+      with_fx :slicer, phase: 1.0, phase_offset: 1.0, smooth: 0.05 do
+        sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80
+      end
+      with_fx :slicer, phase: 1.0, phase_offset: 8.0, smooth: 0.05 do
+        sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80, rate: -1
+      end
+    end
+  end
 
   with_fx(:pitch_shift, mix: 0.0, time_dis: 0.01) do
     with_fx :slicer, mix: 0.0 do
@@ -236,17 +239,19 @@ live_loop :beat do
         #sample Organic[/loop/, 11], amp: 0.08, beat_stretch: 16/2.0,  cutoff: 100
 
         with_fx(:slicer, phase: 0.25*2) do
-          #          sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80, rate: -1
+          # sample Organic[/loop/, 11], amp: 0.3, beat_stretch: 16, cutoff: 80, rate: -1
         end
 
       end
     end
   end
 
-  with_fx :hpf, cutoff: 100, mix: 0.0 do
-    #    with_fx :bitcrusher, bits: 64*8, mix: 0.04, sample_rate: 40000 do
-    #sample CineAmbi[/kick/,0], amp: 0.08, beat_stretch: 16, cutoff: 120
-    #   end
+  with_fx :bpf, centre: (ring :FS1, :FS2, :FS3, :FS4).tick(:bcut), mix: 0.5 do
+    with_fx :hpf, cutoff: 100, mix: 0.2 do
+      with_fx :bitcrusher, bits: 64*8, mix: 0.04+rand*0.1, sample_rate: 40000 do
+        sample CineAmbi[/kick/,0], amp: 0.2, beat_stretch: 16, cutoff: 80
+      end
+    end
   end
 
   #sleep 1
