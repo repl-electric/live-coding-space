@@ -33,7 +33,7 @@ live_loop :go do
     chord(:Cs3, :m7, invert: 1),
     chord(:D3, :M),
   chord(:E3, :M) + [:D3])
-  uncomment do
+  comment do
     cs = ring(   chord(:FS3, :m, invert: 0),
                  chord(:FS3, :m, invert: -1),
 
@@ -90,18 +90,18 @@ live_loop :go do
 
   with_fx :pitch_shift do
     with_transpose -12*2 do
-      #s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.7, attack: 0.0, noise1: 1.5, noise2: 1.5
+      #s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.1, attack: 0.0, noise1: 0.1, noise2: 0.1
     end
     with_transpose 12 do
       #s1 = synth :dark_sea_horn, note: c[0], decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
 
       #synth :leadsaw, note: c, attack: 0.1, cutoff: 130, amp: 0.1, release: 8.0, decay: 8.0, sustain: 8.0
     end
-    #s1 = synth :dark_sea_horn, note: c[1], decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
+    #s1 = synth :dark_sea_horn, note: :Fs2, decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
     sleep 1
-    #s2 = synth :dark_sea_horn, note: c[2], decay: flow_time-1.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    #s2 = synth :dark_sea_horn, note: :E3, decay: flow_time-1.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
-    #s3 = synth :dark_sea_horn, note: c[0], decay: flow_time-5.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    #s3 = synth :dark_sea_horn, note: :CS3, decay: flow_time-5.0, cutoff: 65+rand, amp: 0.2+rand*0.1
   end
 
   sop_notes = ring( 14, 15, 16, 15).look(:main)
@@ -134,17 +134,8 @@ live_loop :go do
   mess = [s1,s2,s3].reject{|x|x.nil?}.choose
   (flow_time-2).times{ |n|
     #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 2).shuffle.choose
-    #control mess, note: :Fs3
-
+    control mess, note: :Cs3
     sleep 1
-
-    if  n == 10
-      #s4 = synth :dark_sea_horn, note: cs.look(:main)[0], attack: 0.0, decay: 8.0, cutoff: 65+rand, amp: 0.2+rand*0.1
-      #sample Organic[/kick/,[1,1]].tick(:sample), cutoff: 100, amp: 0.2
-      with_transpose -12*2 do
-        #   s1 = synth :gpa, note: ring(  c[0]).look(:bassvoice), decay: 4.0, cutoff: 60, amp: 2.0, wave: 6
-      end
-    end
   }
 end
 
@@ -228,7 +219,7 @@ live_loop :beat do
   with_fx(:pitch_shift, mix: 0.1, time_dis: 0.01) do
     with_fx :slicer, mix: 0.0 do
       with_fx :bitcrusher, bits: 64*8, mix: 0.04, sample_rate: 40000 do
-        #sample Organic[/loop/, 11], amp: 0.05, beat_stretch: 16, cutoff: 95
+        #sample Organic[/loop/, 11], amp: 0.05, beat_stretch: 16, cutoff: 70
         #sample Organic[/loop/, 11], amp: 0.08, beat_stretch: 16*2,    cutoff: 100
         #sample Organic[/loop/, 11], amp: 0.08, beat_stretch: 16/2.0,  cutoff: 100
 
@@ -241,7 +232,7 @@ live_loop :beat do
   end
 
   with_fx :bpf, centre: ring( :FS1, :FS2, :FS3, :FS4).tick(:bcut), mix: 0.8 do
-    with_fx :hpf, cutoff: 100, mix: 0.0 do
+    with_fx :hpf, cutoff: 100, mix: 1.0 do
       with_fx :bitcrusher, bits: 64*8, mix: 0.04+rand*0.1, sample_rate: 40000 do
         #sample CineAmbi[/kick/,0], amp: 0.2, beat_stretch: 16, cutoff: 90
       end
@@ -258,7 +249,7 @@ live_loop :beat do
     sample Mountain[/subkick/,[0,0]].tick(:sample), cutoff: 70, amp: 0.5
     at do
       4.times{
-        #i_hollow scale(:Fs3, :minor_pentatonic).shuffle.choose, decay: 4.0
+        i_hollow scale(:Fs3, :minor_pentatonic).shuffle.choose, decay: 4.0
         sleep 0.25
       }
     end
