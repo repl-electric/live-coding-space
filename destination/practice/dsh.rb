@@ -157,13 +157,31 @@ live_loop :hollow do
 end
 
 live_loop :hollow do
+  sync :go
   8.times{
-    #i_hollow scale(:Fs3, :minor_pentatonic).shuffle.choose, decay: 4.0
-    i_hollow deg_seq(:fs3, %w{1 3 4 1 1 1 6 7}).tick, decay: 4.0
-    #i_hollow deg_seq(:fs3, %w{1 5 2 1 1 1 6 7}).tick, decay: 4.0
+    i_hollow deg_seq(:fs4, %w{1 3 4 1 1 1 6 1
+                              7 5 3 1 1 1 4 1
+                              -5 -5 -4 1 1 1 7  3
+                              -5 -5 -4 1 1 1 7  3
+                              -5 -5 -4 1 1 1 7  5
+                              -5 -5 -4 1 1 1 7  6
+                              -5 -5 -4 1 1 1 7  7
+                              }).tick(:p1), decay: 4.0, amp: 8.0
     sleep 0.25
   }
-  sleep 8
+  sleep 3
+  4.times{
+    i_hollow deg_seq(:fs4, %w{1 1 -6 -1
+                              1 1 -6 -1
+                              3 5 -3 -3
+                              3 5 -5 -3
+                              5 5 -7 -5
+                              6 5 -4 -6
+                              7 5 -5 -7
+                              }).tick(:p2), decay: 4.0, amp: 8.0
+    sleep (ring 0.25).tick
+  }
+  sleep 4
 end
 
 
