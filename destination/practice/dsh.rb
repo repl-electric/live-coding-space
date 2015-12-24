@@ -16,42 +16,6 @@ set_volume! 1.5
 _=nil
 use_bpm 60
 
-live_loop :apegy do
-  sync :apeg
-  apeg = deg_seq(:fs3, %w{1 1 2 1   1 3 1 1   1 1 4 4   2 3 1 1
-                          1 1 2 1   1 3 1 1   1 1 4 4   3 3 4 4
-
-                          1 1 2 1   1 3 1 1   1 1 4 4   2 3 1 1
-                          1 1 2 1   1 3 1 1   1 1 4 4   3 3 5 5
-
-                          3 3 2 3   3 3 3 3   3 3 4 4   2 3 1 1
-                          3 3 2 3   3 3 3 3   3 3 4 4   3 3 5 5
-
-                          3 3 2 3   3 3 3 3   3 3 4 4   2 3 1 1
-                          3 3 2 3   3 3 3 3   3 3 4 4   3 3 5 5
-
-                          5 5 2 5   5 5 5 5   5 5 4 4   2 3 1 1
-                          5 5 2 5   5 5 5 5   5 5 4 4   3 3 5 5
-                          })
-
-  32.times{
-    #    chord(:FS3, :m, invert: 0),
-    #   chord(:FS3, :m, invert: -1),
-
-    #  chord(:A2, :maj11),
-    # chord(:A3, :M, invert: -1),
-    #
-    #   chord(:Cs3, :m),
-    #   chord(:D3, '7-5'),
-    #   chord(:E3, :M) + [],
-
-    n = apeg.tick(:dark2)
-    #    synth :leadsaw, note: n, attack: 0.0, cutoff: 70
-    #   synth :dark_sea_horn, note: n, attack: 0.2, decay: 0.15, amp: 5.0, noise1: 1.0, noise2: 0.02, max_delay: 0.15, release: 0.2
-    sleep 0.5
-  }
-end
-
 live_loop :go do
   cs = ring(
     chord(:FS3, :m),
@@ -68,17 +32,17 @@ live_loop :go do
     chord(:A3, :M, invert: -1),
     chord(:Cs3, :m7, invert: 1),
     chord(:D3, :M),
-    chord(:E3, :M) + [:D3])
+  chord(:E3, :M) + [:D3])
   comment do
-    cs = ring(chord(:FS3, :m, invert: 0),
-              chord(:FS3, :m, invert: -1),
+    cs = ring(   chord(:FS3, :m, invert: 0),
+                 chord(:FS3, :m, invert: -1),
 
-              chord(:A2, :maj11),
-              chord(:A3, :M, invert: -1),
+                 chord(:A2, :maj11),
+                 chord(:A3, :M, invert: -1),
 
-              chord(:Cs3, :m),
-              chord(:D3, '7-5'),
-              chord(:E3, :M) + [])
+                 chord(:Cs3, :m),
+                 chord(:D3, '7-5'),
+                 chord(:E3, :M) + [])
   end
   comment do
     cs = (ring  chord(:FS3, :m),
@@ -94,20 +58,7 @@ live_loop :go do
   puts note_inspect(c)
 
   with_fx(:reverb, room: 0.9, mix: 0.9, damp: 0.5) do |r_fx|
-    #  sample Organ[/_#{note_info(c[2]+ring( 5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5, attack: 0.5
-  end
-
-  with_transpose -12*2 do
-    #s1 = synth :gpa, note: ring(  c[0]).tick(:bassvoice), decay: 4.0, cutoff: 70, amp: 2.0, wave: 6
-  end
-  #synth :leadsaw, note: :Gs4,  amp: 0.8, decay: 16.0, amp: 0.4
-  #synth :dsaw,  note: :Gs4, cutoff: 60, amp: 0.4, decay: 16.0, detune: 12, attack: 0.1
-
-  with_transpose -12 do
-    with_fx(:reverb, room: 0.9, mix: 0.8, damp: 0.5) do |r_fx|
-      #   synth :dsaw,  note: c[0]+0, cutoff: 60, amp: 0.5, decay: 8.0, detune: 12, attack: 0.1
-      #   synth :prophet, note: c[0]+0, cutoff: 60, amp: 0.5, decay: 8.0,attack: 0.1
-    end
+    #sample Organ[/_#{note_info(c[2]+ring( 5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5, attack: 0.5
   end
 
   _=nil
@@ -130,7 +81,6 @@ live_loop :go do
     #s2 = synth :dark_sea_horn, note: c[2], decay: 15.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
     #s3 = synth :dark_sea_horn, note: c[0], decay: 11.0, cutoff: 65+rand, amp: 0.2+rand*0.1
-
   end
 
   sop_notes = ring( 14, 15, 16, 15).look(:main)
