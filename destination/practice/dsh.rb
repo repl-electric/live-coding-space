@@ -57,7 +57,7 @@ live_loop :go do
   end
   c = cs.tick(:main)
 
-  at do
+    at do
     comment do
       pos = look(:main)*8
       8.times{|x|
@@ -72,6 +72,7 @@ live_loop :go do
         sleep 0.25
       }
       sleep 3
+      pos = look(:main)*4
       4.times{|x|
         i_hollow deg_seq(:fs4, %w{1 1 -6 -1
                                   1 1 -6 -1
