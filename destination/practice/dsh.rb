@@ -12,11 +12,9 @@
 #  ██║  ██║╚██████╔╝██║  ██║███████║███████╗███████║
 #  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
 #
-set_volume! 1.5
-_=nil
-use_bpm 60
+_=nil; set_volume! 1.5; use_bpm 60
 live_loop :go do
-  flow_time = 16
+  flow_time = (knit 4,2,8,5).tick(:flowing); puts "flow: #{flow_time}"
   cs = ring(
     chord(:FS3, :m),
     chord(:FS3, :m, invert: 1),
@@ -57,7 +55,7 @@ live_loop :go do
   end
   c = cs.tick(:main)
 
-    at do
+  at do
     comment do
       pos = look(:main)*8
       8.times{|x|
@@ -90,7 +88,7 @@ live_loop :go do
 
   #c = []
   puts note_inspect(c)
-  with_fx(:reverb, room: 0.9, mix: 0.9, damp: 0.5) do |r_fx|
+  with_fx(:reverb, room: 0.9, mix: 0.9, damp: 1.0) do |r_fx|
     #sample Organ[/_#{note_info(c[2]+ring(5,0,0,0).tick(:offset) ).midi_string.gsub(/3|2|4/,'1').gsub("s","#")}_/,[0,0]].tick(:sample), amp: 2.5, release: 0.5, attack: 0.5
   end
   comment do
@@ -120,22 +118,20 @@ live_loop :go do
 
   #synth :hollow, note: ring(c[0]-5, c[0], c[0]).tick(:cut), release: 4.0, decay: 10.0, amp: 0.2, attack: 4.0, cutoff: 80
 
-
   with_transpose -12*2 do
     s3 = synth :dark_sea_horn, note: c[0], decay: 8.0, cutoff: 130, amp: 0.8, attack: 0.0, noise1: 1.5, noise2: 1.5
   end
-
 
   with_fx :pitch_shift do
     with_transpose 12 do
       #s1 = synth :dark_sea_horn, note: c[0], decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
       #synth :leadsaw, note: c, attack: 0.1, cutoff: 130, amp: 0.1, release: 8.0, decay: 8.0, sustain: 8.0
     end
-    #s1 = synth :dark_sea_horn, note: c[1], decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
+    s1 = synth :dark_sea_horn, note: c[1], decay: flow_time+0.1, cutoff: 60+rand, amp: 0.2+rand*0.1
     sleep 1
-    #s2 = synth :dark_sea_horn, note: c[2], decay: flow_time-1.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    s2 = synth :dark_sea_horn, note: c[2], decay: flow_time-1.0, cutoff: 65+rand, amp: 0.2+rand*0.1
     sleep 1
-    #s3 = synth :dark_sea_horn, note: c[0], decay: flow_time-5.0, cutoff: 65+rand, amp: 0.2+rand*0.1
+    s3 = synth :dark_sea_horn, note: c[0], decay: flow_time-5.0, cutoff: 65+rand, amp: 0.2+rand*0.1
   end
 
   sop_notes = ring( 14, 15, 16, 15).look(:main)
@@ -167,7 +163,7 @@ live_loop :go do
   sleep 0
   mess = [s1].reject{|x|x.nil?}.choose
   (flow_time-2).times{ |n|
-    #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 2).shuffle.choose
+    #control mess, note: scale(:Fs3, :minor_pentatonic, num_octaves: 1).shuffle.choose
     #control mess, note: :Fs3
     sleep 1
   }
@@ -175,7 +171,7 @@ end
 
 with_fx :pitch_shift, time_dis: 0.8,  pitch_dis: 0.8 do
   live_loop :end do
-    sample_and_sleep Mountain[/cracklin/], rate: 0.9, amp: 0.2
+    sample_and_sleep Mountain[/cracklin/], rate: 0.9, amp: 0.05
   end
 end
 
@@ -219,9 +215,9 @@ live_loop :beat do
   end
 
   with_fx :bpf, centre: ring( :FS1, :FS2, :FS3, :FS4).tick(:bcut), mix: 0.8 do
-    with_fx :hpf, cutoff: 100, mix: 0.1 do
+    with_fx :hpf, cutoff: 100, mix: 1.0 do
       with_fx :bitcrusher, bits: 64*8, mix: 0.04+rand*0.1, sample_rate: 40000 do
-        #sample CineAmbi[/kick/,0], amp: 0.15, beat_stretch: 16, cutoff: 80
+        sample CineAmbi[/kick/,0], amp: 0.15, beat_stretch: 16, cutoff: 80
       end
     end
   end
