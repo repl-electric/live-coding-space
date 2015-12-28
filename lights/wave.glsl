@@ -54,8 +54,8 @@ vec2 c = gl_FragCoord.xy / iResolution.xy;
 				  abs(.1/(c.y+EPS)));
   vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), g*s.w*.1, g*g * iGlow, 1.);
   wave.x *= iR;
-  wave.y *= iG;
-  wave.z *= iB;
+  wave.y *= iB*0.5;
+  wave.z *= 1.5;
   
 	gl_FragColor = lineDistort(wave, c);
 }
