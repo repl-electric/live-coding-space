@@ -5,9 +5,10 @@ uniform float iConstrict;
 uniform float iMotion;
 uniform float iKick;
 uniform float iDistort;
+uniform float iForm;
 
 float rand2(vec2 co){
-  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+  return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
 
 vec3 posf2(float t, float i) {
@@ -43,7 +44,6 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
     
   vec3 posf = fract(pos+.5)-.5;
   
-
   float l = length(posf)*2.;
   vec3 r = (- posf + posf/l)*(1.0-smoothstep(lerpEnd,1.,l));
 
@@ -61,29 +61,31 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
 }
 
 void main() {
-  // more or less random movement
-  float t = iGlobalTime * iMotion;
-  //t = t + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
-  t += iKick*0.01;
+  float time = iGlobalTime * iMotion;
+  //time = time + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
+  time += iKick*0.01;
   
   float constrict = min(iDistort,1.0);
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
   
   float i = (gl_VertexID + cos(gl_VertexID))*constrict;
 
-  vec3 pos = posf(t,i);
+  vec3 pos = posf(time,i);
   vec3 ofs = vec3(snd);
-  for (float f = -10.; f < 0.; f++) {
+
+  for (float f = -10.; f < 10.; f++) {
     snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.5;
-	  ofs += push(snd+t+f*.05,i,ofs, 2.-exp(-f*.1));
+	  ofs += push(snd/time+f*.05,i,ofs, 2.-exp(-f*.1));
   }
-  ofs += push(t,i,ofs,.999);
+
+  if(iForm > 0.0){
+    ofs += push(time,i,ofs,.999) * iForm;
+  }
   
-  
-  pos -= posf0(t);
-  
+  pos -= posf0(time);
   pos += ofs;
-  
+
+  //pos.yz *= mat2(.8,9.6,-.6,.8);  
   pos.yz *= mat2(.8,.6,-.6,.8);
   pos.xz *= mat2(.8,.6,-.6,.8);
   
