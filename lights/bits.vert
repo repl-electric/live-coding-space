@@ -74,9 +74,11 @@ void main() {
   vec3 pos = posf(t,i);
   vec3 ofs = vec3(snd);
   for (float f = -10.; f < 0.; f++) {
-	  ofs += push(t+f*.05,i,ofs, 2.-exp(-f*.1));
+    snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.5;
+	  ofs += push(snd+t+f*.05,i,ofs, 2.-exp(-f*.1));
   }
   ofs += push(t,i,ofs,.999);
+  
   
   pos -= posf0(t);
   
