@@ -6,12 +6,17 @@ uniform float iMotion;
 uniform float iKick;
 uniform float iDistort;
 uniform float iForm;
+uniform float iSize;
 
 float rand2(vec2 co){
   return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
 
 vec3 posf2(float t, float i) {
+  float size = 0.2;
+  if(iSize > 0){
+    size = iSize;
+  }
 	return vec3(
       sin(t+i*.9553) +
       sin(t*1.311+i) +
@@ -25,7 +30,7 @@ vec3 posf2(float t, float i) {
       sin(t*1.311+i*1.1-2.1) +
       sin(t*1.4+i*1.23+2.1) +
       sin(t*1.84+i*.36+2.1)
-	)*.2;
+	) * size;
 }
 
 vec3 posf0(float t) {
