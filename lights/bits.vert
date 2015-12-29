@@ -68,26 +68,32 @@ void main() {
   float constrict = min(iDistort,1.0);
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
   
-  float i = (gl_VertexID + cos(gl_VertexID))*constrict;
+  float i = (gl_VertexID + cos(gl_VertexID)) * constrict;
 
   vec3 pos = posf(time,i);
   vec3 ofs = vec3(snd);
 
   for (float f = -10.; f < 10.; f++) {
-    snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.5;
-	  ofs += push(snd/time+f*.05,i,ofs, 2.-exp(-f*.1));
+    snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.0005;
+    if(rand2(ofs.xy) > 0.5){
+	    ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
+    }
+    else{
+      //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      ofs *= push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+    }
   }
 
   if(iForm > 0.0){
-    ofs += push(time,i,ofs,.999) * iForm;
+    ofs += push(time, i, ofs, .999) * iForm;
   }
   
   pos -= posf0(time);
   pos += ofs;
 
   //pos.yz *= mat2(.8,9.6,-.6,.8);  
-  pos.yz *= mat2(.8,.6,-.6,.8);
-  pos.xz *= mat2(.8,.6,-.6,.8);
+  pos.yz   *= mat2(.8,.6,-.6,.8);
+  pos.xz   *= mat2(.8,.6,-.6,.8);
   
   pos *= 1.;
   pos.z += .7;
