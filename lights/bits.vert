@@ -84,8 +84,12 @@ void main() {
 	    ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
     }
     else{
-      //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
-      ofs *= push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      if(iForm > 0.0){
+        ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      }
+      else{
+        ofs *= push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      }
     }
   }
 
