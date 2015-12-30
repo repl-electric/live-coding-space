@@ -13,10 +13,6 @@ float rand2(vec2 co){
 }
 
 vec3 posf2(float t, float i) {
-  float size = 0.2;
-  if(iSize > 0){
-    size = iSize;
-  }
 	return vec3(
       sin(t+i*.9553) +
       sin(t*1.311+i) +
@@ -30,7 +26,7 @@ vec3 posf2(float t, float i) {
       sin(t*1.311+i*1.1-2.1) +
       sin(t*1.4+i*1.23+2.1) +
       sin(t*1.84+i*.36+2.1)
-	) * size;
+	) * 0.2;
 }
 
 vec3 posf0(float t) {
@@ -84,12 +80,8 @@ void main() {
 	    ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
     }
     else{
-      if(iForm > 0.0){
-        ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
-      }
-      else{
-        ofs *= push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
-      }
+      //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      ofs *= push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
     }
   }
 
@@ -101,8 +93,14 @@ void main() {
   pos += ofs;
 
   //pos.yz *= mat2(.8,9.6,-.6,.8);  
-  pos.yz   *= mat2(.8,.6,-.6,.8);
-  pos.xz   *= mat2(.8,.6,-.6,.8);
+  pos.yz   *= mat2(.8, 0.6,-.6, .8);
+  pos.xz   *= mat2(.8,.6,-.6, .8);
+  
+  
+  if(iSize > 0.0){
+    pos.z += iSize;
+  }
+  
   
   pos *= 1.;
   pos.z += .7;
