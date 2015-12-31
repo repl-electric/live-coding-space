@@ -9,8 +9,8 @@ unless defined?(SHADER_ROOT)
 end
 def shader(endpoint, *args)
   if endpoint.is_a?(Array)
-    endpoint.each do |a|
-      shader(a, *args)
+    endpoint.zip(args.cycle).each do |thing, value|
+      shader(thing, value)
     end
   else
     endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
@@ -29,7 +29,8 @@ def shader(endpoint, *args)
     begin
       args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
       @client.send(OSC::Message.new(endpoint, *args))
-    rescue Exception 
+    rescue Exception
+      puts $!
       puts "$!> Graphics not loaded"
     end
   end
