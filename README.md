@@ -27,6 +27,9 @@ d[-_-]b
 
 Visuals are generated using ShaderView: https://github.com/josephwilk/shaderview
 
+Source: https://github.com/repl-electric/live-coding-space/tree/master/lights
+
+
 ### Material
 
 Recordings on: 
