@@ -31,10 +31,8 @@ def shader(endpoint, *args)
     endpoint = "#{endpoint.to_s.gsub("decay", "decaying-uniform")}"
     endpoint = "/#{endpoint}"
     @client ||= OSC::Client.new('localhost', 9177)
-    begin
-      
+    begin      
       args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
-      puts args
       @client.send(OSC::Message.new(endpoint, *args))
     rescue Exception
       puts $!
