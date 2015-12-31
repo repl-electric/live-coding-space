@@ -7,6 +7,7 @@ uniform float iKick;
 uniform float iDistort;
 uniform float iForm;
 uniform float iSize;
+uniform float iHorse;
 
 float rand2(vec2 co){
   return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
@@ -101,6 +102,9 @@ void main() {
     pos.z += iSize;
   }
   
+  //42 => fs2  78 => :FS5
+  float horse = smoothstep(42.0, 78.0, iHorse);
+  pos.z *= iHorse;
   
   pos *= 1.;
   pos.z += .7;
