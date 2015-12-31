@@ -9,6 +9,11 @@ unless defined?(SHADER_ROOT)
 end
 def shader(endpoint, *args)
   if endpoint.is_a?(Array)
+    args = if(args[0].is_a?(Array))
+      args[0]
+    else
+      args
+    end
     endpoint.zip(args.cycle).each do |thing, value|
       shader(thing, value)
     end
@@ -27,7 +32,9 @@ def shader(endpoint, *args)
     endpoint = "/#{endpoint}"
     @client ||= OSC::Client.new('localhost', 9177)
     begin
+      
       args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
+      puts args
       @client.send(OSC::Message.new(endpoint, *args))
     rescue Exception
       puts $!
