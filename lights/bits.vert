@@ -107,7 +107,9 @@ void main() {
   pos.z *= iHorse;
   
   pos *= 1.;
-  pos.z += .7;
+  //pos.z += .7;
+  pos.z /= 8.0;
+
   
   pos.xy *= .6/pos.z;
   
