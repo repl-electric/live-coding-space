@@ -66,9 +66,8 @@ void main() {
   float time = iGlobalTime * iMotion;
   //time = time + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
   time += iKick*0.01;
-  
-  float constrict = min(iDistort,1.0);
-  float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);
+  float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);  
+  float constrict = min(iDistort+snd*0.1,1.0);
   
   float i = (gl_VertexID + cos(gl_VertexID)) * constrict;
 
@@ -94,22 +93,17 @@ void main() {
   pos += ofs;
 
   //pos.yz *= mat2(.8,9.6,-.6,.8);  
-  pos.yz   *= mat2(.8, 0.6,-.6, .8);
-  pos.xz   *= mat2(.8,.6,-.6, .8);
+  pos.yz   *= mat2(.8, 0.6,-.6,.8);
+  pos.xz   *= mat2(.8,.6,-.6,.8);
   
-  
-  if(iSize > 0.0){
-    pos.z += iSize;
-  }
+  pos.z *= iSize;
   
   //42 => fs2  78 => :FS5
   float horse = smoothstep(42.0, 78.0, iHorse);
   pos.z *= iHorse;
   
   pos *= 1.;
-  //pos.z += .7;
-  pos.z /= 8.0;
-
+  pos.z /= 6.0;
   
   pos.xy *= .6/pos.z;
   
