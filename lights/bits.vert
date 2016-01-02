@@ -64,11 +64,9 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
 
 void main() {
   float time = iGlobalTime * iMotion;
-  //time = time + iKick*(0.5+0.5*sin(iKick*iGlobalTime));
   time += iKick*0.01;
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);  
   float constrict = min(iDistort+snd*0.1,1.0);
-  
   float i = (gl_VertexID + cos(gl_VertexID)) * constrict;
 
   vec3 pos = posf(time,i);
@@ -77,7 +75,7 @@ void main() {
   for (float f = -10.; f < 10.; f++) {
     snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.0005;
     if(rand2(ofs.xy) > 0.5){
-	    ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
     }
     else{
       //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
@@ -99,7 +97,7 @@ void main() {
   pos.z *= iSize;
   
   //42 => fs2  78 => :FS5
-  float horse = smoothstep(42.0, 78.0, iHorse);
+  //float horse = smoothstep(42.0, 78.0, iHorse);
   pos.z *= iHorse;
   
   pos *= 1.;
