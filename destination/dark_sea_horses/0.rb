@@ -39,8 +39,10 @@ live_loop :go do
           chord(:E3, '7'),
           )
   end
+  c_old = cs.look(:main)
   c = cs.tick(:main)
-
+  (c_old[0] < c[0]) ? shader(:iDir, 1.0) : shader(:iDir, -1.0)
+  
   at do
     comment do
       pos = look(:main)*8
