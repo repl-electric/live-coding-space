@@ -8,6 +8,7 @@ uniform float iDistort;
 uniform float iForm;
 uniform float iSize;
 uniform float iHorse;
+uniform float iDir;
 
 float rand2(vec2 co){
   return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
