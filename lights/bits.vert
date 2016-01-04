@@ -95,11 +95,15 @@ void main() {
   pos.yz   *= mat2(.8, 0.6,-.6,.8);
   pos.xz   *= mat2(.8,.6,-.6,.8);
   
-  pos.z *= iSize;
+  if(iSize > 0.0){
+    pos.z *= iSize;
+  }
   
   //42 => fs2  78 => :FS5
   //float horse = smoothstep(42.0, 78.0, iHorse);
-  pos.z *= iHorse;
+  if(iHorse > 0.0){
+    pos.z *= iHorse;
+  }
   
   pos *= 1.;
   pos.z /= 6.0;
@@ -111,7 +115,7 @@ void main() {
   if(iScale < 0.1){
     if(mod(iGlobalTime, 128.0) > 64.0){
       size = ((1./pos.z)*iScale)+iBeat;
-    } 
+    }
   }
   else{
     size = ((1./pos.z)*iScale)+iBeat*5;
