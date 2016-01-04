@@ -1,6 +1,6 @@
 uniform sampler2D iChannel0;
 uniform float iBeat;
-uniform float iScale;
+uniform float iPointSize;
 uniform float iConstrict;
 uniform float iMotion;
 uniform float iKick;
@@ -112,13 +112,13 @@ void main() {
   
   gl_Position = vec4(pos.x, pos.y*iResolution.x/iResolution.y, 0, 1);
   float size = (1./pos.z)*6;
-  if(iScale < 0.1){
+  if(iPointSize < 0.1){
     if(mod(iGlobalTime, 128.0) > 64.0){
-      size = ((1./pos.z)*iScale)+iBeat;
+      size = ((1./pos.z)*iPointSize)+iBeat;
     }
   }
   else{
-    size = ((1./pos.z)*iScale)+iBeat*5;
+    size = ((1./pos.z)*iPointSize)+iBeat*5;
   }
   gl_PointSize  = size; 
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
