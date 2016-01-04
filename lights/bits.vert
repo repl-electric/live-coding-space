@@ -107,8 +107,7 @@ void main() {
   
   pos *= 1.;
   pos.z /= 6.0;
-  
-  pos.xy *= .6/pos.z;
+  pos.xy *= 0.6/pos.z;
   
   gl_Position = vec4(pos.x, pos.y*iResolution.x/iResolution.y, 0, 1);
   float size = (1./pos.z)*6;
@@ -120,6 +119,6 @@ void main() {
   else{
     size = ((1./pos.z)*iPointSize)+iBeat*5;
   }
-  gl_PointSize  = size; 
+  gl_PointSize  = max(size, 0.000001);
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
 }
