@@ -52,10 +52,10 @@ vec2 c = gl_FragCoord.xy / iResolution.xy;
 	c = vec2(0., A*s.y*sin((c.x*W+iGlobalTime*V)* 2.5)) + (c*2.-1.);
 	float g = max(abs(s.y/(pow(c.y, 0.1*sin(s.x*PI))))*T*iFat,
 				  abs(.1/(c.y+EPS)));
-  vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), g*s.w*.1, g*g * iGlow, 1.);
-  wave.x *= iR;
-  wave.y *= iB*0.5;
-  wave.z *= 1.5;
+  vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), g*s.w*.1, g*g, 1.);
+    wave.x *= (1.0*sin(iGlobalTime/2.0+iGlobalTime*0.1)*0.5+0.5);
+    wave.y *= (90.0*sin(iGlobalTime*0.1)*0.5+0.5);
+    wave.z *= 10.0*sin(iGlobalTime/3.0+iGlobalTime*0.1)*0.5+0.5;
   
 	gl_FragColor = lineDistort(wave, c);
 }
