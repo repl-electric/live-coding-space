@@ -1,5 +1,6 @@
 #graphics setup
 #Defaults
+shader :shader, "wave.glsl", "bits.vert", "points", 10000
 shader [:iR, :iB, :iG], 3.0
 shader :iForm, 0.1
 shader :iDir, 1.0
