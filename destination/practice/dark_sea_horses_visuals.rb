@@ -29,29 +29,33 @@ live_loop :warm do
   #I just learnt this...
 
   #Grab the next chord not playing yet.
-  dis_note =  (data.look(:main, offset: 1).to_a-notes).sort[0] #unstable note maybe...
+  dis_note =  (data.look(:main, offset: 1).to_a-notes).shuffle.choose #unstable note maybe...
   puts "stable=>#{note_inspect(notes)}"
   puts "nextchord#{note_inspect(data.look(:main, offset: 1))}"
   puts "dis => #{note_inspect(dis_note)}"
   #Try the 2nd note of the chord
-
-  with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
-    with_transpose 0 do
-      n = notes[0] + (dice(6) > 3 ? 5 : 0)
-      #synth :hollow, note: n, attack: 4.0, decay: 4.0, amp: 0.2, cutoff: 80
-    end
-  end
-
   _ = nil
   new_note = (ring
               _,_,dis_note,
               _,_,dis_note,).tick(:not_always)
-  at do
-    sleep 4
+
+  with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
     with_transpose 0 do
+      n = notes[0] + (dice(6) > 3 ? 5 : 0)
+      synth :hollow, note: [new_note, n].choose, attack: 4.0, decay: 4.0, amp: 0.2, cutoff: 80
+    end
+  end
+
+  at do
+    sleep 6
+    with_transpose 5 do
       _ = :r
-      puts "ring: #{new_note}"
-      synth :gpa, note: new_note, attack: 1.0, decay: 8.0, amp: 0.2
+      if new_note
+        puts "fire----------------> #{new_note}" if new_note
+        with_fx(:reverb, room: 0.6, mix: 1.0, damp: 0.5) do |r_fx|
+          synth :dark_sea_horn, note: new_note, attack: 0.01, decay: 8.0, amp: 0.05, cutoff: 80
+        end
+      end
     end
 
     with_transpose 0 do
@@ -63,7 +67,7 @@ live_loop :warm do
 
   end
 
-  with_fx :pitch_shift, mix: 0.1 do
+  with_fx :pitch_shift, mix: 0.0 do
     with_transpose -24 do
       bass_dsh =  synth :dark_sea_horn, note: notes[0], decay: 2, cutoff: 130, amp: 0.01, note_slide: 0.01
     end
