@@ -29,7 +29,10 @@ live_loop :warm do
   #I just learnt this...
 
   #Grab the next chord not playing yet.
-  dis_note = data.look(:main, offset: 1)[0] #unstable note maybe...
+  dis_note =  (data.look(:main, offset: 1).to_a-notes).sort[0] #unstable note maybe...
+  puts "stable=>#{note_inspect(notes)}"
+  puts "nextchord#{note_inspect(data.look(:main, offset: 1))}"
+  puts "dis => #{note_inspect(dis_note)}"
   #Try the 2nd note of the chord
 
   with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
@@ -39,13 +42,16 @@ live_loop :warm do
     end
   end
 
+  _ = nil
+  new_note = (ring
+              _,_,dis_note,
+              _,_,dis_note,).tick(:not_always)
   at do
-    _ = nil
-    sleep 6
+    sleep 4
     with_transpose 0 do
-      with_fx(:reverb, room: 1.0, mix: 0.3, damp: 0.5) do |r_fx|
-        synth :beep, note: (ring dis_note, _, _).tick(:not_always), attack: 1.0, decay: 4.0, amp: 0.1
-      end
+      _ = :r
+      puts "ring: #{new_note}"
+      synth :gpa, note: new_note, attack: 1.0, decay: 8.0, amp: 0.2
     end
 
     with_transpose 0 do
