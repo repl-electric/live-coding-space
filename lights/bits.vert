@@ -36,19 +36,23 @@ vec3 posf0(float t) {
 }
 
 vec3 posf(float t, float i) {
-  return posf2(t*.3,i) + posf0(t);
+//  float snd = texture2D(iChannel0, vec2(0.75, i)).x*0.1;
+  //i -= (iHorse+1.0)*0.5;
+  //t *= (iHorse+1.0)*0.5;
+    return posf2(t*.3,i) + posf0(t);
 }
 
 vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
   float snd = pow(texture2D(iChannel0, vec2(.02+.5 * ofs.x, 0.)).x, 8.);
+  float wave = texture2D(iChannel0, vec2(ofs.x,0.75)).x *0.8;
   vec3 pos = posf(t,i) + ofs;
-  
+
+  //pos.x += snd2;
   //pos += iBeat*0.1;
     
   vec3 posf = fract(pos+.5)-.5;
-  
   float l = length(posf)*2.;
-  vec3 r = (- posf + posf/l)*(1.0-smoothstep(lerpEnd,1.,l));
+  vec3 r = (-posf + posf/l) * (1-smoothstep(lerpEnd,1.,l));
 
   //Lines through jumping
   //return 0.01*rand2(vec2(t,i))+r;
@@ -56,15 +60,16 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
   if(iDistort > 0.0){
     r.x += min(iDistort,0.2)*rand2(vec2(i,i));
   }
-  
-  //vec4 s = texture2D(iChannel0, vec2(i,t))*0.0002;
-  //return s.xyz + r.xyz;
-
   return r;
 }
 
 void main() {
   float time = iGlobalTime * iMotion;
+  
+  if(iHorse < 0){
+    //time = -time;
+  }
+  
   time += iKick*0.01;
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);  
   float constrict = min(iDistort+snd*0.1,1.0);
@@ -75,8 +80,9 @@ void main() {
 
   for (float f = -10.; f < 10.; f++) {
     snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.0005;
+    snd = 0.0;
     if(rand2(ofs.xy) > 0.5){
-      ofs += push((time+snd+f*.05),i,ofs, 2.-exp(-f*.1));
+      ofs += push((time+snd+f*.05)*0.1,i,ofs, 2.-exp(-f*.1));
     }
     else{
       //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
@@ -84,9 +90,20 @@ void main() {
     }
   }
 
-  if(iForm > 0.0){
-    ofs += push(time, i, ofs, .999) * iForm;
+  float formWeight = iForm;
+
+  //if(iHorse < 0){
+  //  formWeight = -formWeight+0.1*iHorse + snd;
+  //}
+  //else{
+//    formWeight = formWeight+0.1*iHorse + snd;
+  //}
+
+  if(formWeight > 0.0){
+    ofs += push(time, i, ofs, .999) * formWeight;
   }
+  
+  
   
   pos -= posf0(time);
   pos += ofs;
@@ -102,7 +119,7 @@ void main() {
   //42 => fs2  78 => :FS5
   //float horse = smoothstep(42.0, 78.0, iHorse);
   if(iHorse > 0.0){
-    pos.z *= iHorse;
+   // pos.z *= iHorse;
   }
   
   pos *= 1.;
@@ -119,6 +136,6 @@ void main() {
   else{
     size = ((1./pos.z)*iPointSize)+iBeat*5;
   }
-  gl_PointSize  = max(size, 0.000001);
+  gl_PointSize  = max(size, 0.000000001);
   gl_FrontColor = vec4(abs(normalize(ofs))*.3+.7,1);
 }
