@@ -3,7 +3,6 @@ uniform float iBeat;
 uniform float iPointSize;
 uniform float iConstrict;
 uniform float iMotion;
-uniform float iKick;
 uniform float iDistort;
 uniform float iForm;
 uniform float iSize;
@@ -70,7 +69,7 @@ void main() {
     //time = -time;
   }
   
-  time += iKick*0.01;
+  time += iBeat*0.01;
   float snd = pow(texture2D(iChannel0, vec2(gl_VertexID, 0.)).x, 8.);  
   float constrict = min(iDistort+snd*0.1,1.0);
   float i = (gl_VertexID + cos(gl_VertexID)) * constrict;
