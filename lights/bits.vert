@@ -57,7 +57,15 @@ vec3 push(float t, float i, vec3 ofs, float lerpEnd) {
   //return 0.01*rand2(vec2(t,i))+r;
   
   if(iDistort > 0.0){
-    r.x += min(iDistort,0.2)*rand2(vec2(i,i));
+    if(rand2(vec2(i,i)) > 0.5){
+      r.x += min(iDistort*100,199)*rand2(vec2(i,i));
+    }
+    if(rand2(vec2(i,i)) < 0.2){
+      r.y += min(iDistort*2,0.2)*rand2(vec2(i,i));
+    }
+    if(rand2(vec2(i,i)) > 0.9){
+      r.z -= min(iDistort*2,0.2)*rand2(vec2(i,i));  
+    }
   }
   return r;
 }
@@ -77,11 +85,12 @@ void main() {
   vec3 pos = posf(time,i);
   vec3 ofs = vec3(snd);
 
-  for (float f = -10.; f < 10.; f++) {
+  for (float f = -10.1; f < 10.; f++) {
+  
     snd = texture2D(iChannel0, vec2(f * ofs.x, 0.8)).x*0.0005;
     snd = 0.0;
     if(rand2(ofs.xy) > 0.5){
-      ofs += push((time+snd+f*.05)*0.1,i,ofs, 2.-exp(-f*.1));
+      ofs += push((time+snd+f*.05)*0.1,i,ofs, 199.-exp(-f*.1));
     }
     else{
       //ofs += push((time-snd+f*.05),i,ofs, 2.-exp(-f*.1));
