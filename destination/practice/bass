@@ -1,0 +1,90 @@
+["instruments","shaderview","experiments", "log","samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
+shader :shader, "wave.glsl", "bits.vert", "points", 10
+#shader :iSpaceLight, 0.4
+#shader :iStarLight, 0.3
+#shader [:iR, :iB, :iG], 3.0
+#shader :iForm, 0.01
+#shader :iDir, 1.0
+#shader :iMotion, 0.00001
+#shader :iWave, 0.9
+shader :iSize, 100.9
+#shader :iPointSize, 0.1
+#shader :iDistort, 0.005
+#@cells = 10000;
+#shader :iDistort, 0.05
+@cells = 10000
+live_loop :slept_but do #...
+
+  d = (ring
+       [(chord :FS3, :m),16], #F A C
+       [(chord :A3, :M),8],  #A C E
+       [(chord :D3, :M),8],  #D F A
+       [(chord :E3, :M),8])  #E G B
+
+  x= d.tick(:main)
+  bass = (ring :Fs2, :E2, :A2, :Gs2).tick(:bass)
+  puts "Bass:#{note_inspect(bass)}"
+  with_transpose 0 do
+    synth :fm, note: bass, decay: x[1]/2.0, cutoff: 80, amp: 0.5
+    with_transpose -12 do
+      #synth :dark_sea_horn, note: bass, decay: x[1], cutoff: 50
+    end
+  end
+
+  at do
+    use_synth :gpa
+    8.times{
+      #play d[0][0], decay: (ring 0.25,0.25,0.25,1.0).tick(:decay)
+      sleep 0.25
+    }
+  end
+
+  shader :vertex_settings,"points", [@cells += 50,10000].min
+  puts @cells
+  puts "chords:#{note_inspect(x[0])}"
+  #synth :dark_sea_horn, note: x[0][0], decay: x[1], cutoff: 70, amp: 0.1
+  synth :dark_sea_horn, note: x[0][1], decay: x[1], cutoff: 70, amp: 0.1
+  synth :dark_sea_horn, note: x[0][2], decay: x[1], cutoff: 70, amp: 0.1
+
+  at do
+    sleep x[1]-2
+    with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
+      synth :hollow, note: (ring d.look(:main, offset: 1)[1],_,_).tick(:h),    decay: x[1]/2.0, amp: 8.0, attack: 1.0
+  end
+end
+
+with_transpose -12 do
+  with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
+    synth :dsaw,    note: x[0], cutoff: 50, decay: 2.0, amp: 1.2
+    synth :prophet, note: x[0], cutoff: 50, decay: 2.0, amp: 1.2
+  end
+end
+
+sample Corrupt[/instrument/,/fx/,/f#/,[0,1]].tick(:sample), cutoff: 60, amp: 0.5
+sleep x[1]
+end
+
+live_loop :thing do
+  sample Dust[/hat/,[0..7]].tick(:sample), cutoff: 60, amp: 0.5
+  shader :iSize, (range 0, 100, steps:0.1).tick
+  sleep 0.25*2
+end
+
+live_loop :do, sync: :slept_but do
+  shader :decay, :iBeat, 2.0*2
+  sample Mountain[/subkick/,0], cutoff: 130, amp: 2.5
+  sleep 2
+  with_fx(:reverb, room: 0.6, mix: 0.7, damp: 0.5) do |r_fx|
+    sample Ether[/clap/,0], cutoff: 100, amp: 0.2
+  end
+
+  shader :growing_uniform, :iForm, rrand(0.01, 1.5), 0.001
+  shader :decay, :iDistort, rrand(0.005, 0.009), 0.0000001
+  if spread(1,4).tick(:S)
+    sleep 2-0.25
+    sample Mountain[/subkick/,1], cutoff: 70, amp: 1.5
+    sleep 0.25
+  else
+    sleep 2
+  end
+end
