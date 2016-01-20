@@ -1,3 +1,4 @@
+set_volume! 10.0
 ["instruments","shaderview","experiments", "log","samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
 shader :shader, "wave.glsl", "bits.vert", "points", 10
 #shader :iSpaceLight, 0.4
@@ -15,6 +16,11 @@ shader :iFuzz, 0.03
 #shader :iDistort, 0.05
 @cells ||= 100
 
+hold     = (ring *%w{1  0 0 0 0 0 0 0 0 0   0  1  0   1 0  0}.map(&:to_i))
+tranpose = (ring *%w{10 0 0 0 5 0 0 0 0 -12 0 -2 -12 -2 0 -12}.map(&:to_i))
+velocity = (ring *%w{100 100 49 100 118 78 110 114 100 127 100 127 115 100 100 100}.map(&:to_i))
+
+
 with_fx(:reverb, room: 0.8, mix: 0.1, damp: 0.5) do |r_fx|
   live_loop :melody, sync: :slept_but do
     d = (ring
@@ -24,8 +30,14 @@ with_fx(:reverb, room: 0.8, mix: 0.1, damp: 0.5) do |r_fx|
          :FS4, :FS3, :A4, :A3, :FS4, :FS3, :A4,  :A4,
          )
     sleep 0.25
-    synth :dark_sea_horn, note: d.tick, noise1: 0.09, release: 1, cutoff: 70, amp: 2.9, attack: 1.0, decay: 0.25,    wave: 1.0
-    synth :hollow, note: d.look, decay: 0.25, amp: 0.1, cutoff: (ring 80,90,100,110).tick(:c)
+
+    use_synth :hollow
+    with_transpose(0){
+      play d.tick, release: hold.tick(:h) == 1 ? 0.8 : 0.5, attack: 1-(velocity.tick(:v)/100), cutoff: 80
+    }
+
+#    synth :dark_sea_horn, note: d.tick, noise1: 0.09, release: 1, cutoff: 70, amp: 2.9, attack: 1.0, decay: 0.25,    wave: 1.0
+    synth :hollow, note: d.look, decay: (knit 0.25,1,0.5,1,0.25,6).tick(:l), amp: 0.1, cutoff: (ring 80,90,100,110).tick(:c)
   end
 end
 
@@ -47,8 +59,8 @@ live_loop :slept_but do #...
   puts "chords:#{note_inspect(x[0])}"
   synth :dark_sea_horn, note: x[0][1], release: x[1], cutoff: 70, amp: 0.1,attack: 0.001, decay: 1.5
   sleep x[1]/8.0
-  synth :dark_sea_horn, note: x[0][2], release: x[1], cutoff: 70, amp: 0.1,attack: 0.001, decay: 1.5
-  sleep x[1]/8.0
+                                                                       synth :dark_sea_horn, note: x[0][2], release: x[1], cutoff: 70, amp: 0.1,attack: 0.001, decay: 1.5
+                                                                       sleep x[1]/8.0
 
   #synth :dark_sea_horn, note: x[0][0], release: x[1], cutoff: 70, amp: 0.1,attack: 0.001, decay: 1.1
   synth :dark_sea_horn, note: x[0][3], release: x[1], cutoff: 70, amp: 0.1,attack: 0.001, decay: 1.1
@@ -57,19 +69,19 @@ live_loop :slept_but do #...
     sleep 1
     with_transpose 0 do
       #synth :fm, note: bass, decay: x[1]/2.0, cutoff: 80, amp: 0.5
-      with_fx :slicer, phase: 0.25, smooth: 0.25, mix: 0.1 do
-        with_transpose -12 do
-          synth :dark_sea_horn, note: bass, decay: x[1][0], cutoff: 50, amp: 0.5
-        end
-      end
-    end
-  end
+                                                                       with_fx :slicer, phase: 0.25, smooth: 0.25, mix: 0.1 do
+                                                                         with_transpose -12 do
+                                                                           synth :dark_sea_horn, note: bass, decay: x[1][0], cutoff: 50, amp: 0.5
+                                                                         end
+                                                                       end
+                                                                       end
+                                                                       end
 
-  h_note = (ring d.look(:main, offset: 1)[0],_,_).tick(:h)
-  at do
-    sleep x[1]-2
-    with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
-      synth :hollow, note: h_note,    decay: x[1]/2.0, amp: 1.0, attack: 1.0
+                                                                       h_note = (ring d.look(:main, offset: 1)[0],_,_).tick(:h)
+                                                                       at do
+                                                                         sleep x[1]-2
+                                                                         with_fx(:reverb, room: 0.6, mix: 0.4, damp: 0.5) do |r_fx|
+                                                                           synth :hollow, note: h_note,    decay: x[1]/2.0, amp: 1.0, attack: 1.0
     end
   end
 
@@ -81,23 +93,23 @@ live_loop :slept_but do #...
   end
 
     #sample Corrupt[/instrument/,/fx/,/f#/,[0,1]].tick(:sample), cutoff: 60, amp: 0.5
-      sleep x[1] - (x[1]/8.0)*2
+                                                                           sleep x[1] - (x[1]/8.0)*2
   end
 
 live_loop :do, sync: :slept_but do
   shader :decay, :iBeat, 2.0*2
   sample Fraz[/kick/,0], cutoff: 30, amp: 2.5
-                    sleep 2
-                    with_fx(:reverb, room: 0.6, mix: 0.7, damp: 0.5) do |r_fx|
-                      sample Dust[/snare/,8], cutoff: 80, amp: 0.2
-                    end
-                    shader :growing_uniform, :iForm, rrand(0.01, 10.5), 0.1
-                    shader :decay, :iDistort, rrand(0.005, 0.001), 0.0000001
-                    if spread(1,4).tick(:S)
-                      sleep 2-0.25
-                      sample Mountain[/subkick/,1], cutoff: 50, amp: 1.5
-                      sleep 0.25
-                    else
-                      sleep 2
-                    end
-                    end
+                                                                                         sleep 2
+                                                                                         with_fx(:reverb, room: 0.6, mix: 0.7, damp: 0.5) do |r_fx|
+                                                                                           sample Dust[/snare/,8], cutoff: 80, amp: 0.2
+                                                                                         end
+                                                                                         shader :growing_uniform, :iForm, rrand(0.01, 10.5), 0.1
+                                                                                         shader :decay, :iDistort, rrand(0.005, 0.001), 0.0000001
+                                                                                         if spread(1,4).tick(:S)
+                                                                                           sleep 2-0.25
+                                                                                           sample Mountain[/subkick/,1], cutoff: 50, amp: 1.5
+                                                                                           sleep 0.25
+                                                                                         else
+                                                                                           sleep 2
+                                                                                         end
+                                                                                         end
