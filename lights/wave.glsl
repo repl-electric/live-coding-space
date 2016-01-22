@@ -8,14 +8,12 @@ uniform float iR;
 uniform float iG;
 uniform float iB;
 
-
-#define PI  3.14159
-#define EPS .8
-
-#define T 1.5  // Thickness
-#define W 1.5   // Width
-#define A .5  // Amplitude
-#define V 0.1   // Velocity
+#define PI  3.14159  
+#define EPS 0.7  
+#define T 0.1  // Thickness  
+#define W 1.5  // Width  
+#define A 0.1   // Amplitude  
+#define V 0.1  // Velocity 
 
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(2.9898,78.233))) * 58.5453);
@@ -46,16 +44,35 @@ vec4 lineDistort(vec4 cTextureScreen, vec2 uv1){
 }
 
 
+vec4 oldmain(void){
+   vec2 c = gl_FragCoord.xy / iResolution.xy;  
+   	vec4 s = texture2D(iChannel0, c * .5)*iWave+0.5;  
+   	c = vec2(0., A*s.y*sin((c.x*W+iGlobalTime*V)* 2.5)) + (c*2.-1.);  
+   	float g = max(abs(s.y/(pow(c.y, 0.3*sin(s.x*PI))))*T,  
+   				  abs(.1/(c.y+EPS)));  
+     vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), 
+                      g*s.w*.1, 
+                      g*g * 0.1, 
+                      1.);
+     float rWeight = 1.0;
+     float gWeight = 1.0;
+     float bWeight = 1.0;
+     if(iR < 0.0 || iR > 0.0){
+       rWeight = iR;
+     }
+     if(iG < 0.0 || iG > 0.0){
+       gWeight = iG;
+     }
+     if(iB < 0.0 || iB > 0.0){
+       bWeight = iB;
+     }    
+     wave.x *= rWeight;
+     wave.y *= gWeight;
+     wave.z *= bWeight;
+     return wave;
+ } 
+
 void main(void){
-vec2 c = gl_FragCoord.xy / iResolution.xy;
-	vec4 s = texture2D(iChannel0, c * .1)*iWave+0.5;
-	c = vec2(0., A*s.y*sin((c.x*W+iGlobalTime*V)* 2.5)) + (c*2.-1.);
-	float g = max(abs(s.y/(pow(c.y, 0.1*sin(s.x*PI))))*T*iFat,
-				  abs(.1/(c.y+EPS)));
-  vec4 wave = vec4(g+sin(iBeat+iGlobalTime*0.1)*g*s.y*(2.9+iBeat), g*s.w*.1, g*g, 1.);
-    wave.x *= (1.0*sin(iGlobalTime/2.0+iGlobalTime*0.1)*0.5+0.5);
-    wave.y *= (90.0*sin(iGlobalTime*0.1)*0.5+0.5);
-    wave.z *= 10.0*sin(iGlobalTime/3.0+iGlobalTime*0.1)*0.5+0.5;
-  
-	gl_FragColor = lineDistort(wave, c);
+  vec2 c = gl_FragCoord.xy / iResolution.xy;
+  gl_FragColor = lineDistort(oldmain(), c);
 }
