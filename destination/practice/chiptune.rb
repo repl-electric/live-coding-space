@@ -1,5 +1,5 @@
 ["instruments","shaderview","experiments", "log","samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
-set_volume! 0.2
+set_volume! 0.5
 live_loop :meloyd2 do
   sleep 1.125
   synth :dark_ambience, note: (ring :Gs2, _, _, _).tick, amp: 4.0
@@ -14,18 +14,24 @@ end
 
 
 live_loop :basszzz, sync: :thing do
-  _=[]
+  _=[[], 0.125]
   b = (ring
-       [chord(:Gs2,:dim, invert:-1)[0],4],  _, _, _, _,_,_,
-       [chord(:B2,:m)[0],  4],   _, _, _, _,_,_,
-       [chord(:D2,:M)[0..1],  4],  _, _, _, _,_,_,
-       [chord(:FS2,:m)[0..1], 4], _, _, _, _,_,_
+       [chord(:E2,:M),    0.5],  [[], 0.375],    #0.875           1.75
+       [chord(:Gs2,:dim), 0.25], _, _, _, [chord(:Fs2, :m),  0.125], _,
+       [chord(:Fs2, :m),  0.5],  [[],  0.375],
+       [chord(:D2, :M),   0.5],  [[],  0.375],
        ).tick(:n2)
-  synth :dsaw,    note: b[0], amp: 1.0, decay: 0.125, cutoff: 60,  attack: 0.001
-  sleep 0.125
-  synth :prophet, note: b[0], amp: 1.0, decay: b[1], cutoff: 50, attack: 0.001
-  synth :dsaw,    note: b[0], amp: 1.0, decay: b[1], cutoff: 50, attack: 0.001
-  sleep 0.5-0.25
+  with_transpose 0 do
+    synth :fm, note: b[0][2], amp: 2.9, decay: b[1]*2 , attack: 0.001
+    #sleep b[1] ? b[1] : 0.125
+    synth :dsaw, note: b[0][1], amp: 2.9, decay: b[1] , attack: 0.001, cutoff: 50, detune: -12
+  end
+  with_transpose -12 do
+    #synth :fm, note: b[0][2], amp: 2.9, decay: b[1] ? b[1]*2 : b[1], attack: 0.001
+    synth :prophet, note: b[0][0], amp: 0.3, decay: b[1], attack: 0.001, cutoff: 60
+    synth :dsaw,    note: b[0][0], amp: 0.3, decay: b[1], attack: 0.001, cutoff: 60
+  end
+  sleep b[1]
 end
 
 live_loop :hollower, sync: :thing do
@@ -42,10 +48,10 @@ live_loop :hollower, sync: :thing do
 
     with_fx :distortion, mix: 0.1 do
       if d == [:fs4, 1/4.0]
-        n = synth :gpa ,note: d[0],  amp: 8.0*1, release: d[1], note_slide: 0.25,attack: 0.0001, cutoff: 80
+        n = synth :gpa ,note: d[0],  amp: 8.0*2, release: d[1], note_slide: 0.25,attack: 0.0001, cutoff: 80
         control n, note: d[0]
       else
-        n = synth :gpa, note: d[0],  amp: 8.0*1, release: d[1], attack: 0.0001, cutoff: 100
+        n = synth :gpa, note: d[0],  amp: 8.0*2, release: d[1], attack: 0.0001, cutoff: 100
       end
       synth :hollow, note: (ring
                             _, _, _, _,
