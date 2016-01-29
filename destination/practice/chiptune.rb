@@ -1,19 +1,7 @@
 ["instruments","shaderview","experiments", "log","samples"].each{|f| require "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
 set_volume! 0.5
-live_loop :meloyd2 do
-  sleep 1.125
-  synth :dark_ambience, note: (ring :Gs2, _, _, _).tick, amp: 4.0
-end
 
-comment do
-  [  :fs3, :Fs3, _,:Fs3, :Cs3, :E4, :E4,
-     :fs3, :Fs3, _,:Fs3, :Cs3, :E4,
-     :fs3, :Gs3, _,:Fs3, :Cs3, :E4,
-     :fs3, :Gs3, _,:Fs3, :Cs3, :fs4]
-end
-
-
-live_loop :basszzz, sync: :thing do
+live_loop :bazz, sync: :thing do
   _=[[], 0.125]
   b = (ring
        [chord(:Gs2, :m),   0.5],             _,_, [[:Cs2], 0.125],
@@ -21,17 +9,12 @@ live_loop :basszzz, sync: :thing do
        [chord(:A2,  :M),   0.875-0.125],          [[:B1], 0.125],
        [chord(:Gs2, :m, invert: 1), 0.75],  [[], 0.125],
 
-       #       [chord(:Fs2,:m),   0.5], [[], 0.375],    #0.875           1.75
-       #       [chord(:Gs2,:dim), 0.25], _, _, _, [chord(:Fs2, :m),  0.125], _,
-       #       [chord(:D2, :M),  0.5], [[],  0.375],
-       #       [chord(:E2, :M, invert: 1), 0.5],  [[],  0.375],
        ).tick(:n2)
   with_transpose 0 do
     if b[0].length == 1
-      synth :dark_sea_horn, note: b[0][0], amp: 4.0, decay: b[1]*4 , attack: 0.001
+      synth :fm, note: b[0][0], amp: 4.0, decay: b[1]*4 , attack: 0.001
     end
     synth :dark_sea_horn, note: b[0][0], amp: 4.9, decay: b[1]*4 , attack: 0.001
-    #sleep b[1] ? b[1] : 0.125
     with_fx(:slicer, phase: 0.5, probability: 0, invert_wave: 1) do
       synth :dsaw, note: b[0], amp: 2.9, decay: b[1]*4 , attack: 0.001
     end
@@ -40,7 +23,6 @@ live_loop :basszzz, sync: :thing do
     end
   end
   with_transpose -12 do
-    #synth :fm, note: b[0][2], amp: 2.9, decay: b[1] ? b[1]*2 : b[1], attack: 0.001
     synth :prophet, note: b[0][0], amp: 0.3, decay: b[1]*4, attack: 0.001, cutoff: 60
     synth :dsaw,    note: b[0][0], amp: 0.3, decay: b[1]*4, attack: 0.001, cutoff: 60
   end
@@ -48,7 +30,7 @@ live_loop :basszzz, sync: :thing do
 end
 
 live_loop :hollower, sync: :thing do
-  with_transpose 12 do
+  with_transpose 0 do
     d = (ring
          [:gs3, 1], [:gs3, 0.5], [:A3, 0.5], [:gs3, 1.0], [:Cs3, 0.5],        #2nd(G A C)  G B  D    F A C
          [:gs3, 1], [:gs3, 0.5], [:A3, 0.5], [:gs3, 1.0], [:Cs3, 0.5],
@@ -58,7 +40,7 @@ live_loop :hollower, sync: :thing do
     d[1] = d[1]/4.0
 
     with_fx(:reverb, room: 0.9, mix: 0.4, damp: 0.5) do |r_fx|
-      sample (ring Frag[/coil/, /f#/, 2], nil).tick(:s), rate: 4.0, amp: 8.0 if d[0] == :fs4
+      #sample (ring Frag[/coil/, /f#/, 2], nil).tick(:s), rate: 2.0, amp: 8.0 if d[0] == :fs4
   end
 
   #  sample Ether[/noise/,[1,1,1]].tick(:sample), cutoff: 120, amp: 0.5
@@ -68,7 +50,10 @@ live_loop :hollower, sync: :thing do
       n = synth :gpa ,note: d[0],  amp: 8.0*4, release: d[1], note_slide: 0.25,attack: 0.0001, cutoff: 80
       control n, note: d[0]
     else
-      n = synth :gpa, note: d[0],  amp: 8.0*4, release: d[1], attack: 0.0001, cutoff: 100
+      with_transpose 0 do
+
+        n = synth :gpa, note: d[0],  amp: 8.0*15, release: d[1], attack: 0.0001, cutoff: 130
+      end
     end
     synth :hollow, note: (ring
                           _, _, _, _,
@@ -78,8 +63,6 @@ live_loop :hollower, sync: :thing do
                           :Cs4, :E5, :CS4, :CS4,
                           :Cs4, :E5, :FS3, :FS3,
     ).tick(:n2), amp: 8.5*0, release: d[1]/4.0, cutoff: (range 80,100, 5).tick(:c)
-
-
 end
 sleep d[1]
 end
@@ -88,12 +71,9 @@ end
 with_fx :reverb do
   live_loop :thing do
     _=nil
-    l = (ring
-         1.0, 0.5, 0.5, 0.5, 0.5, 1.0, 0.5).tick/4.0   #4.5  1.125
-    # l = (ring 1.0, 0.5, 0.5, 1.0, 0.5).tick/4.0
+    l = (ring 1.0, 0.5, 0.5, 0.5, 0.5, 1.0, 0.5).tick/4.0
     n = (ring
-         :e3
-
+         :e3,_,_,_# :Gs4, :fs3
          ).tick(:note)
     n2 = (ring
           _, _, _,_, _, _,
@@ -102,16 +82,16 @@ with_fx :reverb do
           _, _, _,:FS4, _, _,
           ).tick(:note2)
     with_transpose [5,0].choose do
-      #   synth :hollow, note: n2, release: 1.0, amp: 4.0*0
+      synth :hollow, note: n2, release: 1.0, amp: 4.0*1
     end
 
     with_fx :distortion, mix: 0.2, distort: (range 0.1, 0.7, 0.1).tick(:r) do
       with_fx :bitcrusher, bits: (range 4,16,1).tick(:b), mix: 0.2 do
-        #      synth :dsaw, note: n, release: l, cutoff: (rrand 80,90), amp: 0.6*0
+        synth :dsaw, note: n, release: l, cutoff: (rrand 80,90), amp: 0.6*0
       end
     end
-    # synth :tri, note: n, release: l, amp: 1 *0
-    # synth :gpa, note: n, release: l*2, amp: 1 *0
+    #    synth :tri, note: n, release: l, amp: 1 *1
+    #    synth :gpa, note: n, release: l*2, amp: 1 *1
     sleep l
   end
 end
@@ -139,17 +119,6 @@ live_loop :voice4, sync: :voice2 do
   }
 end
 
-live_loop :bass, sync: :thing do
-  n = [:Fs2].shuffle
-  #synth :dsaw, note: n[0], attack: 0.001, decay: 0.1, release: 0.1
-  #synth :dsaw, note: (ring :FS1, :A1, :D1, :E1).tick, decay: 0.2, cutoff: 70, attack: 0.001
-  sleep 0.25
-  # synth :dsaw, note: n[0], attack: 0.001, decay: 0.5, release: 0.5, cutoff: 60
-  with_transpose 12*2 do
-    #   synth :growl, note: (ring :FS1, :A1, :D1, :E1).look, decay: 1.0, cutoff: 60
-  end
-  sleep (1.125*2)- 0.25
-end
 live_loop :hats do
   sleep 0.25
   if spread(7,11).tick
