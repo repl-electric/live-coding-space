@@ -133,9 +133,12 @@ live_loop :hats do
 end
 
 live_loop :beat, sync: :thing do
-  sample Fraz[/kick/,[1,0,0,0]].tick(:sample), cutoff: 100, amp: 1.0
-  sleep 1/2.0
-  sample Frag[/kick/,[1,0]].tick(:sample), cutoff: 100, amp: 1.0
-  sample Ether[/snare/,[0,0]].tick(:sample), cutoff: 100, amp: 1.0
-  sleep 1/2.0
+    sample Fraz[/kick/,[1,0,0,0]].tick(:sample), cutoff: 100, amp: 1.0
+    sleep 1/2.0
+    sample Frag[/kick/,[1,0]].tick(:sample), cutoff: 100, amp: 1.0
+
+    with_fx :echo, phase: 0.25/2.0, mix: 0.0 do
+      sample Ether[/snare/,[0,0]].tick(:sample), cutoff: 135, amp: 1.0
+    end
+    sleep 1/2.0
 end
