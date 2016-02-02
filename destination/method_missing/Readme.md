@@ -8,7 +8,7 @@
 
 module MissingMethod
   def self.method_missing(where, *are, &you)
-    missing
+    i_am_right_here
   end
 end
 
