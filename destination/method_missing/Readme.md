@@ -9,7 +9,7 @@
 
 ```ruby
 module MissingMethod
-  def self.method_missing(method_sym, *arguments, &block)
+  def self.method_missing(where, *are, &you)
     missing
   end
 end
