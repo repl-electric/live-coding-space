@@ -115,6 +115,28 @@ with_fx :reverb do
     end
   end
 
+  live_loop :beat, sync: :thing do
+    florish = spread(1,8, rotate: 0).tick(:flo)
+    if florish
+      sample Fraz[/kick/,[2,3]].tick(:sample), cutoff: 100, amp: 1.0
+      # sample Ether[/snare/,[3,3]].tick(:sample), cutoff: 110, amp: 1.0
+      sleep 1/2.0/2.0
+      sample Fraz[/kick/,[2,4,4,4]].tick(:sample), cutoff: 120, amp: 1.0
+      sleep 1/2.0/2.0
+      sample Frag[/kick/,[4,5]].tick(:sample), cutoff: 130, amp: 1.0 if dice(6) > 3
+      sample Ether[/snare/,[2,2]].tick(:sample), cutoff: 135, amp: 1.0
+      sleep 1/2.0
+    else
+      sample Fraz[/kick/,[1,0,0,0]].tick(:sample), cutoff: 100+rand, amp: 1.0
+      sleep 1/2.0
+      sample Frag[/kick/,[1,0]].tick(:sample), cutoff: 100+rand, amp: 1.0
+      with_fx :echo, phase: 0.25/2.0, mix: 0 do
+        sample Ether[/snare/,[0,0]].tick(:sample), cutoff: 135, amp: 1.0
+      end
+      sleep 1/2.0
+    end
+  end
+
   live_loop :voice2, sync: :thing do
     n = (ring :Fs1, :A1, :Cs1, :D2, :E1).tick(:c)
 
@@ -163,26 +185,4 @@ with_fx :reverb do
     sleep 1/2.0
     sample Mountain[/microperc/,[6,6]].tick(:sample2), cutoff: 130, amp: 1.5
     sleep 1/2.0
-  end
-
-  live_loop :beat, sync: :thing do
-    florish = spread(1,8, rotate: 0).tick(:flo)
-    if florish
-      sample Fraz[/kick/,[2,3]].tick(:sample), cutoff: 100, amp: 1.0
-      # sample Ether[/snare/,[3,3]].tick(:sample), cutoff: 110, amp: 1.0
-      sleep 1/2.0/2.0
-      sample Fraz[/kick/,[2,4,4,4]].tick(:sample), cutoff: 120, amp: 1.0
-      sleep 1/2.0/2.0
-      sample Frag[/kick/,[4,5]].tick(:sample), cutoff: 130, amp: 1.0 if dice(6) > 3
-      sample Ether[/snare/,[2,2]].tick(:sample), cutoff: 135, amp: 1.0
-      sleep 1/2.0
-    else
-      sample Fraz[/kick/,[1,0,0,0]].tick(:sample), cutoff: 100+rand, amp: 1.0
-      sleep 1/2.0
-      sample Frag[/kick/,[1,0]].tick(:sample), cutoff: 100+rand, amp: 1.0
-      with_fx :echo, phase: 0.25/2.0, mix: 0 do
-        sample Ether[/snare/,[0,0]].tick(:sample), cutoff: 135, amp: 1.0
-      end
-      sleep 1/2.0
-    end
   end
