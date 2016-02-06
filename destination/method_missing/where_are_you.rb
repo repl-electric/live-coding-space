@@ -55,7 +55,7 @@ live_loop :hollower, sync: :thing do
     #sample Ether[/noise/,[1,1,1]].tick(:sample), cutoff: 120, amp: 0.5
 
     with_fx :distortion do
-      if d == [:fs4, 1/4.0]
+      if d[0] == [:fs4]
         #n = synth :gpa ,note: d[0],  amp: 8.0*1, release: d[1], note_slide: 0.25,attack: 0.0001, cutoff: 80
         #control n, note: d[0]
         #n = synth :plucked, note: (knit :f4,1,_,3).tick(:sour),  amp: 0.5*1, release: d[1]*4, note_slide: 0.25,attack: 0.0001
