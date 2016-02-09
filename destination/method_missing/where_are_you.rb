@@ -136,6 +136,22 @@ with_fx :reverb do
       sleep 1/2.0
     end
   end
+  
+live_loop :beat, sync: :thing do
+    florish = spread(1,8, rotate: 0).tick(:flo)
+    sample Fraz[/kick/,[1,0,0,0]].tick(:sample), amp: 10.0, cutoff: 135
+    sleep 1.0/2.0
+    sample Frag[/kick/,[1,0]].tick(:sample), amp: 1.0, cutoff: 80
+    #   with_fx(:reverb, room: 0.3, mix: 0.4, damp: 0.5) do |r_fx|
+    with_fx :slicer, phase: (ring 0.5, 1.0, 1.0, 0.25).tick(:pahse)/1.0, mix: 0.5 do
+    with_fx :echo, phase: 0.25/2.0, mix: 0.0 do
+      sample Ether[/snare/,[0,0]].tick(:sample), cutoff: 100, amp: 2.0
+    end
+  end
+  #  end
+  sleep 1/2.0
+end
+
 
   live_loop :voice2, sync: :thing do
     n = (ring :Fs1, :A1, :Cs1, :D2, :E1).tick(:c)
