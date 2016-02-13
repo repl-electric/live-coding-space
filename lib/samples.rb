@@ -36,6 +36,7 @@ def self.matches(samples, matchers)
 end
 end
 
+ROOT = "/Users/josephwilk/Workspace/music/samples/"
 module Organ
   def self.pick(a)
     self[a]
