@@ -76,13 +76,13 @@ module Mountain
   end
 end
 
-module MountainLoop
-  def self.pick(a)
-    self[a]
-  end
+module Decimated
   def self.[](*a)
-    samples = Dir["/Users/josephwilk/Workspace/music/samples/loops/Mountain/**/*.wav"]
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Decimated/**/*.wav"]
     Sample.matches(samples, a)
+  end
+  def self.pick(a)
+    self[a][0]
   end
 end
 
