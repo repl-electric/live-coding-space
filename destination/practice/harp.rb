@@ -32,6 +32,18 @@ live_loop :bass do
   sleep 1/2.0
 end
 
+live_loop :pad do
+  sample CineElec[/f#m_ColdPad/].tick(:sample), cutoff: 130, amp: 1.0
+  sleep 16
+end
+
+live_loop :perc_added do
+  with_fx(:slicer, phase: 0.25*2, probability: 0) do
+    sample CineElec[/80_OrganicPercs/,6], cutoff: 100, amp: 1.0, beat_stretch: 16
+  end
+  sleep 16
+end
+
 live_loop :kickit, sync: :intro do
   sample CineElec[/kick/,[0,0]].tick(:sample), cutoff: 100, amp: 2.5
   sleep 1
