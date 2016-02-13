@@ -265,6 +265,36 @@ module CineAmbi
   end
 end
 
+module CineElec
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/CineElec/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Fractured
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Fractured/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Cycles
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Cycles/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module FutureE
   def self.pick(a)
     self[a]
