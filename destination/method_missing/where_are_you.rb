@@ -38,6 +38,7 @@ live_loop :bazz, sync: :thing do
   sleep b[1]
 end
 
+with_fx(:reverb, room: 0.9, mix: 0.4, damp: 0.5) do |r_fx|
 live_loop :hollower, sync: :thing do
   with_transpose 0 do
     d = (ring #7 per ring   2   2
@@ -50,7 +51,6 @@ live_loop :hollower, sync: :thing do
     # d = (ring  [:fs4, 1], [:gs3, 0.5], [_, 0.5], [:A3, 0.5], [:gs3, 1.0], [:Cs3, 0.5]).tick
     d[1] = d[1]/4.0
 
-    with_fx(:reverb, room: 0.9, mix: 0.4, damp: 0.5) do |r_fx|
     #sample (ring Frag[/coil/, /f#/, 2], nil).tick(:s), rate: 2.0, amp: 8.0 if d[0] == :fs4
     #sample Ether[/noise/,[1,1,1]].tick(:sample), cutoff: 120, amp: 0.5
 
