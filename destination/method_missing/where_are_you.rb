@@ -176,7 +176,7 @@ end
     }
   end
 
-  live_loop :hats do
+  live_loop :hats, sync: :thing do
     sleep 0.25
     if spread(7,11).tick
       sample Dust[/hat/,[0,0,0,1]].tick(:sample), cutoff: 85+rand, amp: 0.9, start: rrand(0.0,0.05)
