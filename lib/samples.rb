@@ -306,6 +306,16 @@ module FutureE
   end
 end
 
+module MagicDust
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/MagicDust/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module S
 def self.halixic              
   csample "halixic.wav"
