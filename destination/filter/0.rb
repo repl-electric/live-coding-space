@@ -86,43 +86,12 @@ end
 
 live_loop :skitter,sync: :kick do
   sample (ring MagicDust[/_HI/,[34,_,19,22]].tick(:sample), _, _).tick(:s),  amp: 1.0*0.25+rand*0.05, pan: Math.sin(vt*16)/2.0
-#  with_fx :wobble, phase: 16 do
- #   sample Frag[/coil/,/f#/,3], amp: 2.5, beat_stretch: 32
-  #end
   sleep 1/8.0
 end
 
 live_loop :skat, sync: :kick do
-  sample Junk[/perc/,[0,0]].tick(:sample), amp: 0.25*1, rpitch: -8
+  #sample Junk[/perc/,[0,0]].tick(:sample), amp: 0.25*1, rpitch: -8
   sleep 32.0
-end
-
-live_loop :high, sync: :kick do
-  score = (knit :E3,8, :D2,8).tick
-  with_fx :reverb, mix: 0.1 do
-    #synth :gpa, note: score, decay: 0.5, release: 0.01, amp: 0.2, attack: 0.1, wave: 4
-  end
-  sleep 2
-  #synth :plucked, note: score, decay: 0.5, release: 0.01, amp: 0.5, attack: 0.02
-  sleep 1
-  with_transpose 12 do
-    #synth :plucked, note: score, decay: 0.5, release: 0.01, amp: 0.8, attack: 0.1
-  end
-  sleep 2- 1
-end
-
-live_loop :pl, sync: :kick do
-  score = (ring [0.25], [0.25], [0.125], [0.125], [0.125], [0.125])
-  note = score.tick
-  with_fx :distortion, mix: (range 0.0, 0.1, 0.001).tick(:d) do
-    #synth :plucked, note: (knit
-    #                       chord(:FS3, :m11),32,
-    #                       chord(:D3, :M7),32,
-    #                       chord(:E3, :M7),32
-    #).tick.choose,
-    #  amp: 0.0, release: note[-1], attack: 0.05
-  end
-  sleep note[-1]
 end
 
 live_loop :bassline, sync: :kick do
@@ -158,16 +127,23 @@ live_loop :kick do
                :D1,:D1,:E1,:Fs1, :Cs1, :Cs1,:D1,:Cs1,  :B0,:B0,:Cs1,:A0,
                :gs0,:gs0,:B0,:Fs0, :Fs0,:Fs0,:A0,:B0,  :Cs1,:Cs1,:E1,:E1, :E1,:Cs1,:B0,:B0).tick(:b)
   puts note_inspect(bass_note)
-  with_fx :lpf, cutoff: 50*2, mix_slide: 0.5, mix: 1.0 do |lpf_fx|
-    (bass_note == :Fs0 || bass_note == :Fs1) ? control(lpf_fx, mix: 0.0) : control(lpf_fx, mix: 1.0)
-    with_fx :distortion, mix: 0.8 do
+  with_fx :lpf, cutoff: 50*2, mix_slide: 1.0, mix: 1.0 do |lpf_fx|
+    with_fx :distortion, mix_slide: 0.5, mix: 0.8 do |dis_fx|
+      if (bass_note == :Cs1 || bass_note == :Fs0)
+        control(lpf_fx, mix: 0.0)
+        control(dis_fx, mix: 1.0)
+      else
+        control(lpf_fx, mix: 1.0)
+        control(dis_fx, mix: 0.8)
+      end
+      
       with_fx :reverb, decay: 8.0 do
         with_transpose -12 do
           #synth :chiplead, note: bass_note+0.0, amp: 0.2*1, decay: 0.5
           synth :chipbass, note: bass_note+0.0, amp: 0.5*1, decay: 0.5
         end
         with_transpose 12*1 do
-          synth :gpa, wave: 4, note: bass_note, amp: 1, decay: 0.125
+          #synth :gpa, wave: 4, note: bass_note, amp: 1, decay: 0.125
           synth :growl, note: bass_note, attack: 0.001, amp: 0.6*1, decay: 0.25
         end
       end
@@ -210,7 +186,8 @@ live_loop :kick do
         sleep 1/4.0
         #synth :gpa, note: s.tick, wave: 4, release: 0.125, attack: 0.001
         sleep 1/4.0
-        sample Corrupt[/snare/,0], amp: 0.2#, cutoff: 40
+        #sample Corrupt[/kick/,4], amp: 0.4
+        sample Corrupt[/snare/,0], amp: 0.3#, cutoff: 40
         #sample Corrupt[/hit/,9], amp: 0.8 if spread(1,32).look
         #        synth :gpa, note: s.tick[0], wave: 0, release: s.look[-1], attack: 0.001, amp: 1
         sleep 1/4.0
