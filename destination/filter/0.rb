@@ -32,21 +32,28 @@ with_fx(:reverb, room: 0.6, mix: 0.8, damp: 0.5, damp_slide: 1.0, mix_slide: 0.1
         #        sample Instruments[/violin/,(ring 'fs5', 'd4', 'E4').tick(:vn),/1/].tick(:sample), amp: 0.015, attack: 2.0
       end
     end
-    
-    s = synth :beep, note: n[0]
-    s = synth :hollow, note: n[0], release: n[-1]/2.0, decay: n[-1]/2.0 + 5, amp: 1.0, amp_slide: 0.5, attack: 0.2
-    d = nil
-    with_transpose -12 do
-      #d = synth :dark_sea_horn, note: (ring n[0][0],_).tick(:dark), release: 16, amp: 1.5, cutoff: 100, note_slide: 2.0
-    end
-    
-    n[-1].times{|idx|
-      if s.respond_to? :sub_nodes
-        control r_fx, damp: rand, mix: rand; s.sub_nodes.each{|sy| control sy, amp: rrand(0.5,1.0)}
-        #control(d, note: n[0].choose-12*2) if d && idx % 8 == 0
+    sample Sop[/sustain/,[0..3]].tick(:sample), amp: 1.0
+    with_fx :krush, mix: 0.05, mix_slide: 2 do |k_fx|
+      
+      s = synth :beep, note: n[0]
+      s = synth :hollow, note: n[0], release: n[-1]/2.0, decay: n[-1]/2.0 + 5, amp: 1.0, amp_slide: 0.5, attack: 0.2
+      d = nil
+      with_transpose -12 do
+        #d = synth :dark_sea_horn, note: (ring n[0][0],_).tick(:dark), release: 16, amp: 1.5, cutoff: 100, note_slide: 2.0
       end
-      sleep 1
-    }
+      
+      
+      n[-1].times{|idx|
+        sample Sop[/Polysustains/, /release/, /01_oos/, /04/], amp: 2.0 if idx < 4
+        
+        if s.respond_to? :sub_nodes
+          control r_fx, damp: rand, mix: rand; s.sub_nodes.each{|sy| control sy, amp: rrand(0.5,1.0)}
+          #control(d, note: n[0].choose-12*2) if d && idx % 8 == 0
+        end
+        sleep 1
+        control k_fx, mix: 0
+      }
+    end
   end
 end
 
