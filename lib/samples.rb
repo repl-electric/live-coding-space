@@ -336,6 +336,17 @@ module Dusty
   end
 end
 
+module Tech
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Analogue/**/*.wav"] + Dir["/Users/josephwilk/Workspace/music/samples/Pulse/**/*.wav"] +
+Dir["/Users/josephwilk/Workspace/music/samples/ModTech/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Sink
   def self.pick(a)
     self[a]
