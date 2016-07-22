@@ -177,6 +177,15 @@ module Sop
     Sample.matches(samples, a)
   end
 end
+module Alt
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Alto/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
 module Dust
   def self.pick(a)
     self[a][0]
@@ -343,6 +352,36 @@ module Tech
   def self.[](*a)
     samples = Dir["/Users/josephwilk/Workspace/music/samples/Analogue/**/*.wav"] + Dir["/Users/josephwilk/Workspace/music/samples/Pulse/**/*.wav"] +
 Dir["/Users/josephwilk/Workspace/music/samples/ModTech/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Ambius
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambius/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Circles
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/CircleBells/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Twine
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/TwineBass/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
