@@ -1,7 +1,7 @@
 require "mysql2"
 module Dsp
   def self.query(sql)
-    SonicPi::Core::RingVector.new(Dsp.connection.query(sql).to_a)
+    SonicPi::Core::RingVector.new(Dsp.connection.query(sql,:symbolize_keys => true).to_a)
   end
   
   def self.connection()
