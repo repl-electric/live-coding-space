@@ -361,7 +361,7 @@ module Ambius
     self[a]
   end
   def self.[](*a)
-    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambius/**/*.wav"]
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Ambius/Samples/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
@@ -371,7 +371,7 @@ module Circles
     self[a]
   end
   def self.[](*a)
-    samples = Dir["/Users/josephwilk/Workspace/music/samples/CircleBells/**/*.wav"]
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Circle Bells/Samples/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
@@ -381,7 +381,7 @@ module Twine
     self[a]
   end
   def self.[](*a)
-    samples = Dir["/Users/josephwilk/Workspace/music/samples/TwineBass/**/*.wav"]
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/TwineBass/Samples/**/*.wav"]
     Sample.matches(samples, a)
   end
 end
