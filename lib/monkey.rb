@@ -11,4 +11,7 @@ class SonicPi::Core::RingVector
   def reject(&fun)
     SonicPi::Core::RingVector.new(self.to_a.reject(&fun))
   end
+  def select(&fun)
+    SonicPi::Core::RingVector.new(self.to_a.select(&fun))
+  end
 end
