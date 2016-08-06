@@ -1,5 +1,6 @@
 use_bpm 120
 _=nil
+shader :iWave, 1.0
 max_samples = 500
 max_count = 500
 octave = 3
@@ -17,8 +18,8 @@ puts (@perc_c+@perc_f+@perc_a+@perc_d+@perc_g+@perc_e).count
 def tuned_perc(note)
   #puts note
   case note
-  when "F#" then  ring(*@perc_f.to_a.select{|p| p["path"] =~ /alto|sop/})
-  when "C#" then  ring(*@perc_c.to_a.select{|p| p["path"] =~ /alto|sop/})
+  when "F#" then  ring(*@perc_f.to_a.select{|p| p[:path] =~ /alto|sop/})
+  when "C#" then  ring(*@perc_c.to_a.select{|p| p[:path] =~ /alto|sop/})
   when "A" then  @perc_a# ring(*@perc_a.to_a.select{|p| p["path"] =~ /alto|sop/})
   when "D" then  @perc_d# ring(*@perc_d.to_a.select{|p| p["path"] =~ /kick/})
   when "E" then  @perc_e# ring(*@perc_e.to_a.select{|p| p["path"] =~ /kick/})
@@ -53,9 +54,9 @@ live_loop :voices_rolling, sync: :heart do
     with_fx :krush do
       with_fx :wobble, phase: 32 do
         sleep 1/2.0
-        sample  ring(*@perc_f.to_a.select{|p| p["path"] =~ /alto/}
+        sample  ring(*@perc_f.to_a.select{|p| p[:path] =~ /alto/}
                      # @perc_c.to_a.select{|p| p["path"] =~ /alto|sop/}
-                     ).look["path"], amp: 1.0, cutoff: 80
+                     ).look[:path], amp: 1.0, cutoff: 80
         sleep 1/2.0
       end
     end
@@ -91,7 +92,7 @@ live_loop :perc_part, sync: :heart do
             pos = [ratio_on(p1), ratio_off(p1)]
             pos.shuffle! if dice(32) > 1
             nudge = 0.0#(n == "E") ? (p1["length"]*0.1 / p1["length"])  : 0.0
-            sample p1["path"], start: pos[0], finish: pos[1]+nudge, amp: 2.0
+            sample p1[:path], start: pos[0], finish: pos[1]+nudge, amp: 2.0
           end
           n =  knit("A",22, "C#",22, "F#",22, "G#",22).tick(:t2i)
           p1 = tuned_perc(n).take(32).look
@@ -99,7 +100,7 @@ live_loop :perc_part, sync: :heart do
             #synth :plucked, note: n.gsub("#","s"), decay: 0.125, attack: 0.001, cutoff: 120, cutoff:  ramp(* range(0, 135, 5)).tick(:Ramspey)
             pos = [ratio_on(p1), ratio_off(p1)]
             pos.shuffle! if dice(32) > 1
-            sample p1["path"], start: pos[0], finish: pos[1], amp: 2.0
+            sample p1[:path], start: pos[0], finish: pos[1], amp: 2.0
           end
         end
         sleep 0.25
@@ -180,14 +181,14 @@ end
 
 def ratio_on(smp)
   if smp
-    dur = sample_duration(smp["path"])
-    smp["onset"]/dur+0.0
+    dur = sample_duration(smp[:path])
+    smp[:onset]/dur+0.0
   end
 end
 def ratio_off(smp)
 if smp
-  dur = sample_duration(smp["path"])
-  smp["offset"]/dur+0.0
+  dur = sample_duration(smp[:path])
+  smp[:offset]/dur+0.0
   end
 end
 
