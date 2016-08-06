@@ -1,4 +1,5 @@
 module Sample
+  
 def self.matches(samples, matchers)
   samples = samples.sort!
   r = matchers.reduce(samples) do |filtered_samples,filter|
