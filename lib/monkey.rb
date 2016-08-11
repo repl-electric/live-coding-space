@@ -15,6 +15,15 @@ class SonicPi::Core::RingVector
     SonicPi::Core::RingVector.new(self.to_a.select(&fun))
   end
 end
+
+def smp(*args)
+  sample_name = args.first
+  if sample_name =~ /kick/
+    shader :decay, :iBeat, 1.0, 0.001 
+  end
+  sample(*args)
+end
+
 def ratio_on(smp)
   if smp
     dur = sample_duration(smp[:path])
