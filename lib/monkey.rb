@@ -15,6 +15,18 @@ class SonicPi::Core::RingVector
     SonicPi::Core::RingVector.new(self.to_a.select(&fun))
   end
 end
+def ratio_on(smp)
+  if smp
+    dur = sample_duration(smp[:path])
+    smp[:onset]/dur+0.0
+  end
+end
+def ratio_off(smp)
+if smp
+  dur = sample_duration(smp[:path])
+  smp[:offset]/dur+0.0
+  end
+end
 module Shaderview
   def self.voc
     shader :shader, "voc.glsl", "bits.vert", "points", 10000
