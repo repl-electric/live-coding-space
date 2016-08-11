@@ -15,16 +15,16 @@ module Samples
   def self.sql(query="")
     Dsp.query("select * from samples where #{query}")
   end
-  def self.find(name: nil, note: nil, max: nil, min: nil)
+  def self.find(path: nil, note: nil, max: nil, min: nil)
     @@cache ||= {}
-    k = "#{note}#{name}#{max}#{min}"
+    k = "note#{note}path#{path}max#{max}min#{min}"
     if !@@cache.has_key?(k)
-      query = ""
-      query = "name like '#{name}'" if name
-      query += " AND note1=#{note}" if note
-      query += " AND length < #{min}" if min
-      query += " AND length > #{max}" if max
-      r = Dsp.query("select * from notes_fine where #{query}")
+      query = []
+      query << "path like '%#{path}%'" if name
+      query << "note1='#{note}'" if note
+      query << "length < #{min}" if min
+      query << "length > #{max}" if max
+      r = Dsp.query("select * from samples where #{query.join(" AND ")}")
       @@cache[k] = r
     end
     @@cache[k]
@@ -40,13 +40,14 @@ module NoteSlices
   end
   def self.find(note: nil, octave: nil, max: nil, min: nil)
     @@cache ||= {}
-    k = "#{note}#{octave}#{max}#{min}"
+    k = "note#{note}octave#{octave}max#{max}min#{min}"
     if !@@cache.has_key?(k)
-      query = "note='#{note}'"
-      query += " AND octave=#{octave}" if octave
-      query += " AND length < #{min}" if min
-      query += " AND length > #{max}" if max
-      r = Dsp.query("select * from notes_fine where #{query}")
+      query = []
+      query << "note='#{note}'" if note
+      query << "octave=#{octave}" if octave
+      query << "length < #{min}" if min
+      query << "length > #{max}" if max
+      r = Dsp.query("select * from notes_fine where #{query.join(" AND ")}")
       @@cache[k] = r
     end
     @@cache[k]
