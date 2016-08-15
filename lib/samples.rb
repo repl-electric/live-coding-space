@@ -187,6 +187,15 @@ module Alt
     Sample.matches(samples, a)
   end
 end
+module Bass
+  def self.pick(a)
+    self[a][0]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Bass/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
 module Dust
   def self.pick(a)
     self[a][0]
