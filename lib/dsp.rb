@@ -17,7 +17,7 @@ module Samples
   end
   def self.find(path: nil, note: nil, max: nil, min: nil)
     @@cache ||= {}
-    k = "note#{note}path#{path}max#{max}min#{min}"
+    k = "samples[note#{note}path#{path}max#{max}min#{min}]"
     if !@@cache.has_key?(k)
       query = []
       query << "path like '%#{path}%'" if name
@@ -40,7 +40,7 @@ module NoteSlices
   end
   def self.find(note: nil, octave: nil, min: nil, max: nil)
     @@cache ||= {}
-    k = "note#{note}octave#{octave}max#{max}min#{min}"
+    k = "noteslices[note#{note}octave#{octave}max#{max}min#{min}]"
     if !@@cache.has_key?(k)
       query = []
       query << "note='#{note}'" if note
