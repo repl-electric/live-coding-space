@@ -38,15 +38,15 @@ module NoteSlices
   def self.sql(query="")
     Dsp.query("select * from notes_fine where #{query}")
   end
-  def self.find(note: nil, octave: nil, max: nil, min: nil)
+  def self.find(note: nil, octave: nil, min: nil, max: nil)
     @@cache ||= {}
     k = "note#{note}octave#{octave}max#{max}min#{min}"
     if !@@cache.has_key?(k)
       query = []
       query << "note='#{note}'" if note
       query << "octave=#{octave}" if octave
-      query << "length < #{min}" if min
-      query << "length > #{max}" if max
+      query << "length > #{min}" if min
+      query << "length < #{max}" if max
       r = Dsp.query("select * from notes_fine where #{query.join(" AND ")}")
       @@cache[k] = r
     end
