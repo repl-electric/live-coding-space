@@ -34,6 +34,31 @@ module Samples
   end
 end
 
+module SampleBeats
+  def self.sql(query="")
+    Dsp.query("select * from track where #{query}")
+  end
+  def self.find(path: nil, collection: collection)
+    @@cache ||= {}
+    k = "path[query]"
+    if !@@cache.has_key?(k)
+      query = []
+      query << "path like '#{path}'" if path
+      query << "collection like '#{path}'" if collection
+      r = Dsp.query("select * from track where #{query.join(" AND ")} ORDER BY beat")
+      if r && !r.emtpy?
+        beats = r.map{|r| r[:beat]}
+        r = {beats: beats}.merge(r[0])
+      end
+      @@cache[k] = r
+    end
+    @@cache[k]
+  end
+  def self.flush
+    @@cache = {}
+  end
+end
+
 module NoteSlices
   def self.sql(query="")
     Dsp.query("select * from notes_fine where #{query}")
