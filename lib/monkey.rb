@@ -17,11 +17,22 @@ class SonicPi::Core::RingVector
 end
 
 def smp(*args)
-  sample_name = args.first
-  if sample_name =~ /kick/
+  sample_thing = args.first
+  smp_name = if sample_thing.is_a?(Hash)
+    sample_file = sample_thing[:path]
+    start = ratio_on(sample_thing)
+    fini = ratio_off(sample_thing)
+    options = {start: start, finish: fini}.merge(args.last)
+    puts options
+    sample sample_file, *[options]
+    sample_file
+  else
+    sample(*args)
+    sample_thing
+  end
+  if smp_name =~ /kick/
     shader :decay, :iBeat, 1.0, 0.001 
   end
-  sample(*args)
 end
 
 def ratio_on(smp)
