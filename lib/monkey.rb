@@ -60,7 +60,7 @@ module Shaderview
     shader :iDistort, 100.0
   end
   def self.wave
-    shader :shader, "wave.glsl", "bits.vert", "points", 10000
+    shader :shader, "wave.glsl", "bits.vert", "points", 5000 #TOOOOOO MANY DOTS
     shader [:iR, :iB, :iG], 3.0
     shader :iForm, 0.01
     shader :iDir, 1.0
