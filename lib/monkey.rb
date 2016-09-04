@@ -22,8 +22,12 @@ def smp(*args)
     sample_file = sample_thing[:path]
     start = ratio_on(sample_thing)
     fini = ratio_off(sample_thing)
-    options = {start: start, finish: fini}.merge(args.last)
-    puts options
+    options = {start: start, finish: fini}
+    options = if args.length > 1
+      options.merge(args.last)
+    else
+      options
+    end
     sample sample_file, *[options]
     sample_file
   else
