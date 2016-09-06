@@ -66,7 +66,7 @@ module NoteSlices
   def self.sql(query="")
     Dsp.query("select * from notes_fine where #{query}")
   end
-  def self.find(root: nil, octave: nil, min: nil, max: nil, note: nil)
+  def self.find(root: nil, octave: nil, min: nil, max: nil, note: nil, pat: nil)
     @@cache = {}
     octave = if !note.nil?
       note[-1]
@@ -85,6 +85,8 @@ module NoteSlices
       query << "octave=#{octave}" if octave
       query << "length > #{min}" if min
       query << "length < #{max}" if max
+      query << "path REGEXP '#{pat}'" if pat
+      query = query.flatten
       r = Dsp.query("select * from notes_fine where #{query.join(" AND ")}")
       @@cache[k] = r
     end
