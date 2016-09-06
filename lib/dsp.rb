@@ -66,16 +66,22 @@ module NoteSlices
   def self.sql(query="")
     Dsp.query("select * from notes_fine where #{query}")
   end
-  def self.find(note: nil, octave: nil, min: nil, max: nil, n: nil)
-    @@cache ||= {}
-    if n
-      octave = n.split("")[-1]
-      note = n.split("")[0..-2]
+  def self.find(root: nil, octave: nil, min: nil, max: nil, note: nil)
+    @@cache = {}
+    octave = if !note.nil?
+      note[-1]
+    else
+      octave
     end
-    k = "noteslices[note#{note}octave#{octave}max#{max}min#{min}]"
+    root = if !note.nil?
+      note[0..-2]
+    else
+      root
+    end
+    k = "noteslices[note#{root}octave#{octave}max#{max}min#{min}]"
     if !@@cache.has_key?(k)
       query = []
-      query << "note='#{note}'" if note
+      query << "note='#{root}'" if root
       query << "octave=#{octave}" if octave
       query << "length > #{min}" if min
       query << "length < #{max}" if max
