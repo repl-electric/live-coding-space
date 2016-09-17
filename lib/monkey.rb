@@ -28,7 +28,7 @@ def note_to_semi(n1,n2)
   end
 end
 
-def sample_smash(s,bits)
+def recombinance(s,bits)
   load_sample s
   total_time = sample_duration(s)
   bit_length = total_time/bits+0.0
