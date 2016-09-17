@@ -28,6 +28,25 @@ def note_to_semi(n1,n2)
   end
 end
 
+def sample_smash(s,bits)
+  load_sample s
+  total_time = sample_duration(s)
+  bit_length = total_time/bits+0.0
+  positions = ([0]*bits).reduce([0]){|acc,bit| acc << acc[-1]+bit_length}
+  s_pos,e_pos=0.0,0.0
+  s_idx,e_idx =0,1
+  data = positions.reduce([]) do |acc,p|
+    s_pos = positions[s_idx]
+    e_pos = (positions[s_idx+1] || total_time)
+    s_idx+=1
+    acc << [s_pos, e_pos]
+  end
+  data.shuffle.each{|b|
+    sample s, start: b[0]/total_time, finish: b[1]/total_time
+    sleep b[1]-b[0]
+  }
+end
+
 def smp(*args)
   sample_thing = args.first
   smp_name = if sample_thing.is_a?(Hash)
