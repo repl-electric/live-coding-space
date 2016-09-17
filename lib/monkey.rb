@@ -16,6 +16,18 @@ class SonicPi::Core::RingVector
   end
 end
 
+def note_to_semi(n1,n2)
+  notes = ring(:F, :Fs, :G, :Gs, :A, :As, :B, :C, :Cs, :D, :Ds, :E)
+  start_hit = notes.index(note_info(n1).pitch_class)
+  goal_hit = notes.index(note_info(n2).pitch_class)
+  octave_diff = note_info(n2).octave - note_info(n1).octave
+  if octave_diff < 0
+    diff = (start_hit - goal_hit) + octave_diff*12
+  else
+    diff = (goal_hit - start_hit) + octave_diff*12
+  end
+end
+
 def smp(*args)
   sample_thing = args.first
   smp_name = if sample_thing.is_a?(Hash)
