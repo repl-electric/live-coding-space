@@ -33,8 +33,7 @@ def recombinance(s,bits)
   total_time = sample_duration(s)
   bit_length = total_time/bits+0.0
   positions = ([0]*bits).reduce([0]){|acc,bit| acc << acc[-1]+bit_length}
-  s_pos,e_pos=0.0,0.0
-  s_idx,e_idx =0,1
+  s_idx = 0
   data = positions.reduce([]) do |acc,p|
     s_pos = positions[s_idx]
     e_pos = (positions[s_idx+1] || total_time)
