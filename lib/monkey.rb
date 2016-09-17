@@ -1,3 +1,5 @@
+#🐒
+
 class SonicPi::Core::RingVector
   def take(n)
     SonicPi::Core::RingVector.new(self.to_a.take(n))
