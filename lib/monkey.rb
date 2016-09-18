@@ -31,7 +31,6 @@ def note_to_semi(n1,n2)
 end
 
 def smash(s,bits)
-  puts "Dur:#{sample_duration(s)}"
   total_time = sample_duration(s)
   positions = bits.reduce([0]){|acc,bit| acc << acc[-1]+(total_time/bit)}
   load_sample s
@@ -44,13 +43,16 @@ def smash(s,bits)
   end
   {sample: s, data: data, total: total_time}
 end
-
 def smash_loop(s, *args)
+  opt = args[0]
   s[:data].shuffle.each do |d|
-    sample s[:sample], start: d[0]/s[:total], finish: d[1]/s[:total]
+    opt[:start] = d[0]/s[:total]
+    opt[:finish] = d[1]/s[:total]
+    sample(s[:sample], *[opt])
     sleep d[1]-d[0]
   end
 end
+
 
 def smp(*args)
   sample_thing = args.first
