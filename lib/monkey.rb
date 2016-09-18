@@ -30,22 +30,26 @@ def note_to_semi(n1,n2)
   end
 end
 
-def recombinance(s,bits)
-  load_sample s
+def smash(s,bits)
+  puts "Dur:#{sample_duration(s)}"
   total_time = sample_duration(s)
-  bit_length = total_time/bits+0.0
-  positions = ([0]*bits).reduce([0]){|acc,bit| acc << acc[-1]+bit_length}
-  s_idx = 0
+  positions = bits.reduce([0]){|acc,bit| acc << acc[-1]+(total_time/bit)}
+  load_sample s
+  s_idx=0
   data = positions.reduce([]) do |acc,p|
     s_pos = positions[s_idx]
     e_pos = (positions[s_idx+1] || total_time)
     s_idx+=1
     acc << [s_pos, e_pos]
   end
-  data.shuffle.each{|b|
-    sample s, start: b[0]/total_time, finish: b[1]/total_time
-    sleep b[1]-b[0]
-  }
+  {sample: s, data: data, total: total_time}
+end
+
+def smash_loop(s, *args)
+  s[:data].shuffle.each do |d|
+    sample s[:sample], start: d[0]/s[:total], finish: d[1]/s[:total]
+    sleep d[1]-d[0]
+  end
 end
 
 def smp(*args)
