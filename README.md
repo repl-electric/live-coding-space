@@ -39,8 +39,9 @@ Recordings on:
 
 ##License
 
-Copyright © 2014-2016 Joseph Wilk
+Copyright © 2014-current Joseph Wilk
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
-![](http://nadine-rossa.de/made-in-berlin-badge.png)
+![](http://67.media.tumblr.com/tumblr_lyas7nflhJ1qk2qd1.png)
+& Cambridge, UK
