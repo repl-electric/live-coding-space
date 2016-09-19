@@ -45,11 +45,13 @@ def smash(s,bits)
 end
 def smash_loop(s, *args)
   opt = args[0]
-  s[:data].shuffle.each do |d|
-    opt[:start] = d[0]/s[:total]
-    opt[:finish] = d[1]/s[:total]
-    sample(s[:sample], *[opt])
-    sleep d[1]-d[0]
+  at do
+    s[:data].shuffle.each do |d|
+      opt[:start] = d[0]/s[:total]
+      opt[:finish] = d[1]/s[:total]
+      sample(s[:sample], *[opt])
+      sleep d[1]-d[0]
+    end
   end
 end
 
