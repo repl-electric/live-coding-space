@@ -39,7 +39,7 @@ Recordings on:
 
 ##License
 
-Copyright © 2014-current Joseph Wilk
+Copyright © 2014-present Joseph Wilk
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
