@@ -43,18 +43,19 @@ def smash(s,bits)
   end
   {sample: s, data: data, total: total_time}
 end
-def smash_loop(s, *args)
+def sample_smash(sample_file, bits, *args)
+  data = smash(sample_file, bits)
   opt = args[0]
   at do
-    s[:data].shuffle.each do |d|
-      opt[:start] = d[0]/s[:total]
-      opt[:finish] = d[1]/s[:total]
-      sample(s[:sample], *[opt])
+    data[:data].shuffle.each do |d|
+      opt[:start] = d[0]/data[:total]
+      opt[:finish] = d[1]/data[:total]
+      puts opt
+      sample(sample_file, *[opt])
       sleep d[1]-d[0]
     end
   end
 end
-
 
 def smp(*args)
   sample_thing = args.first
