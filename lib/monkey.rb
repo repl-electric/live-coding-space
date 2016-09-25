@@ -59,24 +59,26 @@ end
 
 def smp(*args)
   sample_thing = args.first
-  smp_name = if sample_thing.is_a?(Hash)
-    sample_file = sample_thing[:path]
-    start = ratio_on(sample_thing)
-    fini = ratio_off(sample_thing)
-    options = {start: start, finish: fini}
-    options = if args.length > 1
-      options.merge(args.last)
+  if sample_thing
+    smp_name = if sample_thing.is_a?(Hash)
+      sample_file = sample_thing[:path]
+      start = ratio_on(sample_thing)
+      fini = ratio_off(sample_thing)
+      options = {start: start, finish: fini}
+      options = if args.length > 1
+        options.merge(args.last)
+      else
+        options
+      end
+      sample sample_file, *[options]
+      sample_file
     else
-      options
+      sample(*args)
+      sample_thing
     end
-    sample sample_file, *[options]
-    sample_file
-  else
-    sample(*args)
-    sample_thing
-  end
-  if smp_name =~ /kick/
-    shader :decay, :iBeat, 1.0, 0.001 
+    if smp_name =~ /kick/
+      shader :decay, :iBeat, 1.0, 0.001 
+    end
   end
 end
 
