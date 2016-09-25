@@ -10,86 +10,168 @@ live_loop :drums do
   p1 = Tech[/Drum_Hits/,/perc/,2]
   v1 = Tech[/vocal/,10]
   r1 = Tech[/cymbal/,8]
-  kick = %w{k1 _ _ _}
+  kick = (ring *%w{k1 _ _ _})
+  hat = (ring *%w{_ _ h1 _})
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
-  smp h1
+  tick
+  smp eval(hat.look) if hat.look
   smp h2
+  smp eval(kick.look) if kick.look
   sleep 1/4.0
+  tick
   smp p1
+  smp eval(hat.look) if hat.look
+  smp eval(kick.look) if kick.look
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s1
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp p1
-  smp h1
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp h1, amp: 0.25
   sleep 1/4.0
   
-  smp k1
+  
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp p1
   sleep 1/4.0
-  smp h1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s1
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp v1, finish: 0.05
-  smp h1
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s2
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
-  smp h1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp p1
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s1
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
   smp p1
-  smp h1
+  smp eval(hat.look) if hat.look
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp h1, amp: 0.25
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp p1
   sleep 1/4.0
-  smp h1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp r1, finish: 0.25
   sleep 1/4.0
   
-  smp k1
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s1
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp v1, finish: 0.05
-  smp h1
   smp h2
   sleep 1/4.0
+  tick
+  smp eval(kick.look) if kick.look
+  smp eval(hat.look) if hat.look
   smp s1
   sleep 1/4.0
 end
