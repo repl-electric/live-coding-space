@@ -70,7 +70,7 @@ def smp(*args)
         fini = 1
       end
       options = {start: start, finish: fini}
-      options = if args.length > 1
+      options = if sample_thing.keys.length > 1
         options.merge(args.last)
       else
         options
