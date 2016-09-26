@@ -62,8 +62,13 @@ def smp(*args)
   if sample_thing
     smp_name = if sample_thing.is_a?(Hash)
       sample_file = sample_thing[:path]
-      start = ratio_on(sample_thing)
-      fini = ratio_off(sample_thing)
+      if sample_thing[:onset] && sample_thing[:offset]
+        start = ratio_on(sample_thing)
+        fini = ratio_off(sample_thing)
+      else
+        start = 0
+        fini = 1
+      end
       options = {start: start, finish: fini}
       options = if args.length > 1
         options.merge(args.last)
