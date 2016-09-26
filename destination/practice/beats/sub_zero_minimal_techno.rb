@@ -1,6 +1,8 @@
 use_bpm 125
 #sub-zero-minimal-techno
-set_volume! 0.2
+
+["instruments","shaderview","experiments", "log","samples","dsp","monkey"].each{|f| load "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lib/#{f}.rb"}; _=nil
+set_volume! 0.25
 #https://www.attackmagazine.com/technique/beat-dissected/sub-zero-minimal-techno
 _=nil
 live_loop :drums do
@@ -12,9 +14,10 @@ live_loop :drums do
   r1 = Tech[/cymbal/,8]
   kick = (ring *%w{k1 _ _ _})
   hat = (ring *%w{_ _ h1 _
-                  _ _ h1 h1
+                  _ _ h1 {path:h1,amp:0.1}
                   _ _ h1 _
                   _ _ h1 _})
+  puts hat
   hat2 = (ring *%w{_ _ h2 _})
   snare = (ring *%w{_ _ _ _  s1 _ _ _})
   snare2 = (ring *%w{_ _ _ _ _ _ _ _
