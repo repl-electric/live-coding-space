@@ -44,6 +44,7 @@ def smash(s,bits)
   {sample: s, data: data, total: total_time}
 end
 def sample_smash(sample_file, bits, *args)
+  if sample_file
   data = smash(sample_file, bits)
   opt = args[0]
   at do
@@ -55,6 +56,7 @@ def sample_smash(sample_file, bits, *args)
       sleep d[1]-d[0]
     end
   end
+end
 end
 
 def smp(*args)
