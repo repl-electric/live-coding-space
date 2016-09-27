@@ -43,20 +43,23 @@ def smash(s,bits)
   end
   {sample: s, data: data, total: total_time}
 end
-def sample_smash(sample_file, bits, *args)
+
+def sample_smash(sample_file, bits, *args, &block)
   if sample_file
-  data = smash(sample_file, bits)
-  opt = args[0]
-  at do
-    data[:data].shuffle.each do |d|
-      opt[:start] = d[0]/data[:total]
-      opt[:finish] = d[1]/data[:total]
-      puts opt
-      sample(sample_file, *[opt])
-      sleep d[1]-d[0]
+    data = smash(sample_file, bits)
+    opt = args[0]
+    selection = data[:data].shuffle
+    at do
+      selection.each do |d|
+        opt[:start] = d[0]/data[:total]
+        opt[:finish] = d[1]/data[:total]
+        sample(sample_file, *[opt])
+        yield d[1]-d[0] block if block_given?
+        sleep d[1]-d[0]
+      end
     end
+    selection
   end
-end
 end
 
 def smp(*args)
