@@ -366,6 +366,16 @@ Dir["/Users/josephwilk/Workspace/music/samples/ModTech/**/*.wav"]
   end
 end
 
+module Juno
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Juno/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Ambius
   def self.pick(a)
     self[a]

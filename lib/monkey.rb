@@ -54,7 +54,7 @@ def sample_smash(sample_file, bits, *args, &block)
         opt[:start] = d[0]/data[:total]
         opt[:finish] = d[1]/data[:total]
         sample(sample_file, *[opt])
-        yield d[1]-d[0] block if block_given?
+        yield block if block_given?
         sleep d[1]-d[0]
       end
     end
