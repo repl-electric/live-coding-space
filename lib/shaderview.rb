@@ -19,8 +19,9 @@ def shader(endpoint, *args)
     end
   else
     endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
-    if args.count == 1 && (endpoint.to_s != "shader" &&
-                           endpoint.to_s != "vertex")
+    if args.count == 1 && (endpoint.to_s != "shader" && #This really has to die
+                           endpoint.to_s != "vertex" && 
+                           endpoint.to_s != "echo")
       args = [endpoint] + args
       endpoint = :uniform
     end
