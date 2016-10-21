@@ -87,7 +87,7 @@ module NoteSlices
       query << "length < #{max}" if max
       query << "path REGEXP '#{pat}'" if pat
       query = query.flatten
-      r = Dsp.query("select * from notes_fine where #{query.join(" AND ")}")
+      r = Dsp.query("select * from notes_fine where #{query.join(" AND ")} ORDER BY path")
       @@cache[k] = r
     end
     @@cache[k]
