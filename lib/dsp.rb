@@ -41,7 +41,7 @@ module SampleBeats
   def self.find(path: nil, collection: collection, filename: f)
     @@cache ||= {}
     k = "path[query]"
-#    if !@@cache.has_key?(k)
+    if !@@cache.has_key?(k)
       query = []
       query << "path='#{path}'" if path
       query << "collection='#{path}'" if collection
@@ -52,9 +52,9 @@ module SampleBeats
         beats = r.map{|r| r[:beat]}
         r = {beats: beats[1..-1]}.merge(r[0])
       end
- #     @@cache[k] = r
-  #  end
-   # @@cache[k]
+      @@cache[k] = r
+    end
+    @@cache[k]
    r
   end
   def self.flush
