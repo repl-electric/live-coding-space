@@ -1,0 +1,73 @@
+_=nil
+live_loop :drums2, sync: :kick do
+  tick
+  magic= ring(*%w{_ _ _ _ [18,18,19] _ _ _
+                  _ _ _ _ _ _ [16,16,17] _
+                  _ _ _ _ [19,19,18] _ _ _
+                  _ _ _ _ _ _ [34,34] _}
+              ).look
+
+  drum= ring(*%w{ [18,18,20] _ _ _ [18,18,20] _ _ _
+                  [18,18,20] _ _ _ [16,16,17] _ _  _
+                  [18,18,20] _ _ _ [20,20,18] _ _ _
+                  [18,18,20] _ _ _ [34,34] _ _  _}
+             ).look
+
+  with_fx :lpf, cutoff: (line 100, 115, steps: 32).look do
+    if spread(1,8, rotate: 0).look
+      sample Frag[/hat/,[0,0]].look, rpitch: (ring 12*1,12*2,12*1).look, amp: 0.5+rand*0.1#, cutoff: 40
+    end
+    if spread(1,11, rotate: 1).look
+      smp Frag[/hat/,[1,1]].look, rpitch: (ring 12*1,12*2,12*1).look, amp: 0.5+rand*0.1# ,cutoff: 80
+    end
+    if spread(1,16, rotate: 0).look
+      smp @slices["Fs4/8"][0], rpitch: (ring 7*-1, 12*0, 12*0).look, amp: 1#, cutoff: 40
+    end
+  end
+  if spread(1,32, rotate: 0).look # F# G G# A A# B C C# D D# E F
+    sample_smash(Alt[/vor_alto_leg_oo_05_d_08/,0], [8,16,16,16,16].shuffle,
+                 fx: (ring :krush, :none),
+                 rpitch: (ring 12, 5, 5+2.0,0).tick(:progrress), cutoff: 135, amp: 1.0)        #(F#5->B)  => (A#5->E) => (A#5->E)
+    sample_smash(Alt[/vor_alto_leg_oo_05_d_08/,0], [32,64,64,64,64,64,64,64,64], rpitch: (ring -12, -12, -12).tick(:progrress), cutoff: 80, amp: 1.0) #   (F#5->B)  => (A#5->E) => (A#5->E)
+    #smp @slices["Fs4/8"][0][:path], rpitch: (ring 12, 5, 5+2,0).tick(:progrress), cutoff: 80, amp: 1.0 #   (F#5->B)  => (A#5->E) => (A#5->E)
+
+    #sample_smash(@slices["Fs4/8"][0][:path], [64,64,64,64,64,64,64,64], rpitch: (ring 12, 12, 12).tick(:progrress), cutoff: 80, amp:     1.0)
+    #sample_smash(@slices["Fs4/8"][0][:path], [128,128,64,128,128], rpitch: (ring 12, 12, 12).tick(:progrress), cutoff: 80, amp:     1.0)
+
+    at do
+      sleep 1; if spread(1,32).look
+                 #sample "/Users/josephwilk/Workspace/music/samples/melodyne/vor_alto_leg_oo_05_d_F#_D.wav", amp: 2.0
+                 #sample Alt[/vor_alto_leg_oo_05_d_03/,0], amp: 2       #G# -> C#
+                 #sample Alt[/vor_alto_leg_oo_05_d_09/,0], amp: 2       #G# -> C#
+                 #  with_fx(:slicer, invert_wave: 1.0, phase: 0.25){sample Alt[/vor_alto_leg_oo_05_d_08/,0], amp: 1}       #F# -> B
+                 #   sample Alt[/vor_alto_leg_oo_05_d_02/,0], amp: 1.5        #F# -> B
+                 #with_fx :slicer,phase: 0.5 do
+                 #sample Alt[/vor_alto_leg_oo_05_d_01/,0], amp: 1 ;end      #E -> A
+                 #sample Alt[/vor_alto_leg_oo_05_d_07/,0], amp: 2       #E -> A
+
+                 #sample Alt[/vor_alto_leg_oo_05_d_06/,0], amp: 2       #D -> G???
+               end; end
+  end
+  if drum != "_"
+    matches = drum.match(/(.*)(\[.*\])/)
+    pat = matches[1].empty? ? "kick" : matches[-2]
+    selection = matches[-1]
+    s = Fraz[pat,eval(selection)].tick(:sample)
+    #  smp (knit _,8,Frag[/hihats/,0],1,_,7).look, cutoff: 120, amp: 0.25#(ring -3.0,0,-1).look
+    #smp s, cutoff: (line 100, 80, steps: 32).look/1.0, rpitch: (ring -5,-1,-1).look, amp: 0.8+rand*0.1
+  end
+  with_fx :pan, pan:  ring(0.25,-0.25).look do
+    #control e_fx, phase: knit(0.0,31, 0.25,1).look
+    s = MagicDust[/_HI/,eval(magic)].tick(:s2)
+    with_fx (knit :none, 31, :echo, 1).look, decay: 4 do
+      smp s, amp: 0.8+rand*0.1, rate: 1.0, cutoff: line(80, 105, steps: 32).look
+    end
+    s = Fraz[/kick/,[0,1]].look(:s2)
+    if magic != "_"
+      with_fx (knit :none, 31, :echo, 1).look, decay: 4 do
+        #smp s, amp: 1.0+rand*0.1, rate: 1.0, cutoff: ring(*range(70, 105, 5)).look, rpitch: (ring -5.0,0,-1).look
+      end
+    end
+  end
+  sleep 1/8.0
+end

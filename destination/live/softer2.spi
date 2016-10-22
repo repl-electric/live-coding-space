@@ -1,0 +1,60 @@
+with_fx(:reverb, room: 0.6, mix: 0.8, damp: 0.5, damp_slide: 1.0, mix_slide: 0.1) do |r_fx|
+  live_loop :soft2, sync: :kick do
+    with_fx :level, amp: 1.0 do
+      score = ring(# 7 -> 1a -> 3 -> 5 -> 1a -> 6 -> 4
+                   # 3 -> 6 -> 7 -> 1 -> 6 -> 4
+                   #[[:Fs2,8],[:A2,8],[:Cs3,8*2]],
+                   #                    [[:Fs3,8],[:A3,8],[_,8]],
+                   [[:E3,8],[:Gs3,8],[:B3,8]],
+                   [[:CS3,8],[:FS3, 8], [:A3, 8*2]],
+                   [[:Cs4,8],[_,8], [:E4,8], [:E3, -4],[:A2, -6]],
+                   [[:Cs3,16+8], [:E3,16], [:Gs3,16]],
+                   [[:Fs3,8*3], [_,8], [:A3,8*2]],
+                   [[:D3,8*2],[_,8], [_,8]],
+                   [[:B2,8],[_,8],[_,8]],
+                    [[:A2,8],   [:Cs3,8],[:E3,8]],
+                   [[:D3,8],   [:Fs3,8],[:A3,8]],
+                   [[:E3,8],   [:Gs3,8],[:B3,8],[:Cs4,8], [:B3,-6]],
+                   [[:Fs3,8],  [:A3,8*2],[:Cs4,8], [:A3,-4]],
+                   [[:D3, 8],  [:Fs3, 8], [_, 8] ],
+                   [[:Cs3, 16],[:E3, 16], [:Gs3, 16]],
+                   [[:CS3,8],[:FS3, 8], [:A3, 8*2]],
+                   [[:D3,8],[:Fs3, 8], [_, 8]],
+                   [[:B2,8], [:D3, 8], [:Fs3,8]]
+                    )
+      n = score.tick
+      with_fx :krush, mix: 0.2, mix_slide: 4*1 do |k_fx|
+        a,s = [],[]
+        n.select{|n| n[1] > 0}.each do |note|
+          #puts note
+          a = synth :beep, note: note[0], amp: (1.0/[n.length,3].max)
+          s << (synth :hollow, note: note[0], decay: note[1], amp: (1.0/[n.length,3].max), amp_slide: 0.5, attack: 0.5)
+        end
+        with_transpose 0 do
+          #with_transpose(-12){synth :dark_sea_horn, note: n[0][0], decay: 0.5, cutoff: 135, amp: 0.2}
+          synth :pluck, note: n[0][0], release: n[0][1]/2.0, decay: n[0][1]/2.0, attack: 0.05, amp: 0.2
+        end
+        (n.map{|s| s[1] > 0 ? s[1] : 0}.select{|s| s!=0}.min).times{|idx|
+          control r_fx, damp: rand, mix: 1.0
+          s.each{|sy| control sy, amp: rrand(0.5, 0.9)}
+          n.select{|n| n[1] < 0}.each do |note|
+            if note[1].abs == idx
+              synth :pluck, note: note[0], release: note[1].abs, decay: note[1].abs, attack: 0.1, amp: 0.01
+              synth :hollow, note: note[0], release: note[1].abs, decay: note[1].abs, attack: 0.01, amp: 1.0
+            end
+          end
+          if idx == (score.look(offset: 1)[0][1]/2.0)+2
+            b = nil
+            with_fx :slicer do
+              with_transpose 0 do
+                synth :pretty_bell, note: score.look(offset: 1)[0][0], amp: 0.25, decay: ring(2.0,1.0).tick(:itss), attack: 2.0
+              end
+            end
+          end
+          sleep 1
+          control k_fx, mix: 0
+        }
+      end
+    end
+  end
+end

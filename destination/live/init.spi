@@ -1,0 +1,112 @@
+require "mysql2"
+module Dsp
+  def self.query(sql)
+    SonicPi::Core::RingVector.new(Dsp.connection.query(sql,:symbolize_keys => true).to_a)
+  end
+  def self.connection()
+    @@connection ||= Mysql2::Client.new(:host => "localhost", :username => "root", :database => "repl_electric_samples", :reconnect => true)
+  end
+  def self.connect!()
+    @@connection = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "repl_electric_samples",:reconnect => true)
+  end
+end
+
+module Samples
+  def self.sql(query="")
+    Dsp.query("select * from samples where #{query}")
+  end
+  def self.find(path: nil, note: nil, max: nil, min: nil)
+    @@cache ||= {}
+    k = "samples[note#{note}path#{path}max#{max}min#{min}]"
+    if !@@cache.has_key?(k)
+      query = []
+      query << "path like '%#{path}%'" if name
+      query << "note1='#{note}'" if note
+      query << "length < #{min}" if min
+      query << "length > #{max}" if max
+      r = Dsp.query("select * from samples where #{query.join(" AND ")}")
+      @@cache[k] = r
+    end
+    @@cache[k]
+  end
+  def self.flush
+    @@cache = {}
+  end
+end
+
+module SampleBeats
+  def self.sql(query="")
+    Dsp.query("select * from track where #{query}")
+  end
+  def self.find(path: nil, col: collection, filename: f)
+    @@cache ||= {}
+    k = "path[query]"
+    if !@@cache.has_key?(k)
+      query = []
+      query << "path='#{path}'" if path
+      query << "collection='#{path}'" if col
+      query << "collection ='#{f}'" if f
+      r = Dsp.query("select * from track where #{query.join(" AND ")} ORDER BY beat")
+      puts "results#{r}"
+      if r && !r.empty?
+        beats = r.map{|r| r[:beat]}
+        r = {beats: beats[1..-1]}.merge(r[0])
+      end
+      @@cache[k] = r
+    end
+    @@cache[k]
+   r
+  end
+  def self.flush
+    @@cache = {}
+  end
+end
+
+module NoteSlices
+  def self.sql(query="")
+    Dsp.query("select * from notes_fine where #{query}")
+  end
+  def self.find(root: nil, octave: nil, min: nil, max: nil, note: nil, pat: nil)
+    @@cache = {}
+    octave = if !note.nil?
+      note[-1]
+    else
+      octave
+    end
+    root = if !note.nil?
+      note[0..-2]
+    else
+      root
+    end
+    k = "noteslices[note#{root}octave#{octave}max#{max}min#{min}]"
+    if !@@cache.has_key?(k)
+      query = []
+      query << "note='#{root}'" if root
+      query << "octave=#{octave}" if octave
+      query << "length > #{min}" if min
+      query << "length < #{max}" if max
+      query << "path REGEXP '#{pat}'" if pat
+      query = query.flatten
+      r = Dsp.query("select * from notes_fine where #{query.join(" AND ")}")
+      @@cache[k] = r
+    end
+    @@cache[k]
+  end
+  def self.flush
+    @@cache = {}
+  end
+end
+
+_=nil
+def note_slices(note, m)
+  NoteSlices.find(note: note, max: m, pat: "sop|alto|bass").select{|s| s[:path] =~ /sop|alto/}.take(16)
+end
+@slices ||= {"Gs2/4" => note_slices("Gs2",1/4.0),"D2/4" => note_slices("D2",1/4.0), "E2/4" => note_slices("E2",1/4.0), "A2/4" => note_slices("A2",1/4.0), "Fs2/4" => note_slices("F#2",1/4.0),"Fs2/8" => note_slices("F#2",1/8.0), "E3/4" => note_slices("E3",1/4.0), "D3/4" => note_slices("D3",1/4.0),"D3/8" => note_slices("D3",1/8.0),"Cs3/4" => note_slices("C#3",1/4.0), "Fs3/8" => note_slices("F#3",1/8.0),"Fs3/4" => note_slices("F#3",1/4.0), "Gs3/4" => note_slices("G#3",1/4.0), "A3/8" => note_slices("A3",1/8.0),"A3/4" => note_slices("A3",1/4.0), "B3/4" => note_slices("B3",1/4.0), "Cs4/4" => note_slices("C#4",1/4.0), "Cs4/8" => note_slices("C#4",1/8.0), "D4/4" => note_slices("D4",1/4.0),"D4/8" => note_slices("D4",1/8.0), "E4/4" => note_slices("E4",1/4.0),"E4/8" => note_slices("E4",1/8.0), "Fs4/4" => note_slices("F#4",1/4.0),"Fs4/8" => note_slices("F#4",1/8.0), "Gs4/4" => note_slices("G#4",1/4.0), "B4/4" => note_slices("B4",1/4.0),"Fs5/4" => note_slices("F#5",1/4.0), "Fs6/4" => note_slices("F#6",1/4.0),"A4/4" => note_slices("A4",1/4.0),"E5/4" => note_slices("E5",1/4.0)}
+@slices.values.flatten.each{|f| load_sample f[:path]}
+puts @slices.values.flatten.count
+
+live_loop :doit do
+  tick
+  sample @slices["Fs4/8"].map{|p|p[:path]}.look, amp: 10
+  sleep 2
+end

@@ -1,0 +1,127 @@
+with_fx :gverb, room: 300, mix: 1.0, spread: 4.0, damp: 1.0, dry: 1.0 do
+  live_loop :melody, sync: :kick  do
+    with_fx :level, amp: 1.0 do
+      tick
+      score = (knit
+        #(ring :Cs4,:E3, _, _),     32,              #E  6
+        #(ring :B3, :D4,  _, :D4) , 32,              #B  4
+        #(ring :A4, :CS4, _, :Cs4), 32,              #C  5
+        #(ring :Gs4, :B3,  _, :E3), 32,              #E  6
+
+        #          (ring :Fs4, _,  _, :B3), 32,              #B  4
+        #         (ring :Fs4, _,  _, :Cs4), 32,              #C  5
+        #               (ring
+        #               :Fs4, :Gs4, _, :B3,
+        #              :Fs4, :Gs4, _, :B3,
+        #             :E4, :Gs4,  _, :A3,
+        #            :E4, :Gs4,  _, :B3), 32,
+
+        # (ring :Cs4, :E3, _, :E3), 32,   # BONUS
+        (ring :B3, :B4,  _, :Fs3) , 64,              #B  4
+        (ring :A3, :A4,  _, :E3) , 64,              #B  4
+        (ring :Cs4, :Cs5,  _, :Fs4) , 64,              #B  4
+
+
+        #     (ring :D4,  :E4,  _, :A3), 32,  # A
+        #    (ring :Cs4, :D4,  _, :A3), 16,  # A
+        #   (ring :B3,  :A3,  _, :Fs3), 32, # F
+        #  (ring :B3,  :A3,  _, :A3), 16)  # A
+        )
+      score2 = (knit
+        (ring _, _, _, _),  32,              #E  6
+        (ring _, _, _, _) , 32,              #B  4
+        (ring _, _, _, _), 32,              #C  5
+        (ring _, _, _, _), 32,              #E  6
+
+        (ring _, _,  _, :FS2,   _,_,_,_), 32,              #B  4
+        (ring _, _,  _, :A1,    _,_,_,_), 32,              #C  5
+        (ring _, _, _ , :Cs2,
+          _,  _,_, _,
+          _,  _,_, _,
+          _, _,  _, _), 32,
+
+        (ring _, _,  _, _), 32,   # BONUS
+        (ring _, _,  _, _), 32,  # A
+        (ring _, _,  _, _), 16,  # A
+        (ring _, _,  _, _), 32, # F
+        (ring _, _,  _, _), 16)  # A
+
+      b = score2.look.look(:n)
+      base_s = score.look
+      with_fx :slicer, phase: 0.375, wave:0, mix: 0 do
+        puts "--------------#{b}" if b
+        if b#spread(1,4).look
+          #puts "BASS:#{b}" if b
+          #synth :dsaw, note: b, decay: 2, attack: 0.001, amp: 0.8, cutoff: 45
+        end
+      end
+
+      #puts base_s
+      note = base_s.tick(:n)
+      #puts note
+      if note == _
+        if spread(1,6).look
+          pi = (ring -5, -5, 0, -5, -12, 0, -5, -5, -12, -12-5, -12-5).tick(:progrress)
+          #puts  "**********#{pi}************************"
+          #sample_smash(@slices["Fs4/8"][0][:path], [4,8,8,8,8].shuffle, rpitch: pi, cutoff: 80, amp: 1.2)
+        end
+        amp = if base_s.look(:n, offset: -1) == _
+                0.5 #ghost
+              else
+                0.8
+              end
+        p1 = (knit
+          Ether[/click/,3],1,
+          Ether[/click/,4],6).tick(:sp)
+        with_fx((knit :none,31, :echo,1).look(:sp), phase: 0.25, decay: 4) do
+          sample p1, amp: amp+3, cutoff: 80, rpitch: (knit 0,3,-12,2,-24,1).look(:sp)
+          #smp (knit Mountain[/microperc/,5],7, Mountain[/microperc/,6],1).look(:sp), amp: 0.1+rand
+        end
+      end
+      with_fx :distortion, distort: 0.2, mix: 0.0 do
+        if note == :Fs4
+          #smp Mountain[/subkick/,[1,0]].tick(:sample2)
+          #          smp Mountain[/microperc/,[4,5]].tick(:sample2), cutoff: 85, amp: 1.0
+          #         smp Mountain[/perc/,/shot/,/snare/].tick(:sample), cutoff: 80, amp: 1.0
+        end
+        if note.is_a?(Array)
+          note.each {|note|
+            #   s = synth :gpa, note: note, attack: 0.001, release: ring(0.125, 0.25, 0.125, 0.25).tick, amp: 2.8*1+0.1*rand}#, cutoff: (ramp *(range 0,135,0.25)).tick(:entry)}
+          }
+        else
+          s = synth :gpa, note: note, attack: 0.001, release: ring(0.125, 0.25, 0.125, 0.25).tick, amp: 2.8*1+0.1*rand #, cutoff: (ramp *(range 0,135,0.25)).tick(:entry)
+        end
+        with_transpose 12 do
+          s = synth :gpa, note: (ring _,_,_,note).look(:n), attack: 0.0001, release: 5.5, amp: 0.4*1#, cutoff: 100
+        end
+        with_transpose 0 do
+          synth :dark_ambience, note: (ring note, _,_,_  ,_,_,_).tick(:thing), decay: 1.0, attack: 1.0, amp: 0.2
+        end
+      end
+      high_score = (knit
+        (ring _,_,_,_),(32*4+ 32*4 + 32+32 + 32*3),
+        (ring (chord :E5, "7"),:E4,(chord :E5, "7"), :E4), 32*1,
+        (ring (chord :Fs5,:m),:Fs4,:Fs5, :Fs4), 32*1,
+        (ring :A4,:A3,:A4, :A3), 32*1,
+        (ring _,_,_,_),(32*2+32+16+16))
+      highlight = high_score.look.tick(:core_bitty)
+      #puts "HIGHGHGHGHGHGHG  #{highlight}" if highlight
+      s = synth :plucked, note: highlight, attack: 0.1, release: 0.25, amp: 0.3*1, cutoff: 70
+      sleep 1/8.0
+      with_transpose 12*2 do
+        ghost = (knit _, 31, note,1).look
+        puts "ping -------------->      #{ghost}" if ghost
+        as = synth :gpa, note: ghost, amp: 1.5, attack: 0.001, note_slide: 2
+        if ghost != _
+          sample_smash(@slices["Fs4/8"][0][:path], [4,8,16,32,32,32], cutoff: 135,
+                       rpitch: (ring -12,0,0).tick(:ab), amp: 1)
+        end
+        at do
+          sleep 0.125
+          control as, note: note(note)-(12*2)
+        end
+      end
+      sleep 1/8.0
+    end
+  end
+end

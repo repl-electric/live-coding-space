@@ -1,0 +1,34 @@
+def sample_smash(sample_file, bits, *args, &block)
+  if sample_file
+    data = smash(sample_file, bits)
+    opt = args[0]
+    selection = data[:data].shuffle
+    fx_selection = opt[:fx] || ring(:none,:none)
+    opt.delete(:fx)
+    selection.each do |d|
+      opt[:start] = d[0]/data[:total]
+      opt[:finish] = d[1]/data[:total]
+      with_fx(fx_selection.tick(:fx), mix: 1.0) do
+        sample(sample_file, *[opt])
+      end
+
+      yield block if block_given?
+      sleep d[1]-d[0]
+    end
+    selection
+  end
+end
+
+sample_smash(Alt[/vor_alto_leg_oo_05_d_08/,0],
+             [
+               8,32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+               32,32,32,32,
+              32,32,32,32],
+             rpitch: (ring 12, 5, 5+2.0,0).tick(:progrress), cutoff: 135, amp: 4.0)

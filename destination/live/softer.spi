@@ -1,0 +1,45 @@
+with_fx(:reverb, room: 0.6, mix: 0.8, damp: 0.5, damp_slide: 1.0, mix_slide: 0.1) do |r_fx|
+  with_fx :level, amp: 1.0 do
+    live_loop :softer, sync: :kick do
+      score =  ring( 8, 8, 8, 8, 8, 16, 8)
+      n = score.tick
+      blah = nil
+      with_fx :slicer, phase: 0.25, wave: 0 do
+        with_fx :pitch_shift, time_dis: 0.9, window_size: 0.9, mix: 0.1, pitch_dis: 0.1  do
+          with_fx :wobble, phase: 32, mix: 1 do
+            with_fx :echo, decay: 16, phase: 0.125 do
+              #blah=synth :dark_sea_horn, note: (ring :Fs1).look, decay: 0.25, cutoff: 130, amp: 0.5
+              sample_smash(Sop[/sustain/,[0..3]].tick(:sample),[4.0,4.0,4.0,4.0], amp: 0.8, cutoff: 130, pitch: (ring 2, 3, 2, 0).look(:sample))
+            end
+          end
+        end
+      end
+      comment do
+        with_fx :slicer, invert_wave: 1, phase: 0.5, wave: 0 do
+          blah=synth :dark_sea_horn, note: (ring :A2).look, decay: 16, amp: 0.2
+        end
+
+        with_fx :slicer, invert_wave: 1, phase: 0.25, wave: 0 do
+          blah=synth :dark_sea_horn, note: (ring :Cs2).look, decay: 16, amp: 0.2
+        end
+      end
+      with_fx :krush, mix: 0.05, mix_slide: 2 do |k_fx|
+        n.times{|idx|
+          #sample Sop[/Polysustains/, /release/, /01_oos/, /00/, 0], amp: 12.0
+          with_fx :krush, mix: 0.2, sample_rate: 20000 do
+            #sample Bass[/Polysustains/,/Omni/, /whisper/].tick, amp: 4.0# if idx <= 4
+            # synth :gpa, note: :Fs4, attack: 0.01, release:  ring(0.125, 0.25).tick(:r), amp: 1.0
+            #with_fx :reverb do
+            #sample Alt[/Polysustains/, /release/, /f#/].tick(:sopnotes3), amp: 12.0# if idx <= 4
+            # sample Sop[/Polysustains/, /release/, /01_oos/, /f#3|e3|d3/].tick(:sopnotes), amp: 1.0 if idx <= 4
+            #sample Sop[/Polysustains/, /release/, /01_oos/, /f#4|e4|d4/].tick(:sopnotes2), amp: 2.1, rate: 1 if idx >= 4 && idx < 8
+            #end
+          end
+          sleep 1
+          control k_fx, mix: 0
+          control blah, note: :FS1 if rand > 0.5
+        }
+      end
+    end
+  end
+end

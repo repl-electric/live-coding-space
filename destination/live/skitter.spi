@@ -1,0 +1,82 @@
+with_fx :echo, mix: 0.8, phase: 0.25 do |e_fx|
+  live_loop :skitter, sync: :kick do
+    with_fx :level, amp: 1.0 do
+      tick
+      idx2= ring(            *%w{9 1 1 _ 1 _ 1 _ 1 _ _ _ 1 _ _ _
+                                 }
+                 ).look
+      idx2= ring(            *%w{2 2  _ _  3 _   _ _    1 _  _ _  _ _  _ _
+                                 1 1  _ _  _ _   _ _    1 _  _ 1  _ _  _ _
+                                 1 1  _ _  _ _   _ _    1 _  _ _  _ _  _ _
+                                 1 1  _ _  _ _   1 _    1 _  _ 1  _ _  _ _
+
+                                 3 3  _ _  2 _   _ _    1 _  _ _  1 _  _ _
+                                 1 1  _ _  _ _   _ _    1 _  _ 2  _ _  _ _
+                                 1 1  _ _  _ _   _ _    1 _  _ _  _ _  _ _
+                                 1 1  _ _  _ _   1 _    1 _  1 1  _ _  _ _
+                                 }
+                 ).look
+      idxdd2= ring(            *%w{_ _  _ _  _ _   _ _    _ _  _ _  _ _  _ _
+                                   _ _  _ _  _ _   _ _    _ _  _ _  _ _  _ 2
+                                   }
+                   ).look
+
+      idx2 = (ring *%w{_ _ 4 _
+                       _ _ 5 _
+                       _ _ 6 _
+                       _ _ 4 _
+                       _ _ 5 _
+                       _ _ 6 _
+
+                       _ _ 6 _
+                       _ _ 7 8
+                       }).look
+
+      s = nil
+      control e_fx, phase: ring(0.25, 0.0, 0.125,  0.0).look*2
+      control e_fx, decay: 2.0
+      if idx2 != "_"
+        with_fx :hpf, cutoff: 80, mix: 1.0 do
+          with_fx :bitcrusher, mix: (line 0.0, 1.0, steps: 32).look*0.2 do# bits: (line 4,8,steps: 32).look do
+            # with_fx :echo, mix: 0.9, decay: 8.0 do
+            score =  knit(
+                          # "Fs4/4",4,           _,4,                _,4,                _,4,
+
+                          #              "Fs4/4",4, "Fs3/4",4, "Fs3/4",4, "Fs3/4", 4,
+                          #             "Fs3/4",4, "A3/4",4, "A3/4",4, "A3/8", 4,
+                          #            "Fs3/4",4, "A3/4",4, "A3/4",4, "A3/8", 4,
+                          #           "A3/4",4,  "A3/4",4, "A3/4",4, "A3/8", 4,
+
+                          #              "Fs4/4",4, "Fs3/4",4, "Fs3/4",4, "Fs3/4",4,      #F#=>C#  C# D D# E F F# G G# A
+                          #             "Fs3/4",4, "A3/4",4, "A3/4",4, "A3/4", 4,
+                          #            "Fs3/4",4, "A3/4",4, "Fs3/4",4, "Fs3/4",4,
+                          #           "Fs3/4",4, "A3/4",4, "A3/4",4, "A3/4", 4,
+                          #          "Fs3/4",4, "A3/4",4, "Fs3/4",4, "Fs3/4",4,
+                          #         "Fs3/4",4, "A3/4",4, "A3/4",4, "A3/4", 4,
+                          #        "A3/4",4, "Fs3/4",4, "Fs3/4",4, "Fs3/4",4,
+                          "Fs3/4",4, "A3/4",4, "Fs3/4",4, "Fs3/4", 4,
+                          )
+            set = @slices[score.look]
+            if set
+              s = set[eval(idx2)]
+              bits = (ring [ratio_off(s)-0.05,  ratio_on(s)], [ratio_on(s)-0.05,  ratio_off(s)])
+              bits = bits.look#.shuffle
+              smp s, amp: ring(*range(0.68, 2.0, 0.01)).look*4, cutoff: ring(*range((rand > 0.5 ? 95 : 95), 135, 5)).look, pan: ring(0.25,-0.25).look,
+              rpitch: (knit 5,4,5+2,4,0,4, 5,4,5+3,4,0,4).look*0#, finish: bits[0], start: bits[1]
+              #               rpitch:  knit(note_to_semi(score.look[0..-3], :Cs3),4, note_to_semi(score.look[0..-3], :B3),4, note_to_semi(score.look[0..-3], :A3),4, note_to_semi(score.look[0..-3], :Gs3),4,
+              #   rpitch:  knit(note_to_semi(score.look[0..-3], :E4),4, note_to_semi(score.look[0..-3], :D3),4, note_to_semi(score.look[0..-3], :Cs3),4, note_to_semi(score.look[0..-3], :Fs4),4,
+              #                note_to_semi(score.look[0..-3], :E3),4, note_to_semi(score.look[0..-3], :D3),4, note_to_semi(score.look[0..-3], :B3),4, note_to_semi(score.look[0..-3], :Fs4),4,
+              #               note_to_semi(score.look[0..-3], :E3),4, note_to_semi(score.look[0..-3], :D3),4, note_to_semi(score.look[0..-3], :B3),4, note_to_semi(score.look[0..-3], :Fs4),4,
+              #             note_to_semi(score.look[0..-3], :E3),4, note_to_semi(score.look[0..-3], :D3),4, note_to_semi(score.look[0..-3], :B3),4, note_to_semi(score.look[0..-3], :Fs4),4,
+              #             ).look
+            else
+              puts "none for #{score.look}"
+            end
+            #end
+          end
+        end
+      end
+    end
+    sleep 1/8.0
+  end
+end

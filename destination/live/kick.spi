@@ -1,0 +1,104 @@
+_=nil
+live_loop :kick do
+  tick
+  with_fx :level, amp: 1.0 do
+    bass_score =  ring(#2=> 32 patten
+                       #  A B C -> D    D F A C E G# B        D F A C E
+                       [:D1,1],[:D1,1],   [:E1,1],[:Fs1,1],
+                       [:A0,1.5],[:a0,1], [:Gs0,1],[:Gs0,1],
+                       [:Fs0,1.5],[:Fs0,1], [:Gs0,1],[:E0,1],
+                       [:Fs0,1],[:Fs0,1], [_,1],[_,1],
+                       [:Gs0,1],[:Cs0,1], [:Cs0,1], [:Cs1,1])
+    #      [:E1,1],[:B0,1],[:Gs0,1],[:D1,1]                    )
+    bass_note = bass_score.tick(:b)[0]
+    #puts "Bass: #{bass_note}"
+    bass_note =  :Fs0
+    #bass_note =  knit(:D1, 4, :E1,4, :Fs1, 4).tick(:internal)
+    if !bass_note
+      #synth :gpa, note:  ring(:Cs4, :fs3).tick(:asdasdasd), decay: 2, amp: 0.8
+    end
+    with_fx :lpf, cutoff: 135, mix_slide: 1.0, mix: 1.0 do |lpf_fx|
+      with_transpose 12*2 do
+        #synth :pluck, note: bass_note+ ring(0,5,-5,-7,5,7).look, decay: 0.25, cutoff: 100, attack: 0.001
+        #synth :gpa, note: bass_note
+        #synth :beep, note: bass_note, amp: 0.05*1, decay: 0.5
+      end
+      decay_rate =  knit(0.5+0.25,1,0.5,3).tick(:ds4) * bass_score.look(:b)[-1]
+      with_transpose 12*1 do
+        synth :dsaw, note: bass_note, decay: decay_rate, release: 2.0, amp: 0.8*1.0, cutoff: 40
+        #synth :prophet, note: bass_note, decay: decay_rate, release: 4.0, amp: 0.5*1.0, cutoff: 30, attack: 0.001
+      end
+
+      with_fx :distortion, mix_slide: 0.5, mix: 1.0, distort: 0.5 do |dis_fx|
+        if (look(:b) % 8 == 0)
+          control(lpf_fx, mix: 0.0)
+          control(dis_fx, mix: 1.0)
+        else
+          control(lpf_fx, mix: 1.0)
+          control(dis_fx, mix: 0.8)
+        end
+
+        with_fx :reverb, decay: 8.0, damp: 1.0 do
+          with_transpose 12*1 do
+            #synth :prophet, note: bass_note, release: 0.125, attack: 4, amp: 0.4, cutoff: 60
+            #    synth :chipbass, note: bass_note+0.0, amp: 0.013*1, decay: decay_rate, attack: 0.2
+            #synth :chiplead, note: bass_note+0.0, amp: 0.02*1, decay: decay_rate, attack: 0.2
+            #                synth :beep, note: bass_note+0.0, amp: 0.3*1, decay: decay_rate
+          end
+          with_transpose 12*1 do
+            #synth :gpa, wave: 4, note: bass_note, amp: 1.4, decay:  bass_score.look(:b)[-1]*knit(0.25,1,0.125,3).tick(:ds1)
+            #                synth :growl, note: bass_note, attack: 0.001, amp: 0.3*1, decay:  bass_score.look(:b)[-1]*knit(0.5,1,0.25,3).tick(:ds2), cutoff: 135
+          end
+        end
+      end
+    end
+    comment do
+      with_fx :gverb, decay: 0.8, room: 300, mix: 0.9, mix_slide: 0.25, spread: 1.0 do |g_fx|
+        control g_fx, mix: 0.8+rand
+        sample Fraz[/coil/,/c#/,[0,0]].tick(:sample), cutoff: 80, amp: 0.2, start: 0.2, finish: 0.15, rpitch:  ring(5,-2,-2,-2).look
+        sample Corrupt[/kick/,7], amp:  ring(1.0,0.8,0.8,0.9).tick(:ms)*0.2, cutoff:  line(70,100, steps: 8).look, rpitch:  ring(0,5,5,5).look
+      end
+    end
+    with_fx :lpf, cutoff: 0, mix: 1.0 do
+      s =  knit( chord(:Fs3, :m), 4, # chord(:Gs3, :dim), 4,  chord(:Fs3, :m), 4,
+                )
+      with_fx :distortion, distort: 0.5, mix: 1.0, mix_slide: 0.5 do |d_fx|
+        if spread(1,8).tick(:kicker)
+          control d_fx, mix: 0.5
+          sample Corrupt[/kick/,7], amp: 0*0.8, cutoff: 80 + rand,  rpitch:  ring(0,5,5,5).look
+        else
+          control d_fx, mix: 0.2
+          sample Corrupt[/kick/,7], cutoff: 70 + rand, amp: 1.0,  rpitch:  ring(0,5,5,5).look
+        end
+        sy = :plucked
+        sleep 1/4.0
+        #sample Mountain[/ice/].tick(:sample), cutoff: 100, aamp: 0.1
+        with_transpose 0 do
+          sample Fraz[/coil/,/c#/,[0,0]].tick(:sample), cutoff: 135, amp: 0.3, start: 0.2, finish: 0.15, rpitch:  ring(0,-2,-2,-2).tick(:itititi)
+
+          #with_fx :reverb, room: 1.0, mix: 1.0, spread: 1 do
+          with_transpose 12*1 do
+            #synth :beep, cutoff: 100, note: s.tick, release: 0.25, attack: 1.0, amp: 0.2, pan:  ring(0.25, -0.25).tick(:pan)
+          end
+          #    puts "Harmoney #{note_inspect(s.look)}"
+          #synth :prophet, cutoff: 100, note: s.tick, release: 0.25, attack: 2.0, amp: 0.2, pan:  ring(0.25, -0.25).tick(:pan)
+          #end
+          #synth :growl, note: s.look, release: 0.25, attack: 0.1, amp: 0.5
+        end
+        sleep 1/4.0
+        #sample Fraz[/coil/,/c#/,[0,0]].tick(:sample), cutoff: 135, amp: 0.8, start: 0.2, finish: 0.15
+        #        sample Corrupt[/kick/,7], amp: 1*1, cutoff: 100
+        #       sample Corrupt[/GuitarThud/].tick(:hitit), amp: 0.5#, cutoff: 80
+        sleep 1/4.0#;sample Corrupt[/kick/,9]
+        sleep 1/4.0
+        #      sample Corrupt[/kick/,9], amp: 0.6, cutoff: 100
+        #sample Corrupt[/snare/,0], amp: 0.4, cutoff: 75, rpitch: 0
+        sleep 1/4.0
+        sleep 1/4.0
+        sample Corrupt[/GuitarThud/,0], amp: 0.8, cutoff: 50
+        sleep 1/4.0
+        sleep 1/4.0
+      end
+    end
+  end
+end
