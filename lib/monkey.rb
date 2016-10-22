@@ -49,11 +49,15 @@ def sample_smash(sample_file, bits, *args, &block)
     data = smash(sample_file, bits)
     opt = args[0]
     selection = data[:data].shuffle
+    fx_selection = opt[:fx] || ring(:none,:none)
+    opt.delete(:fx)
     at do
       selection.each do |d|
         opt[:start] = d[0]/data[:total]
         opt[:finish] = d[1]/data[:total]
-        sample(sample_file, *[opt])
+        with_fx(fx_selection.tick(:fx), mix: 1.0) do
+          sample(sample_file, *[opt])
+        end
         yield block if block_given?
         sleep d[1]-d[0]
       end
