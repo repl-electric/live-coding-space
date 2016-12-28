@@ -38,7 +38,7 @@ module SampleBeats
   def self.sql(query="")
     Dsp.query("select * from track where #{query}")
   end
-  def self.find(path: nil, collection: collection, filename: f)
+  def self.find(path: nil, collection: col, filename: f)
     @@cache ||= {}
     k = "path[query]"
     if !@@cache.has_key?(k)
@@ -64,7 +64,7 @@ end
 
 module NoteSlices
   def self.sql(query="")
-    Dsp.query("select * from notes_fine where #{query}")
+    Dsp.query("select * from notes_fine64 where #{query}")
   end
   def self.find(root: nil, octave: nil, min: nil, max: nil, note: nil, pat: nil)
     @@cache = {}
@@ -87,7 +87,7 @@ module NoteSlices
       query << "length < #{max}" if max
       query << "path REGEXP '#{pat}'" if pat
       query = query.flatten
-      r = Dsp.query("select * from notes_fine where #{query.join(" AND ")} ORDER BY path")
+      r = Dsp.query("select * from notes_fine64 where #{query.join(" AND ")} ORDER BY path")
       @@cache[k] = r
     end
     @@cache[k]
