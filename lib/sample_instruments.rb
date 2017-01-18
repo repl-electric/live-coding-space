@@ -19,3 +19,15 @@ module Vocal
     @vocal_cache[n]
   end
 end
+
+module Strawberry
+  def self.slice(n, size: 1/4.0)
+    @straw_cache ||= {}
+    n = n.to_s.gsub(/s/,"#")
+    if !@straw_cache.has_key?(n)
+      @straw_cache[n] = NoteSlices.find(note: n, max: size, pat: "strawberry").take(64)
+    end
+    @straw_cache[n]
+  end
+end
+
