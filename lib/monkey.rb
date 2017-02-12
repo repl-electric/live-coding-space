@@ -72,8 +72,8 @@ def smp(*args)
     smp_name = if sample_thing.is_a?(Hash)
       sample_file = sample_thing[:path]
       if sample_thing[:onset] && sample_thing[:offset]
-        start = ratio_on(sample_thing) + (sample_thing[:start_offset] or 0)
-        fini = ratio_off(sample_thing) + (sample_thing[:finish_offset] or 0)
+        start = ratio_on(sample_thing) + (args[:start_offset] || 0)
+        fini = ratio_off(sample_thing) + (args[:finish_offset] || 0)
       else
         start = 0
         fini = 1
