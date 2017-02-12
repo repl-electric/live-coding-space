@@ -72,8 +72,8 @@ def smp(*args)
     smp_name = if sample_thing.is_a?(Hash)
       sample_file = sample_thing[:path]
       if sample_thing[:onset] && sample_thing[:offset]
-        start = ratio_on(sample_thing)
-        fini = ratio_off(sample_thing)
+        start = ratio_on(sample_thing) + (sample_thing[:start_offset] or 0)
+        fini = ratio_off(sample_thing) + (sample_thing[:finish_offset] or 0)
       else
         start = 0
         fini = 1
@@ -91,7 +91,7 @@ def smp(*args)
       sample_thing
     end
     if smp_name =~ /kick/
-      shader :decay, :iBeat, 1.0, 0.001 
+      shader :decay, :iBeat, 1.0, 0.001
     end
   end
 end
@@ -108,6 +108,11 @@ if smp
   smp[:offset]/dur+0.0
   end
 end
+
+def spread_with(start_value,end_value, on_value, off_value)
+  (spread start_value,end_value).map{|s| s ? on_value : off_value}
+end
+
 module Shaderview
   def self.voc
     shader :shader, "voc.glsl", "bits.vert", "points", 10000
