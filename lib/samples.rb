@@ -1,5 +1,5 @@
 module Sample
-  
+
 def self.matches(samples, matchers)
   samples = samples.sort!
   r = matchers.reduce(samples) do |filtered_samples,filter|
@@ -406,6 +406,16 @@ module Twine
   end
 end
 
+module Berry
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/strawberry/Samples/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Sink
   def self.pick(a)
     self[a]
@@ -417,111 +427,111 @@ module Sink
 end
 
 module S
-def self.halixic              
+def self.halixic
   csample "halixic.wav"
-end                           
+end
 
-def self.clacker              
+def self.clacker
   csample "clacker_rhythm.wav"
-end                           
+end
 
-def self.eery_vocals          
+def self.eery_vocals
   csample "hypnoticsynth.wav"
-end                           
+end
 
-def self.zoom                 
+def self.zoom
   csample "nano_blade_loop.wav"
-end                           
+end
 
-def self.beat                 
+def self.beat
   csample "crunchy_beat.aif"
-end                           
+end
 
-def self.whisper              
+def self.whisper
   csample "whisperloop.wav"
-end                           
+end
 
-def self.ethereal_femininity  
+def self.ethereal_femininity
   csample "ethereal_femininity.wav"
-end                           
+end
 
-def self.sixg                 
+def self.sixg
   csample "120bpmacantholabrus6s_g.wav"
-end                           
+end
 
-def self.sixa                 
+def self.sixa
   csample "120bpmacantholabrus6s_a.wav"
-end                           
+end
 
-def self.sixd                 
+def self.sixd
   csample "120bpmacantholabrus6s_d.wav"
-end                           
+end
 
-def self.fourg                
+def self.fourg
   csample "120bpmacantholabrus4s_g.wav"
-end                           
+end
 
-def self.h                    
+def self.h
   csample "120bpm2smagnhildhh.wav"
-end                           
+end
 
-def self.d                    
+def self.d
   csample "120bpm2smagnhildbd.wav"
-end                           
+end
 
-def self.feedback             
+def self.feedback
   csample "feedback21.wav"
-end                           
+end
 
-def self.house_lead           
+def self.house_lead
   csample "128-bpm-house-lead-fx.wav"
-end                           
+end
 
-def self.nasal                
+def self.nasal
   csample "183669__alienxxx__loop2-009-nasal-120bpm.wav"
-end                           
+end
 
-def self.arp                  
+def self.arp
   csample "20341__djgriffin__trippyarp120bpm.aif"
-end                           
+end
 
-def self.epsilon_four         
+def self.epsilon_four
   csample "249178__gis-sweden__120bpmepsilon4s-g.wav"
-end                           
+end
 
-def self.epsilonix            
+def self.epsilonix
   csample "249177__gis-sweden__120bpmepsilon6s-d.wav"
-end                           
+end
 
-def self.metaix               
+def self.metaix
   csample "249179__gis-sweden__120bpmeta6s-g.wav"
-end                           
+end
 
-def self.skappa               
+def self.skappa
   csample "249870__gis-sweden__120bpm10skappa-g.wav"
-end                           
+end
 
-def self.fourg                
+def self.fourg
   csample "120bpmabramis4s_g.wav"
-end                           
+end
 
-def self.voc                  
+def self.voc
   csample "150399__mikobuntu__voc-formant9.wav"
-end                           
+end
 
-def self.drum_13              
+def self.drum_13
   csample "c13.aif"
-end                           
+end
 
-def self.drum_14              
+def self.drum_14
   csample "c14.aif"
-end                           
+end
 
-def self.drum_2               
+def self.drum_2
   csample "c2.aif"
-end                           
+end
 
-def self.gutteral_wobble      
+def self.gutteral_wobble
   csample "blip.wav"
 end
 end

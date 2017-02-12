@@ -30,4 +30,3 @@ module Strawberry
     @straw_cache[n]
   end
 end
-
