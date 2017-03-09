@@ -70,26 +70,29 @@ def smp(*args)
   sample_thing = args.first
   if sample_thing
     smp_name = if sample_thing.is_a?(Hash)
-      sample_file = sample_thing[:path]
-      if sample_thing[:onset] && sample_thing[:offset]
-        start = ratio_on(sample_thing) + (args[:start_offset] || 0)
-        fini = ratio_off(sample_thing) + (args[:finish_offset] || 0)
-      else
-        start = 0
-        fini = 1
-      end
-      options = {start: start, finish: fini}
-      options = if sample_thing.keys.length > 1
-        options.merge(args.last)
-      else
-        options
-      end
-      sample sample_file, *[options]
-      sample_file
-    else
-      sample(*args)
-      sample_thing
-    end
+                 sample_file = sample_thing[:path]
+                 if sample_thing[:onset] && sample_thing[:offset]
+                   start = ratio_on(sample_thing) + (args.last[:start_offset] || 0)
+                   fini = ratio_off(sample_thing) + (args.last[:finish_offset] || 0)
+                 else
+                   start = 0
+                   fini = 1
+                 end
+                 options = {start: start, finish: fini}
+                 options = if sample_thing.keys.length > 1
+                             options.merge(args.last)
+                           else
+                             options
+                           end
+                 options.delete(:onset) #Corrupts if left
+                 options.delete(:offset)
+                 args=([sample_file] + [options])
+                 sample *args
+                 sample_file
+               else
+                 sample(*args)
+                 sample_thing
+               end
     if smp_name =~ /kick/
       shader :decay, :iBeat, 1.0, 0.001
     end
