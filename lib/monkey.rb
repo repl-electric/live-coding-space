@@ -66,6 +66,29 @@ def sample_smash(sample_file, bits, *args, &block)
   end
 end
 
+module OneShotState
+  def self.reset!
+    @state = {}
+  end
+  def self.fired?(s)
+    @state ||= {}
+    @state[s] == true
+  end
+  def self.fire(s)
+    @state ||= {}
+    @state[s] = true
+  end
+end
+
+@gaia_pat  = Regexp.new(/gaiazone/i).freeze
+def one_smp(*args)
+  s = args.first
+  if !OneShotState.fired?(s)
+    smp(*args)
+    OneShotState.fire(s)
+  end
+end
+
 def smp(*args)
   sample_thing = args.first
   if sample_thing
