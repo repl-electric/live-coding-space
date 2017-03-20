@@ -19,9 +19,12 @@ def shader(endpoint, *args)
     end
   else
     endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
-    if args.count == 1 && (endpoint.to_s != "shader" && #This really has to die
-                           endpoint.to_s != "vertex" && 
-                           endpoint.to_s != "echo")
+    if args.count == 1 &&
+        (endpoint.to_s != "shader" && #This really has to die
+        endpoint.to_s != "vertex" &&
+        endpoint.to_s != "echo" &&
+        endpoint.to_s != "fx"
+        )
       args = [endpoint] + args
       endpoint = :uniform
     end
@@ -32,7 +35,7 @@ def shader(endpoint, *args)
     endpoint = "#{endpoint.to_s.gsub("decay", "decaying-uniform")}"
     endpoint = "/#{endpoint}"
     @client ||= OSC::Client.new('localhost', 9177)
-    begin      
+    begin
       args = args.map{|a| a.is_a?(Symbol) ? a.to_s : a}
       @client.send(OSC::Message.new(endpoint, *args))
     rescue Exception
@@ -41,6 +44,12 @@ def shader(endpoint, *args)
     end
   end
 end
+
+def shaderinit
+  shader :shader, "wave.glsl", "rope.vert", "points", 100000
+  shader :iVertexCount, 100000
+end
+
 
 #shader(:shader, "nil.glsl")
 #shader(:uniform, "iColorFactor", 0.0)
