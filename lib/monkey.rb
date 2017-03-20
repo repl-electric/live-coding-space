@@ -80,7 +80,21 @@ module OneShotState
   end
 end
 
-@gaia_pat  = Regexp.new(/gaiazone/i).freeze
+GAIA_PAT  = Regexp.new(/gaiazone/i).freeze
+SNARE_PAT = Regexp.new(/snare/i).freeze
+KICK_PAT  = Regexp.new(/kick/i).freeze
+VOCAL_PAT = Regexp.new(/vog_strw_sus_oh_f_01_rel/i).freeze
+
+#VERTEX_MODE = ring("points", "tri_lines", "tri_lines")
+
+def drifting(s,e,over, &block)
+  drift_sleep = line(s,e,over).tick(:drifting)
+  at do
+    sleep drift_sleep
+    block.()
+  end
+end
+
 def one_smp(*args)
   s = args.first
   if !OneShotState.fired?(s)
@@ -116,9 +130,22 @@ def smp(*args)
                  sample(*args)
                  sample_thing
                end
-    if smp_name =~ /kick/
-      shader :decay, :iBeat, 1.0, 0.001
+
+    if smp_name =~ GAIA_PAT
+      shader [:iR, :iG, :iB].choose, rand*2
+    elsif smp_name =~ SNARE_PAT
+      #      shader :decay, :iVertexCount, 1
+      shader :iCircle, [rand(100000),1000].max
+      shader :iVertexCount, rand(100)
+    elsif smp_name =~ VOCAL_PAT
+      shader :iP, rand*2 #64.0 * rand(10)
+      @mode = (["points", "lines", "tri", "line_loop", "line_strip"] - [@mode]).choose
+    elsif smp_name =~ KICK_PAT
+      shader :iVertexCount, [rand(1000), 400].max
+      #      shader :iVertexCount, 100000
+      shader :decay, :iBeat, [rand,2.5].max, 0.01
     end
+
   end
 end
 
