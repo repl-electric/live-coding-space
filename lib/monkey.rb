@@ -103,6 +103,12 @@ def one_smp(*args)
   end
 end
 
+def syn(*args)
+  if args["note"] != "_"
+    synth *args
+  end
+end
+
 def smp(*args)
   sample_thing = args.first
   if sample_thing
