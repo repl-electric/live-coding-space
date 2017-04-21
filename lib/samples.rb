@@ -416,6 +416,26 @@ module Berry
   end
 end
 
+module SevenBass
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Live/seven/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
+module Suburb
+  def self.pick(a)
+    self[a]
+  end
+  def self.[](*a)
+    samples = Dir["/Users/josephwilk/Workspace/music/samples/Live/suburban/**/*.wav"]
+    Sample.matches(samples, a)
+  end
+end
+
 module Sink
   def self.pick(a)
     self[a]
