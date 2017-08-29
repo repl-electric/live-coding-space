@@ -26,11 +26,11 @@ def self.matches(samples, matchers, match_cache)
         end
         filtered_samples.select{|s| s=~ filter}
       elsif filter.is_a? Range
-        filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
+        filter.to_a.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
       elsif filter.is_a? SonicPi::Core::RingVector
-        filter.to_a.map{|f| Sample.matches(filtered_samples, [f])}
+        filter.to_a.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
       elsif filter.is_a? Array
-        filter.map{|f| Sample.matches(filtered_samples, [f])}
+        filter.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
       elsif filter == nil
         nil
       else
@@ -234,7 +234,6 @@ module Abstract
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module CineAmbi
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -242,7 +241,6 @@ module CineAmbi
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module CineElec
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -250,7 +248,6 @@ module CineElec
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Fractured
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
