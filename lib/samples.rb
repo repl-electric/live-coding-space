@@ -276,6 +276,10 @@ module MagicDust
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
     unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/MagicDust/**/*.wav"); end
+    if(a[0] == :clack) #named matchers
+      a[0] = 21..31
+      a = [/MD_ORGANIC_HIT_MID_/] + a
+    end
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
