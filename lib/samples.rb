@@ -176,7 +176,7 @@ end
 module Dust
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Dropbox/Music/samples/Dust/**/*.wav"); end
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/CPA_TDDC/**/*.wav"); end
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
