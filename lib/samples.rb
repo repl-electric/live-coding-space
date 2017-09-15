@@ -11,9 +11,7 @@ def self.glob(str)
   Dir[str].sort!
 end
 
-def self.matches(samples, matchers, match_cache)
-  result_set = Sample.cached(matchers, match_cache)
-  return result_set if result_set
+def self.filter_samples(samples, matchers)
   r = matchers.reduce(samples) do |filtered_samples,filter|
     if filtered_samples && !filtered_samples.empty?
       if filter.is_a?(Integer)
@@ -26,11 +24,11 @@ def self.matches(samples, matchers, match_cache)
         end
         filtered_samples.select{|s| s=~ filter}
       elsif filter.is_a? Range
-        filter.to_a.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
+        filter.to_a.map{|f| Sample.filter_samples(filtered_samples, [f])}
       elsif filter.is_a? SonicPi::Core::RingVector
-        filter.to_a.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
+        filter.to_a.map{|f| Sample.filter_samples(filtered_samples, [f])}
       elsif filter.is_a? Array
-        filter.map{|f| Sample.matches(filtered_samples, [f], match_cache)}
+        filter.map{|f| Sample.filter_samples(filtered_samples, [f])}
       elsif filter == nil
         nil
       else
@@ -38,7 +36,6 @@ def self.matches(samples, matchers, match_cache)
       end
     end
   end
-
   result_set = if r && r.length == 1
     r[0]
   else
@@ -46,11 +43,15 @@ def self.matches(samples, matchers, match_cache)
       SonicPi::Core::RingVector.new(r)
     end
   end
-
-  match_cache[Sample.cache_key(matchers)] ||= result_set
   result_set
 end
 
+def self.matches(samples, matchers, match_cache)
+  result_set = Sample.cached(matchers, match_cache)
+  return result_set if result_set
+  result_set = filter_samples(samples, matchers)
+  match_cache[Sample.cache_key(matchers)] ||= result_set
+end
 end
 
 module Organ
