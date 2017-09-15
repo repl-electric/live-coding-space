@@ -7,6 +7,9 @@ require "osc-ruby.rb"
 unless defined?(SHADER_ROOT)
   SHADER_ROOT = "/Users/josephwilk/Workspace/repl-electric/live-coding-space/lights/"
 end
+def dshader(endpoint, *args)
+  at{sleep 0.5; shader(endpoint, *args)}
+end
 def shader(endpoint, *args)
   if endpoint.is_a?(Array)
     args = if(args[0].is_a?(Array))
