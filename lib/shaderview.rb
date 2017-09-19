@@ -22,6 +22,12 @@ def shader(endpoint, *args)
     end
   else
     endpoint = endpoint.to_s.gsub(/_/,"-") #Sorry
+    if endpoint == "shader"
+      if args && (args.count > 3) && args[-1].is_a?(Numeric)
+        shader :uniform, :iVC, args[-1]
+      end
+    end
+
     if args.count == 1 &&
         (endpoint.to_s != "shader" && #This really has to die
         endpoint.to_s != "vertex" &&
