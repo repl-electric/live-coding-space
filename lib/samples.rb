@@ -188,6 +188,14 @@ module Vocals
   end
 end
 
+module Analog
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/workspace/music/samples/Analog Snares & Claps/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+
 module Future
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
