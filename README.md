@@ -6,11 +6,11 @@
     .||.     π=-  π=-  π=-
 ```
 
-### Experimental musical source code
+## Experimental musical source code
 
 Code that makes noises and sounds with Sonic Pi http://sonic-pi.net
 
-#### Tracks
+### Tracks
 
 Tracks which are code and code which are tracks.
 
@@ -23,21 +23,21 @@ d[-_-]b
   .Π.
 ```
 
-### Visuals
+## Visuals
 
 Visuals are generated using ShaderView: https://github.com/josephwilk/shaderview
 
 Source: https://github.com/repl-electric/live-coding-space/tree/master/lights
 
 
-### Material
+## Material
 
 Recordings on: 
 * http://soundcloud.com/repl-electric
 * http://livecoding.tv/josephwilk
 * http://www.repl-electric.com
 
-##License
+## License
 
 Copyright © 2014-present Joseph Wilk
 
