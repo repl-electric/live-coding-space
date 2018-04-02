@@ -54,6 +54,104 @@ def self.matches(samples, matchers, match_cache)
 end
 end
 
+#----------------------------Favs
+module Tape
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Juno/Soundiron Tape/samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Lo
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Juno/Soundiron Lo/samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Drip
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Juno/Soundiron Drip/samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Crystal
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Juno/Soundiron Crystal/samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Mountain
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+
+module Ether
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Frag
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Frag/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Fraz
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Dropbox/Music/samples/Frag2/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+
+module Dust
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/CPA_TDDC/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Sop
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/soprano/Samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Alt
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Alto/Samples/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+
+module Vocals
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Dropbox/Music/samples/Vocals/**/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+module Analog
+  @sample_cache = nil; @matcher_lookup = {}
+  def self.[](*a)
+    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/workspace/music/samples/Analog Snares & Claps/*.wav"); end
+    Sample.matches(@sample_cache, a, @matcher_lookup)
+  end
+end
+
+#--END
+
 module Organ
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -75,38 +173,10 @@ module ChillD
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-module Mountain
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Mountain/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
 module Decimated
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
     unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Decimated/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-module Ether
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Ether/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-module Frag
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Frag/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-module Fraz
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Dropbox/Music/samples/Frag2/**/*.wav"); end
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
@@ -152,20 +222,6 @@ module Heat
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-module Sop
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/soprano/Samples/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-module Alt
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/Alto/Samples/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
 module Bass
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -173,29 +229,6 @@ module Bass
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-module Dust
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Workspace/music/samples/CPA_TDDC/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-module Vocals
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/Dropbox/Music/samples/Vocals/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-
-module Analog
-  @sample_cache = nil; @matcher_lookup = {}
-  def self.[](*a)
-    unless @sample_cache; @sample_cache = Sample.glob("/Users/josephwilk/workspace/music/samples/Analog Snares & Claps/**/*.wav"); end
-    Sample.matches(@sample_cache, a, @matcher_lookup)
-  end
-end
-
 module Future
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -203,7 +236,6 @@ module Future
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Organic
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -211,7 +243,6 @@ module Organic
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Instruments
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -219,7 +250,6 @@ module Instruments
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Live
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -227,7 +257,6 @@ module Live
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Words
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -235,7 +264,6 @@ module Words
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
-
 module Abstract
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
@@ -321,6 +349,8 @@ module Juno
     Sample.matches(@sample_cache, a, @matcher_lookup)
   end
 end
+
+
 module Ambius
   @sample_cache = nil; @matcher_lookup = {}
   def self.[](*a)
