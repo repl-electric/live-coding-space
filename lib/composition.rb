@@ -1,3 +1,7 @@
+def root(note_seq)
+  note_seq.map{|n| note(n[0])}.compact.sort[0]
+end
+
 def degrees_seq(*pattern_and_roots)
   pattern_and_roots = pattern_and_roots.reduce([]){|accu, id| 
   if(!accu[-1].kind_of?(Symbol) && id.kind_of?(Integer))
